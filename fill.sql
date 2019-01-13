@@ -1,35 +1,61 @@
 ﻿TRUNCATE headhunter.users CASCADE;
-ALTER SEQUENCE headhunter.users_id_seq RESTART;
+ALTER SEQUENCE IF EXISTS headhunter.users_users_id_seq RESTART;
 
-INSERT INTO headhunter.users(login, password)
+INSERT INTO headhunter.users(login, password, time_register)
 VALUES 
-    ('vasya', 	md5('querty')),
-    ('petya', 	md5('123456')),
-    ('kostya', 	md5('qazwsx')),
-    ('vanya', 	md5('querty')),
-    ('natasha', md5('000000')),
-    ('sveta', 	md5('******')),
-    ('vova', 	md5('querty')),
-    ('superman',md5('querty')),
-    ('batman', 	md5('querty'));
+    ('vasya', 	md5('querty'), now()),
+    ('petya', 	md5('123456'), now()),
+    ('kostya', 	md5('qazwsx'), now()),
+    ('vanya', 	md5('querty'), now()),
+    ('natasha', md5('000000'), now()),
+    ('sveta', 	md5('******'), now()),
+    ('vova', 	  md5('querty'), now()),
+    ('superman',md5('querty'), now()),
+    ('batman', 	md5('querty'), now());
 
 ------------------------------------------------------------------------------------------------------------------------
 
 TRUNCATE headhunter.company CASCADE;
-ALTER SEQUENCE headhunter.company_id_seq RESTART;
+ALTER SEQUENCE IF EXISTS headhunter.company_company_id_seq RESTART;
 
-INSERT INTO headhunter.company(user_id, name, description, path_to_logo)
+INSERT INTO headhunter.company(name, description, path_to_logo)
 VALUES 
-    (1, 'Майкрософт', 'молодая подающая надежды компания', 'c:/logos/ms.logo'),
-    (2, 'Гугл', 'мы умеем говорить ОК', 'c:/logos/gl.logo'),
-    (3, 'Яху', 'Описание компании', 'c:/logos/ms.logo'),
-    (4, 'ИП Виноградова', 'В 2018 году мы подняли продажи на 100%, реализовав целых 2 принтера!', 'c:/logos/ms.logo'),
-    (4, 'ООО "Рога & Копыта"', 'Магазин охотничьих трофеев', 'c:/logos/ms.logo');
+    ('Майкрософт', 'молодая подающая надежды компания', 'c:/logos/ms.logo'),
+    ('Гугл', 'мы умеем говорить ОК', 'c:/logos/gl.logo'),
+    ('Яху', 'Описание компании', 'c:/logos/ms.logo'),
+    ('ИП Виноградова', 'В 2018 году мы подняли продажи на 100%, реализовав целых 2 принтера!', 'c:/logos/ms.logo'),
+    ('ООО "Рога & Копыта"', 'Магазин охотничьих трофеев', 'c:/logos/ms.logo');
+
+------------------------------------------------------------------------------------------------------------------------
+
+TRUNCATE headhunter.user_to_company_rights;
+ALTER SEQUENCE IF EXISTS headhunter.user_to_company_rights_user_to_company_rights_id_seq RESTART;
+
+INSERT INTO headhunter.user_to_company_rights(user_to_company_rights_id, name, description)
+VALUES
+    (0,'Создатель',     'Главный победитель и ROOT по жизни'),
+    (1,'Администратор', 'Смотрящий'),
+    (2,'HR',            'Человек, рулящий вакансиями в организации'),
+    (3,'Младший помошник HR', 'Просмотр откликов без возможности редактирования');
+
+------------------------------------------------------------------------------------------------------------------------
+
+TRUNCATE headhunter.user_to_company_relations;
+ALTER SEQUENCE IF EXISTS headhunter.user_to_company_relations_user_to_company_relations_id_seq RESTART;
+
+INSERT INTO headhunter.user_to_company_relations(user_id, company_id, rights, time_updated,who_update)
+VALUES
+    (2,1,'{0,1}',now(),1),
+    (3,1,'{2}',now(),1),
+    (5,2,'{0,1}',now(),1),
+    (6,3,'{3}',now(),1),
+    (8,4,'{0}',now(),1),
+    (8,5,'{3}',now(),1);
 
 ------------------------------------------------------------------------------------------------------------------------
 
 TRUNCATE headhunter.vacancy CASCADE;
-ALTER SEQUENCE headhunter.vacancy_id_seq RESTART;
+ALTER SEQUENCE IF EXISTS headhunter.vacancy_vacancy_id_seq RESTART;
 
 INSERT INTO headhunter.vacancy
 (	company_id, 
@@ -38,8 +64,9 @@ INSERT INTO headhunter.vacancy
 	salary_min, salary_max, 
 	wanted_experience, 
 	wanted_skills, 
-	date_to_unpublish, 
-        salary_currency)
+	time_to_unpublish,
+  salary_currency,
+  time_created)
 VALUES 
 (	1,
 	'Уборщица',
@@ -48,7 +75,8 @@ VALUES
 	'опыт работы в высоконагруженных системах',
 	'{"2 высших профильных образования","английский intermediate","опыт работы в высоконагруженных системах"}',
 	'2019-01-01',
-	'RUR'),
+	'RUR',
+	now()),
 	
 (	1,
 	'Сторож',
@@ -57,7 +85,8 @@ VALUES
 	'опыт работы в высоконагруженных системах',
 	'{"2 высших профильных образования","английский intermediate"}',
 	'2019-01-01',
-	'RUR'),
+	'RUR',
+	now()),
 	
 (	2,
 	'Программист BrainF*ck',
@@ -66,7 +95,8 @@ VALUES
 	'опыт работы в высоконагруженных системах',
 	'{"3 высших профильных образования","английский godlike","опыт работы в аду"}',
 	'2019-01-01',
-	'RUR'),
+	'RUR',
+	now()),
 	
 (	2,
 	'PHP Developer',
@@ -75,7 +105,8 @@ VALUES
 	'компьютерщик на все руки',
 	'{"установка windows всех версий","заправка картриджей","настройка программ", "Программирование, Разработка"}',
 	'2019-01-01',
-	'RUR'),
+	'RUR',
+	now()),
 	
 (	4,
 	'Уборщица',
@@ -84,11 +115,12 @@ VALUES
 	'опыт работы в высоконагруженных системах',
 	'{"2 высших профильных образования","английский intermediate","опыт работы в высоконагруженных системах"}',
 	'2019-01-01',
-	'RUR');
+	'RUR',
+	now());
 
 ------------------------------------------------------------------------------------------------------------------------
 TRUNCATE headhunter.resume CASCADE;
-ALTER SEQUENCE headhunter.resume_id_seq RESTART;
+ALTER SEQUENCE IF EXISTS headhunter.resume_resume_id_seq RESTART;
 
 INSERT INTO headhunter.resume
 (	user_id, 
@@ -98,7 +130,9 @@ INSERT INTO headhunter.resume
         salary_min, 
         salary_max, 
         salary_currency, 
-        skills)
+        skills,
+        time_created,
+        time_updated)
 VALUES 
 (	5,
 	'Программист C++ (стажёр)',
@@ -107,7 +141,10 @@ VALUES
 	50000,
 	70000,
 	'RUR',
-	'{"Информационные технологии","Интернет","Мультимедиа"}'),
+	'{"Информационные технологии","Интернет","Мультимедиа"}',
+	now(),
+	NOW() + interval '1 month'
+	),
 	
 (	6,
 	'рограммист C/С++ (Builder, Qt)',
@@ -116,8 +153,10 @@ VALUES
 	10000,
 	170000,
 	'RUR',
-	'{"Информационные технологии","Интернет","телеком","Программирование, Разработка", "Компьютерная безопасность"}'),
-	
+	'{"Информационные технологии","Интернет","телеком","Программирование, Разработка", "Компьютерная безопасность"}',
+	now(),
+	NOW() + interval '1 month'),
+
 (	7,
 	'Ведущий программист С++)',
 	'Иванов Геннадий',
@@ -125,8 +164,10 @@ VALUES
 	70000,
 	70000,
 	'RUR',
-	'{"Информационные технологии","Сетевые технологии","Телекоммуникации"}'),
-	
+	'{"Информационные технологии","Сетевые технологии","Телекоммуникации"}',
+	now(),
+	NOW() + interval '1 month'),
+
 (	8,
 	'Программист С++',
 	'Иванов Николай',
@@ -134,8 +175,10 @@ VALUES
 	18000,
 	20000,
 	'RUR',
-	'{"Информационные технологии","Поддержка, Helpdesk", " Работа в SONY VEGAS 7"}'),
-	
+	'{"Информационные технологии","Поддержка, Helpdesk", " Работа в SONY VEGAS 7"}',
+	now(),
+	NOW() + interval '1 month'),
+
 (	8,
 	'Программист (Junior C++)',
 	'Иванов Иван',
@@ -143,14 +186,16 @@ VALUES
 	50000,
 	50010,
 	'RUR',
-	'{"Информационные технологии","Производство, Технологии"}');
+	'{"Информационные технологии","Производство, Технологии"}',
+	now(),
+	NOW() + interval '1 month');
 
 ------------------------------------------------------------------------------------------------------------------------
 TRUNCATE headhunter.resume_experience CASCADE;
-ALTER SEQUENCE headhunter.resume_experience_id_seq RESTART;
+ALTER SEQUENCE IF EXISTS headhunter.resume_experience_resume_experience_id_seq RESTART;
 
 INSERT INTO headhunter.resume_experience(
-            resume_id, 	date_start, 	date_finish, 	"position", 	description)
+            resume_id, 	time_start, 	time_finish, 	"position", 	description)
 VALUES
 (		2,	'2017-01-05',	'2018-05-01',	'инженер-программист',	
 'Должность: инженер-программист.
@@ -175,23 +220,52 @@ VALUES
 );
 ------------------------------------------------------------------------------------------------------------------------
 TRUNCATE headhunter.messages CASCADE;
-ALTER SEQUENCE headhunter.messages_id_seq RESTART;
+ALTER SEQUENCE IF EXISTS headhunter.messages_messages_id_seq RESTART;
 
 INSERT INTO headhunter.messages
-	(vacancy_id, resume_id, article, description, message_type, unread )
-	SELECT ROUND(1 + RANDOM()*4),ROUND(1 + RANDOM()*4), 'art'||random(),'art'||random(), 'invite', CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END FROM generate_series(1,100);
+	(vacancy_id, resume_id, article, description, message_type, unread ,time_create)
+	SELECT
+		ROUND(1 + RANDOM()*4),
+		ROUND(1 + RANDOM()*4),
+		'art'||random(),'art'||random(),
+		'invite',
+		CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END,
+		date(now() - trunc(random()  * 365) * '1 day'::interval)
+	FROM
+		generate_series(1,100) ;
 
 INSERT INTO headhunter.messages
-	(vacancy_id, resume_id, article, description, message_type, unread )
-	SELECT ROUND(1 + RANDOM()*4),ROUND(1 + RANDOM()*4), 'art'||random(),'art'||random(), 'reply', CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END FROM generate_series(1,100);
+	(vacancy_id, resume_id, article, description, message_type, unread ,time_create)
+	SELECT
+		ROUND(1 + RANDOM()*4),
+		ROUND(1 + RANDOM()*4),
+		'art'||random(),'art'||random(),
+		'reply',
+		CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END,
+		date(now() - trunc(random()  * 365) * '1 day'::interval)
+	FROM
+		generate_series(1,100) ;
 
 INSERT INTO headhunter.messages
-	(vacancy_id, resume_id, article, description, message_type, unread )
-	SELECT ROUND(1 + RANDOM()*4),ROUND(1 + RANDOM()*4), 'art'||random(),'art'||random(), 'message_to_resume', CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END FROM generate_series(1,10000);
+	(vacancy_id, resume_id, article, description, message_type, unread ,time_create)
+	SELECT
+		ROUND(1 + RANDOM()*4),
+		ROUND(1 + RANDOM()*4),
+		'art'||random(),'art'||random(),
+		'message_to_resume',
+		CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END,
+		date(now() - trunc(random()  * 365) * '1 day'::interval)
+	FROM
+		generate_series(1,10000) ;
 
 INSERT INTO headhunter.messages
-	(vacancy_id, resume_id, article, description, message_type, unread )
-	SELECT ROUND(1 + RANDOM()*4),ROUND(1 + RANDOM()*4), 'art'||random(),'art'||random(), 'message_to_vacancy', CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END FROM generate_series(1,10000);
-
-------------------------------------------------------------------------------------------------------------------------
-
+	(vacancy_id, resume_id, article, description, message_type, unread ,time_create)
+	SELECT
+		ROUND(1 + RANDOM()*4),
+		ROUND(1 + RANDOM()*4),
+		'art'||random(),'art'||random(),
+		'message_to_vacancy',
+		CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END,
+		date(now() - trunc(random()  * 365) * '1 day'::interval)
+	FROM
+		generate_series(1,10000) ;
