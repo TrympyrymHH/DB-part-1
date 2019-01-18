@@ -135,20 +135,20 @@ VALUES (1, '+79101234567', 1, 100000, 'Я очень ценный учитель
        (4, '+79161234567', 4, 200000, 'Я очень ценный разработчик', 'FULL_DAY', 'SHOW'),
        (5, '+79051234567', 5, 50000, 'Я очень хочу работать', 'FULL_DAY', 'SHOW');
 
-INSERT INTO hh.resume_to_education(resume_id, education_id)
+INSERT INTO hh.resume_education(resume_id, education_id)
 VALUES (1, 1),
        (2, 2),
        (3, 3),
        (4, 4),
        (5, 5);
 
-INSERT INTO hh.resume_to_experience(resume_id, experience_id)
+INSERT INTO hh.resume_experience(resume_id, experience_id)
 VALUES (1, 1),
        (2, 2),
        (3, 3),
        (4, 4);
 
-INSERT INTO hh.resume_to_skill(resume_id, skill_id)
+INSERT INTO hh.resume_skill(resume_id, skill_id)
 VALUES (1, 1),
        (2, 2),
        (3, 3),
@@ -178,7 +178,7 @@ VALUES (6, 1, 1, NULL, NULL,
         'Привет, друг! Ты сделал правильный выбор, кликнув на нашу вакансию, потому что «МегаФон Ритейл» – лучшая компания для тебя и твоей карьеры.',
         'OPEN');
 
-INSERT INTO hh.vacancy_to_skill(vacancy_id, skill_id)
+INSERT INTO hh.vacancy_skill(vacancy_id, skill_id)
 VALUES (1, 1),
        (4, 4),
        (5, 5);

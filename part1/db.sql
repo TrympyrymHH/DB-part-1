@@ -14,13 +14,13 @@ DROP TABLE IF EXISTS hh.skill CASCADE;
 DROP TYPE IF EXISTS hh.SCHEDULE_TYPE CASCADE;
 DROP TYPE IF EXISTS hh.RESUME_STATUS CASCADE;
 DROP TABLE IF EXISTS hh.resume CASCADE;
-DROP TABLE IF EXISTS hh.resume_to_education CASCADE;
-DROP TABLE IF EXISTS hh.resume_to_experience CASCADE;
-DROP TABLE IF EXISTS hh.resume_to_skill CASCADE;
+DROP TABLE IF EXISTS hh.resume_education CASCADE;
+DROP TABLE IF EXISTS hh.resume_experience CASCADE;
+DROP TABLE IF EXISTS hh.resume_skill CASCADE;
 DROP TABLE IF EXISTS hh.employer CASCADE;
 DROP TYPE IF EXISTS hh.VACANCY_STATUS_TYPE CASCADE;
 DROP TABLE IF EXISTS hh.vacancy CASCADE;
-DROP TABLE IF EXISTS hh.vacancy_to_skill CASCADE;
+DROP TABLE IF EXISTS hh.vacancy_skill CASCADE;
 DROP TYPE IF EXISTS hh.TALKS_STATUS_TYPE CASCADE;
 DROP TABLE IF EXISTS hh.talk CASCADE;
 DROP TYPE IF EXISTS hh.MESSAGE_TYPE CASCADE;
@@ -155,21 +155,21 @@ CREATE TABLE hh.resume
   status       hh.RESUME_STATUS
 );
 
-CREATE TABLE hh.resume_to_education
+CREATE TABLE hh.resume_education
 (
   resume_id    INTEGER NOT NULL REFERENCES hh.resume,
   education_id INTEGER NOT NULL REFERENCES hh.education,
   PRIMARY KEY (resume_id, education_id)
 );
 
-CREATE TABLE hh.resume_to_experience
+CREATE TABLE hh.resume_experience
 (
   resume_id     INTEGER NOT NULL REFERENCES hh.resume,
   experience_id INTEGER NOT NULL REFERENCES hh.experience,
   PRIMARY KEY (resume_id, experience_id)
 );
 
-CREATE TABLE hh.resume_to_skill
+CREATE TABLE hh.resume_skill
 (
   resume_id INTEGER NOT NULL REFERENCES hh.resume,
   skill_id  INTEGER NOT NULL REFERENCES hh.skill,
@@ -200,7 +200,7 @@ CREATE TABLE hh.vacancy
   status      hh.VACANCY_STATUS_TYPE
 );
 
-CREATE TABLE hh.vacancy_to_skill
+CREATE TABLE hh.vacancy_skill
 (
   vacancy_id INTEGER NOT NULL REFERENCES hh.vacancy,
   skill_id   INTEGER NOT NULL REFERENCES hh.skill,
