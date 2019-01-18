@@ -30,8 +30,6 @@ ALTER SEQUENCE IF EXISTS hh.employer_employer_id_seq RESTART;
 --TRUNCATE hh.vacancy CASCADE;
 ALTER SEQUENCE IF EXISTS hh.vacancy_vacancy_id_seq RESTART;
 --TRUNCATE hh.vacancy_to_skill CASCADE;
---TRUNCATE hh.talk CASCADE;
-ALTER SEQUENCE IF EXISTS hh.talk_talk_id_seq RESTART;
 --TRUNCATE hh.message CASCADE;
 ALTER SEQUENCE IF EXISTS hh.message_message_id_seq RESTART;
 
@@ -192,23 +190,19 @@ VALUES (1, 1),
        (4, 4),
        (5, 5);
 
-INSERT INTO hh.talk(resume_id, vacancy_id, status)
-VALUES (1, 1, 'OPEN'),
-       (2, 2, 'ACCEPT'),
-       (3, 3, 'ACCEPT_APP'),
-       (4, 4, 'ACCEPT_EMP'),
-       (5, 5, 'OPEN');
-
-INSERT INTO hh.message(talk_id, send_time, type, body, view)
-VALUES (1, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL, TRUE),
-       (2, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'VACANCY', NULL, TRUE),
-       (3, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'VACANCY', NULL, TRUE),
-       (4, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL, TRUE),
-       (5, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL, TRUE);
-INSERT INTO hh.message(talk_id, send_time, type, body, view)
-SELECT TRUNC(RANDOM() * 5 + 1),
-       date(now() - trunc(1000 * random()) * '1 hour'::interval),
-       CASE WHEN (random() > 0.5) THEN hh.MESSAGE_TYPE('TEXT_APP') ELSE hh.MESSAGE_TYPE('TEXT_EMP') END,
-       'some message text',
-       CASE WHEN (random() > 0.5) THEN TRUE ELSE FALSE END
-FROM generate_series(1, 50);
+INSERT INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
+VALUES (1, 1, 1, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL, TRUE),
+       (2, 2, 2, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'VACANCY', NULL, TRUE),
+       (3, 3, 3, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'VACANCY', NULL, TRUE),
+       (4, 4, 4, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL, TRUE),
+       (5, 5, 5, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL, TRUE);
+INSERT INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
+SELECT id,id,id,send_time,type,body,view
+FROM (
+       SELECT TRUNC(RANDOM() * 5 + 1)                                                                          AS id,
+              date(now() - trunc(1000 * random()) * '1 hour'::interval)                                        AS send_time,
+              CASE WHEN (random() > 0.5) THEN hh.MESSAGE_TYPE('TEXT_APP') ELSE hh.MESSAGE_TYPE('TEXT_EMP') END AS type,
+              'some message text'                                                                              AS body,
+              CASE WHEN (random() > 0.5) THEN TRUE ELSE FALSE END                                              AS view
+       FROM generate_series(1, 50)
+     ) q;

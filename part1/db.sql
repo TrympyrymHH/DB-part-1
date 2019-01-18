@@ -22,8 +22,6 @@ DROP TABLE IF EXISTS hh.employer_account CASCADE;
 DROP TYPE IF EXISTS hh.VACANCY_STATUS CASCADE;
 DROP TABLE IF EXISTS hh.vacancy CASCADE;
 DROP TABLE IF EXISTS hh.vacancy_skill CASCADE;
-DROP TYPE IF EXISTS hh.TALKS_STATUS_TYPE CASCADE;
-DROP TABLE IF EXISTS hh.talk CASCADE;
 DROP TYPE IF EXISTS hh.MESSAGE_TYPE CASCADE;
 DROP TABLE IF EXISTS hh.message CASCADE;
 
@@ -199,7 +197,7 @@ CREATE TYPE hh.VACANCY_STATUS AS ENUM
 CREATE TABLE hh.vacancy
 (
   vacancy_id  SERIAL PRIMARY KEY,
-  employer_id  INTEGER NOT NULL REFERENCES hh.employer,
+  employer_id INTEGER NOT NULL REFERENCES hh.employer,
   position_id INTEGER NOT NULL REFERENCES hh.position,
   city_id     INTEGER NOT NULL REFERENCES hh.city,
   salary_from INTEGER,
@@ -215,23 +213,6 @@ CREATE TABLE hh.vacancy_skill
   PRIMARY KEY (vacancy_id, skill_id)
 );
 
-CREATE TYPE hh.TALKS_STATUS_TYPE AS ENUM
-  (
-    'OPEN',
-    'DECLINE',
-    'ACCEPT_APP',
-    'ACCEPT_EMP',
-    'ACCEPT'
-    );
-
-CREATE TABLE hh.talk
-(
-  talk_id    SERIAL PRIMARY KEY,
-  resume_id  INTEGER NOT NULL REFERENCES hh.resume,
-  vacancy_id INTEGER NOT NULL REFERENCES hh.vacancy,
-  status     hh.TALKS_STATUS_TYPE
-);
-
 CREATE TYPE hh.MESSAGE_TYPE AS ENUM
   (
     'RESUME',
@@ -243,7 +224,9 @@ CREATE TYPE hh.MESSAGE_TYPE AS ENUM
 CREATE TABLE hh.message
 (
   message_id SERIAL PRIMARY KEY,
-  talk_id    INTEGER NOT NULL REFERENCES hh.talk,
+  resume_id  INTEGER NOT NULL REFERENCES hh.resume,
+  vacancy_id INTEGER NOT NULL REFERENCES hh.vacancy,
+  account_id INTEGER NOT NULL REFERENCES hh.account,
   send_time  TIMESTAMP,
   type       hh.MESSAGE_TYPE,
   body       TEXT,
