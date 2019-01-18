@@ -93,7 +93,7 @@ CREATE TABLE hh.speciality
 CREATE TABLE hh.education
 (
   education_id  SERIAL PRIMARY KEY,
-  applicant_id    INTEGER NOT NULL REFERENCES hh.applicant,
+  applicant_id  INTEGER NOT NULL REFERENCES hh.applicant,
   level         hh.EDUCATION_TYPE,
   speciality_id INTEGER REFERENCES hh.speciality,
   year          INTEGER
@@ -114,9 +114,9 @@ CREATE TABLE hh.position
 CREATE TABLE hh.experience
 (
   experience_id   SERIAL PRIMARY KEY,
-  applicant_id      INTEGER NOT NULL REFERENCES hh.applicant,
-  date_begin      TIMESTAMP,
-  date_end        TIMESTAMP,
+  applicant_id    INTEGER NOT NULL REFERENCES hh.applicant,
+  date_begin      DATE    NOT NULL,
+  date_end        DATE,
   organization_id INTEGER NOT NULL REFERENCES hh.organization,
   position_id     INTEGER NOT NULL REFERENCES hh.position,
   about           TEXT
@@ -145,14 +145,14 @@ CREATE TYPE hh.RESUME_STATUS_TYPE AS ENUM
 
 CREATE TABLE hh.resume
 (
-  resume_id   SERIAL PRIMARY KEY,
-  applicant_id  INTEGER NOT NULL REFERENCES hh.applicant,
-  phone       VARCHAR(20),
-  position_id INTEGER NOT NULL REFERENCES hh.position,
-  salary      VARCHAR(20),
-  about       TEXT,
-  shedule     hh.SCHEDULE_TYPE,
-  status      hh.RESUME_STATUS_TYPE
+  resume_id    SERIAL PRIMARY KEY,
+  applicant_id INTEGER NOT NULL REFERENCES hh.applicant,
+  phone        VARCHAR(20),
+  position_id  INTEGER NOT NULL REFERENCES hh.position,
+  salary       VARCHAR(20),
+  about        TEXT,
+  shedule      hh.SCHEDULE_TYPE,
+  status       hh.RESUME_STATUS_TYPE
 );
 
 CREATE TABLE hh.resume_to_education
