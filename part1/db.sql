@@ -50,8 +50,8 @@ CREATE TABLE hh.applicant
 (
   account_id INTEGER NOT NULL PRIMARY KEY REFERENCES hh.account,
   name       varchar(100),
-  sex        hh.GENDER,
-  birthday   TIMESTAMP,
+  gender     hh.GENDER,
+  date       DATE,
   city_id    INTEGER REFERENCES hh.city
 );
 
