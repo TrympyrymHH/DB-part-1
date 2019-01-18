@@ -199,6 +199,6 @@ VALUES (1, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', 
 INSERT INTO hh.message(talk_id, send_time, type, body)
 SELECT TRUNC(RANDOM() * 5 + 1),
        date(now() - trunc(1000 * random()) * '1 hour'::interval),
-       CASE WHEN (random() > 0.5) THEN hh.message_type('TEXT_APP') ELSE hh.message_type('TEXT_EMP') END,
+       CASE WHEN (random() > 0.5) THEN hh.MESSAGE_TYPE('TEXT_APP') ELSE hh.MESSAGE_TYPE('TEXT_EMP') END,
        'some message text'
 FROM generate_series(1, 50);

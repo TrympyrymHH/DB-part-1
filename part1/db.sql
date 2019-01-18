@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS hh.account CASCADE;
-DROP TYPE IF EXISTS hh.gender CASCADE;
+DROP TYPE IF EXISTS hh.GENDER CASCADE;
 DROP TABLE IF EXISTS hh.city CASCADE;
 DROP TABLE IF EXISTS hh.applicant CASCADE;
-DROP TYPE IF EXISTS hh.education_type CASCADE;
+DROP TYPE IF EXISTS hh.EDUCATION_TYPE CASCADE;
 DROP TABLE IF EXISTS hh.educational_institution CASCADE;
 DROP TABLE IF EXISTS hh.faculty CASCADE;
 DROP TABLE IF EXISTS hh.speciality CASCADE;
@@ -11,19 +11,19 @@ DROP TABLE IF EXISTS hh.organization CASCADE;
 DROP TABLE IF EXISTS hh.position CASCADE;
 DROP TABLE IF EXISTS hh.experience CASCADE;
 DROP TABLE IF EXISTS hh.skill CASCADE;
-DROP TYPE IF EXISTS hh.schedule_type CASCADE;
-DROP TYPE IF EXISTS hh.resume_status_type CASCADE;
+DROP TYPE IF EXISTS hh.SCHEDULE_TYPE CASCADE;
+DROP TYPE IF EXISTS hh.RESUME_STATUS_TYPE CASCADE;
 DROP TABLE IF EXISTS hh.resume CASCADE;
 DROP TABLE IF EXISTS hh.resume_to_education CASCADE;
 DROP TABLE IF EXISTS hh.resume_to_experience CASCADE;
 DROP TABLE IF EXISTS hh.resume_to_skill CASCADE;
 DROP TABLE IF EXISTS hh.employer CASCADE;
-DROP TYPE IF EXISTS hh.vacancy_status_type CASCADE;
+DROP TYPE IF EXISTS hh.VACANCY_STATUS_TYPE CASCADE;
 DROP TABLE IF EXISTS hh.vacancy CASCADE;
 DROP TABLE IF EXISTS hh.vacancy_to_skill CASCADE;
-DROP TYPE IF EXISTS hh.talks_status_type CASCADE;
+DROP TYPE IF EXISTS hh.TALKS_STATUS_TYPE CASCADE;
 DROP TABLE IF EXISTS hh.talk CASCADE;
-DROP TYPE IF EXISTS hh.message_type CASCADE;
+DROP TYPE IF EXISTS hh.MESSAGE_TYPE CASCADE;
 DROP TABLE IF EXISTS hh.message CASCADE;
 
 CREATE TABLE hh.account
@@ -34,7 +34,7 @@ CREATE TABLE hh.account
   session_password VARCHAR(50)
 );
 
-CREATE TYPE hh.gender AS ENUM
+CREATE TYPE hh.GENDER AS ENUM
   (
     'MAN',
     'WOMAN'
@@ -50,12 +50,12 @@ CREATE TABLE hh.applicant
 (
   account_id INTEGER NOT NULL PRIMARY KEY REFERENCES hh.account,
   name       varchar(100),
-  sex        hh.gender,
+  sex        hh.GENDER,
   birthday   TIMESTAMP,
   city_id    INTEGER REFERENCES hh.city
 );
 
-CREATE TYPE hh.education_type AS ENUM
+CREATE TYPE hh.EDUCATION_TYPE AS ENUM
   (
     'PRESCHOOL',
     'ELEMENTARY_SCHOOL',
@@ -94,7 +94,7 @@ CREATE TABLE hh.education
 (
   education_id  SERIAL PRIMARY KEY,
   account_id    INTEGER NOT NULL REFERENCES hh.applicant,
-  level         hh.education_type,
+  level         hh.EDUCATION_TYPE,
   speciality_id INTEGER REFERENCES hh.speciality,
   year          INTEGER
 );
@@ -128,7 +128,7 @@ CREATE TABLE hh.skill
   title    VARCHAR(50)
 );
 
-CREATE TYPE hh.schedule_type AS ENUM
+CREATE TYPE hh.SCHEDULE_TYPE AS ENUM
   (
     'FULL_DAY',
     'REPLACEABLE',
@@ -137,7 +137,7 @@ CREATE TYPE hh.schedule_type AS ENUM
     'SHIFT_METHOD'
     );
 
-CREATE TYPE hh.resume_status_type AS ENUM
+CREATE TYPE hh.RESUME_STATUS_TYPE AS ENUM
   (
     'SHOW',
     'HIDE'
@@ -151,8 +151,8 @@ CREATE TABLE hh.resume
   position_id INTEGER NOT NULL REFERENCES hh.position,
   salary      VARCHAR(20),
   about       TEXT,
-  shedule     hh.schedule_type,
-  status      hh.resume_status_type
+  shedule     hh.SCHEDULE_TYPE,
+  status      hh.RESUME_STATUS_TYPE
 );
 
 CREATE TABLE hh.resume_to_education
@@ -182,7 +182,7 @@ CREATE TABLE hh.employer
   organization_id INTEGER NOT NULL REFERENCES hh.organization
 );
 
-CREATE TYPE hh.vacancy_status_type AS ENUM
+CREATE TYPE hh.VACANCY_STATUS_TYPE AS ENUM
   (
     'OPEN',
     'CLOSE'
@@ -197,7 +197,7 @@ CREATE TABLE hh.vacancy
   salary_from INTEGER,
   salary_to   INTEGER,
   about       TEXT,
-  status      hh.vacancy_status_type
+  status      hh.VACANCY_STATUS_TYPE
 );
 
 CREATE TABLE hh.vacancy_to_skill
@@ -207,7 +207,7 @@ CREATE TABLE hh.vacancy_to_skill
   PRIMARY KEY (vacancy_id, skill_id)
 );
 
-CREATE TYPE hh.talks_status_type AS ENUM
+CREATE TYPE hh.TALKS_STATUS_TYPE AS ENUM
   (
     'OPEN',
     'DECLINE',
@@ -221,10 +221,10 @@ CREATE TABLE hh.talk
   talk_id    SERIAL PRIMARY KEY,
   resume_id  INTEGER NOT NULL REFERENCES hh.resume,
   vacancy_id INTEGER NOT NULL REFERENCES hh.vacancy,
-  status     hh.talks_status_type
+  status     hh.TALKS_STATUS_TYPE
 );
 
-CREATE TYPE hh.message_type AS ENUM
+CREATE TYPE hh.MESSAGE_TYPE AS ENUM
   (
     'RESUME',
     'VACANCY',
@@ -237,6 +237,6 @@ CREATE TABLE hh.message
   message_id SERIAL PRIMARY KEY,
   talk_id    INTEGER NOT NULL REFERENCES hh.talk,
   send_time  TIMESTAMP,
-  type       hh.message_type,
+  type       hh.MESSAGE_TYPE,
   body       TEXT
 );
