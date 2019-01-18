@@ -58,7 +58,7 @@ VALUES ('Москва'),
        ('Красноярск'),
        ('Нижний Новгород');
 
-INSERT INTO hh.applicant(account_id, name, sex, birthday, city_id)
+INSERT INTO hh.applicant(applicant_id, name, gender, birthday, city_id)
 VALUES (1, 'Пупкин Василий Владимирович', 'MAN', '1991-06-27', 1),
        (2, 'Иванов Пётр Васильевич', 'MAN', '1987-05-14', 2),
        (3, 'Петров Николай Петрович', 'MAN', '1961-01-01', 11),
@@ -86,7 +86,7 @@ VALUES (1, 'Вычислительные Машины, Комплексы, Си�
        (4, 'Мировая экономика и экономическая теория'),
        (5, 'Кафедра общего языкознания и русского языка');
 
-INSERT INTO hh.education(account_id, level, speciality_id, year)
+INSERT INTO hh.education(applicant_id, level, speciality_id, year)
 VALUES (1, 'MASTER', 5, 2015),
        (2, 'SPECIALIST', 2, 2010),
        (3, 'SPECIALIST', 3, 1984),
@@ -115,7 +115,7 @@ VALUES ('Учитель русского языка'),
        ('Агроном - почвовед'),
        ('PHP разработчик');
 
-INSERT INTO hh.experience(account_id, date_begin, date_end, organization_id, position_id, about)
+INSERT INTO hh.experience(applicant_id, date_begin, date_end, organization_id, position_id, about)
 VALUES (1, '2015-09-01', NULL, 6, 6, 'Работал очень хорошо'),
        (2, '2010-08-01', NULL, 7, 7, 'Ну очень хорошо работал'),
        (3, '1984-07-01', NULL, 8, 8, 'Лучший почвовед'),
@@ -128,7 +128,7 @@ VALUES ('Преподавание русского языка'),
        ('Работа в команде'),
        ('Стрессоустойчивость');
 
-INSERT INTO hh.resume(account_id, phone, position_id, salary, about, shedule, status)
+INSERT INTO hh.resume(applicant_id, phone, position_id, salary, about, shedule, status)
 VALUES (1, '+79101234567', 1, 100000, 'Я очень ценный учитель', 'FULL_DAY', 'SHOW'),
        (2, '+79031234567', 2, 90000, 'Я очень ценный физик', 'FULL_DAY', 'SHOW'),
        (3, '+79261234567', 3, 45000, 'Я очень ценный почвовед', 'FULL_DAY', 'SHOW'),

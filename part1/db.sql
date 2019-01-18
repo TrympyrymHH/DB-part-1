@@ -48,11 +48,11 @@ CREATE TABLE hh.city
 
 CREATE TABLE hh.applicant
 (
-  account_id INTEGER NOT NULL PRIMARY KEY REFERENCES hh.account,
-  name       varchar(100),
-  gender     hh.GENDER,
-  date       DATE,
-  city_id    INTEGER REFERENCES hh.city
+  applicant_id INTEGER NOT NULL PRIMARY KEY REFERENCES hh.account (account_id),
+  name         varchar(100),
+  gender       hh.GENDER,
+  birthday     DATE,
+  city_id      INTEGER REFERENCES hh.city
 );
 
 CREATE TYPE hh.EDUCATION_TYPE AS ENUM
@@ -93,7 +93,7 @@ CREATE TABLE hh.speciality
 CREATE TABLE hh.education
 (
   education_id  SERIAL PRIMARY KEY,
-  account_id    INTEGER NOT NULL REFERENCES hh.applicant,
+  applicant_id    INTEGER NOT NULL REFERENCES hh.applicant,
   level         hh.EDUCATION_TYPE,
   speciality_id INTEGER REFERENCES hh.speciality,
   year          INTEGER
@@ -114,7 +114,7 @@ CREATE TABLE hh.position
 CREATE TABLE hh.experience
 (
   experience_id   SERIAL PRIMARY KEY,
-  account_id      INTEGER NOT NULL REFERENCES hh.applicant,
+  applicant_id      INTEGER NOT NULL REFERENCES hh.applicant,
   date_begin      TIMESTAMP,
   date_end        TIMESTAMP,
   organization_id INTEGER NOT NULL REFERENCES hh.organization,
@@ -146,7 +146,7 @@ CREATE TYPE hh.RESUME_STATUS_TYPE AS ENUM
 CREATE TABLE hh.resume
 (
   resume_id   SERIAL PRIMARY KEY,
-  account_id  INTEGER NOT NULL REFERENCES hh.applicant,
+  applicant_id  INTEGER NOT NULL REFERENCES hh.applicant,
   phone       VARCHAR(20),
   position_id INTEGER NOT NULL REFERENCES hh.position,
   salary      VARCHAR(20),
