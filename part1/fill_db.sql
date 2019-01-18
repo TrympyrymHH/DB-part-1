@@ -58,7 +58,7 @@ VALUES ('Москва'),
        ('Красноярск'),
        ('Нижний Новгород');
 
-INSERT INTO hh.applicant(applicant_id, name, gender, birthday, city_id)
+INSERT INTO hh.applicant(account_id, name, gender, birthday, city_id)
 VALUES (1, 'Пупкин Василий Владимирович', 'MAN', '1991-06-27', 1),
        (2, 'Иванов Пётр Васильевич', 'MAN', '1987-05-14', 2),
        (3, 'Петров Николай Петрович', 'MAN', '1961-01-01', 11),
