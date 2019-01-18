@@ -25,6 +25,8 @@ ALTER SEQUENCE IF EXISTS hh.resume_resume_id_seq RESTART;
 --TRUNCATE hh.resume_to_experience CASCADE;
 --TRUNCATE hh.resume_to_skill CASCADE;
 --TRUNCATE hh.employer CASCADE;
+ALTER SEQUENCE IF EXISTS hh.employer_employer_id_seq RESTART;
+--TRUNCATE hh.employer_account CASCADE;
 --TRUNCATE hh.vacancy CASCADE;
 ALTER SEQUENCE IF EXISTS hh.vacancy_vacancy_id_seq RESTART;
 --TRUNCATE hh.vacancy_to_skill CASCADE;
@@ -155,26 +157,33 @@ VALUES (1, 1),
        (4, 4),
        (5, 5);
 
-INSERT INTO hh.employer(account_id, organization_id)
-VALUES (6, 1),
-       (7, 2),
-       (8, 3),
-       (9, 4),
-       (10, 5);
+INSERT INTO hh.employer(organization_id)
+VALUES (1),
+       (2),
+       (3),
+       (4),
+       (5);
 
-INSERT INTO hh.vacancy(account_id, position_id, city_id, salary_from, salary_to, about, status)
-VALUES (6, 1, 1, NULL, NULL,
+INSERT INTO hh.employer_account(employer_id, account_id)
+VALUES (1, 6),
+       (2, 7),
+       (3, 8),
+       (4, 9),
+       (5, 10);
+
+INSERT INTO hh.vacancy(employer_id, position_id, city_id, salary_from, salary_to, about, status)
+VALUES (1, 1, 1, NULL, NULL,
         'Школа «Летово» — школа-пансион для одаренных и мотивированных детей, реализует обучение по стандартам ФГОС и программе Международного Бакалавриата.',
         'OPEN'),
-       (7, 2, 2, 50000, 100000,
+       (2, 2, 2, 50000, 100000,
         'Предприятие, входящее в группу компаний радиоэлектронной отрасли, ищет технического руководителя для долгосрочной работы.',
         'OPEN'),
-       (8, 3, 11, NULL, NULL,
+       (3, 3, 11, NULL, NULL,
         'Отбор проб компонентов окружающей среды и проведение инструментальных замеров в полевых условиях.', 'OPEN'),
-       (9, 4, 9, 180000, NULL,
+       (4, 4, 9, 180000, NULL,
         'Поддержка и развитие сайта technopark.ru и других проектов холдинга. Поддержка и на высоком уровне культуры разработки и эффективности взаимодействия в команде.',
         'OPEN'),
-       (10, 5, 5, 48000, NULL,
+       (5, 5, 5, 48000, NULL,
         'Привет, друг! Ты сделал правильный выбор, кликнув на нашу вакансию, потому что «МегаФон Ритейл» – лучшая компания для тебя и твоей карьеры.',
         'OPEN');
 

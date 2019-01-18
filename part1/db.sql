@@ -18,6 +18,7 @@ DROP TABLE IF EXISTS hh.resume_education CASCADE;
 DROP TABLE IF EXISTS hh.resume_experience CASCADE;
 DROP TABLE IF EXISTS hh.resume_skill CASCADE;
 DROP TABLE IF EXISTS hh.employer CASCADE;
+DROP TABLE IF EXISTS hh.employer_account CASCADE;
 DROP TYPE IF EXISTS hh.VACANCY_STATUS CASCADE;
 DROP TABLE IF EXISTS hh.vacancy CASCADE;
 DROP TABLE IF EXISTS hh.vacancy_skill CASCADE;
@@ -178,8 +179,15 @@ CREATE TABLE hh.resume_skill
 
 CREATE TABLE hh.employer
 (
-  account_id      INTEGER NOT NULL PRIMARY KEY REFERENCES hh.account,
+  employer_id     SERIAL PRIMARY KEY,
   organization_id INTEGER NOT NULL REFERENCES hh.organization
+);
+
+CREATE TABLE hh.employer_account
+(
+  employer_id INTEGER NOT NULL REFERENCES hh.employer,
+  account_id  INTEGER NOT NULL REFERENCES hh.account,
+  PRIMARY KEY (employer_id, account_id)
 );
 
 CREATE TYPE hh.VACANCY_STATUS AS ENUM
@@ -191,7 +199,7 @@ CREATE TYPE hh.VACANCY_STATUS AS ENUM
 CREATE TABLE hh.vacancy
 (
   vacancy_id  SERIAL PRIMARY KEY,
-  account_id  INTEGER NOT NULL REFERENCES hh.employer,
+  employer_id  INTEGER NOT NULL REFERENCES hh.employer,
   position_id INTEGER NOT NULL REFERENCES hh.position,
   city_id     INTEGER NOT NULL REFERENCES hh.city,
   salary_from INTEGER,
