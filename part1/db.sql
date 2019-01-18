@@ -1,58 +1,58 @@
-DROP TABLE IF EXISTS hh.users CASCADE;
-DROP TYPE IF EXISTS hh.sex_type CASCADE;
-DROP TABLE IF EXISTS hh.towns CASCADE;
-DROP TABLE IF EXISTS hh.applicants CASCADE;
+DROP TABLE IF EXISTS hh.account CASCADE;
+DROP TYPE IF EXISTS hh.gender CASCADE;
+DROP TABLE IF EXISTS hh.city CASCADE;
+DROP TABLE IF EXISTS hh.applicant CASCADE;
 DROP TYPE IF EXISTS hh.education_type CASCADE;
 DROP TABLE IF EXISTS hh.educational_institution CASCADE;
 DROP TABLE IF EXISTS hh.faculty CASCADE;
 DROP TABLE IF EXISTS hh.speciality CASCADE;
 DROP TABLE IF EXISTS hh.education CASCADE;
-DROP TABLE IF EXISTS hh.organizations CASCADE;
-DROP TABLE IF EXISTS hh.positions CASCADE;
+DROP TABLE IF EXISTS hh.organization CASCADE;
+DROP TABLE IF EXISTS hh.position CASCADE;
 DROP TABLE IF EXISTS hh.experience CASCADE;
-DROP TABLE IF EXISTS hh.skills CASCADE;
+DROP TABLE IF EXISTS hh.skill CASCADE;
 DROP TYPE IF EXISTS hh.schedule_type CASCADE;
 DROP TYPE IF EXISTS hh.resume_status_type CASCADE;
 DROP TABLE IF EXISTS hh.resume CASCADE;
 DROP TABLE IF EXISTS hh.resume_to_education CASCADE;
 DROP TABLE IF EXISTS hh.resume_to_experience CASCADE;
-DROP TABLE IF EXISTS hh.resume_to_skills CASCADE;
-DROP TABLE IF EXISTS hh.employers CASCADE;
+DROP TABLE IF EXISTS hh.resume_to_skill CASCADE;
+DROP TABLE IF EXISTS hh.employer CASCADE;
 DROP TYPE IF EXISTS hh.vacancy_status_type CASCADE;
 DROP TABLE IF EXISTS hh.vacancy CASCADE;
-DROP TABLE IF EXISTS hh.vacancy_to_skills CASCADE;
+DROP TABLE IF EXISTS hh.vacancy_to_skill CASCADE;
 DROP TYPE IF EXISTS hh.talks_status_type CASCADE;
-DROP TABLE IF EXISTS hh.talks CASCADE;
+DROP TABLE IF EXISTS hh.talk CASCADE;
 DROP TYPE IF EXISTS hh.message_type CASCADE;
-DROP TABLE IF EXISTS hh.messages CASCADE;
+DROP TABLE IF EXISTS hh.message CASCADE;
 
-create table hh.users
+CREATE TABLE hh.account
 (
-  user_id          SERIAL PRIMARY KEY,
+  account_id       SERIAL PRIMARY KEY,
   email            VARCHAR(50) NOT NULL,
   password         VARCHAR(50) NOT NULL,
   session_password VARCHAR(50)
 );
 
-CREATE TYPE hh.sex_type AS ENUM
+CREATE TYPE hh.gender AS ENUM
   (
-    'MEN',
-    'WOMEN'
+    'MAN',
+    'WOMAN'
     );
 
-CREATE TABLE hh.towns
+CREATE TABLE hh.city
 (
   city_id SERIAL PRIMARY KEY,
   title   varchar(100)
 );
 
-CREATE TABLE hh.applicants
+CREATE TABLE hh.applicant
 (
-  user_id  INTEGER NOT NULL PRIMARY KEY REFERENCES hh.users (user_id),
-  name     varchar(100),
-  sex      hh.sex_type,
-  birthday TIMESTAMP,
-  city_id  INTEGER REFERENCES hh.towns (city_id)
+  account_id INTEGER NOT NULL PRIMARY KEY REFERENCES hh.account,
+  name       varchar(100),
+  sex        hh.gender,
+  birthday   TIMESTAMP,
+  city_id    INTEGER REFERENCES hh.city
 );
 
 CREATE TYPE hh.education_type AS ENUM
@@ -73,39 +73,39 @@ CREATE TABLE hh.educational_institution
   institution_id SERIAL PRIMARY KEY,
   short_name     VARCHAR(20),
   name           VARCHAR(100),
-  city_id        INTEGER REFERENCES hh.towns (city_id)
+  city_id        INTEGER REFERENCES hh.city
 );
 
 CREATE TABLE hh.faculty
 (
   faculty_id     SERIAL PRIMARY KEY,
-  institution_id INTEGER NOT NULL REFERENCES hh.educational_institution (institution_id),
+  institution_id INTEGER NOT NULL REFERENCES hh.educational_institution,
   name           VARCHAR(100)
 );
 
 CREATE TABLE hh.speciality
 (
   speciality_id SERIAL PRIMARY KEY,
-  faculty_id    INTEGER NOT NULL REFERENCES hh.faculty (faculty_id),
+  faculty_id    INTEGER NOT NULL REFERENCES hh.faculty,
   name          VARCHAR(100)
 );
 
 CREATE TABLE hh.education
 (
   education_id  SERIAL PRIMARY KEY,
-  user_id       INTEGER NOT NULL REFERENCES hh.applicants (user_id),
+  account_id    INTEGER NOT NULL REFERENCES hh.applicant,
   level         hh.education_type,
-  speciality_id INTEGER REFERENCES hh.speciality (speciality_id),
+  speciality_id INTEGER REFERENCES hh.speciality,
   year          INTEGER
 );
 
-CREATE TABLE hh.organizations
+CREATE TABLE hh.organization
 (
   organization_id SERIAL PRIMARY KEY,
   name            VARCHAR(100)
 );
 
-CREATE TABLE hh.positions
+CREATE TABLE hh.position
 (
   position_id SERIAL PRIMARY KEY,
   title       VARCHAR(100)
@@ -114,15 +114,15 @@ CREATE TABLE hh.positions
 CREATE TABLE hh.experience
 (
   experience_id   SERIAL PRIMARY KEY,
-  user_id         INTEGER NOT NULL REFERENCES hh.applicants (user_id),
+  account_id      INTEGER NOT NULL REFERENCES hh.applicant,
   date_begin      TIMESTAMP,
   date_end        TIMESTAMP,
-  organization_id INTEGER NOT NULL REFERENCES hh.organizations (organization_id),
-  position_id     INTEGER NOT NULL REFERENCES hh.positions (position_id),
+  organization_id INTEGER NOT NULL REFERENCES hh.organization,
+  position_id     INTEGER NOT NULL REFERENCES hh.position,
   about           TEXT
 );
 
-CREATE TABLE hh.skills
+CREATE TABLE hh.skill
 (
   skill_id SERIAL PRIMARY KEY,
   title    VARCHAR(50)
@@ -146,9 +146,9 @@ CREATE TYPE hh.resume_status_type AS ENUM
 CREATE TABLE hh.resume
 (
   resume_id   SERIAL PRIMARY KEY,
-  user_id     INTEGER NOT NULL REFERENCES hh.applicants (user_id),
+  account_id  INTEGER NOT NULL REFERENCES hh.applicant,
   phone       VARCHAR(20),
-  position_id INTEGER NOT NULL REFERENCES hh.positions (position_id),
+  position_id INTEGER NOT NULL REFERENCES hh.position,
   salary      VARCHAR(20),
   about       TEXT,
   shedule     hh.schedule_type,
@@ -157,29 +157,29 @@ CREATE TABLE hh.resume
 
 CREATE TABLE hh.resume_to_education
 (
-  resume_id    INTEGER NOT NULL REFERENCES hh.resume (resume_id),
-  education_id INTEGER NOT NULL REFERENCES hh.education (education_id),
+  resume_id    INTEGER NOT NULL REFERENCES hh.resume,
+  education_id INTEGER NOT NULL REFERENCES hh.education,
   PRIMARY KEY (resume_id, education_id)
 );
 
 CREATE TABLE hh.resume_to_experience
 (
-  resume_id     INTEGER NOT NULL REFERENCES hh.resume (resume_id),
-  experience_id INTEGER NOT NULL REFERENCES hh.experience (experience_id),
+  resume_id     INTEGER NOT NULL REFERENCES hh.resume,
+  experience_id INTEGER NOT NULL REFERENCES hh.experience,
   PRIMARY KEY (resume_id, experience_id)
 );
 
-CREATE TABLE hh.resume_to_skills
+CREATE TABLE hh.resume_to_skill
 (
-  resume_id INTEGER NOT NULL REFERENCES hh.resume (resume_id),
-  skill_id  INTEGER NOT NULL REFERENCES hh.skills (skill_id),
+  resume_id INTEGER NOT NULL REFERENCES hh.resume,
+  skill_id  INTEGER NOT NULL REFERENCES hh.skill,
   PRIMARY KEY (resume_id, skill_id)
 );
 
-CREATE TABLE hh.employers
+CREATE TABLE hh.employer
 (
-  user_id         INTEGER NOT NULL PRIMARY KEY REFERENCES hh.users (user_id),
-  organization_id INTEGER NOT NULL REFERENCES hh.organizations (organization_id)
+  account_id      INTEGER NOT NULL PRIMARY KEY REFERENCES hh.account,
+  organization_id INTEGER NOT NULL REFERENCES hh.organization
 );
 
 CREATE TYPE hh.vacancy_status_type AS ENUM
@@ -191,19 +191,19 @@ CREATE TYPE hh.vacancy_status_type AS ENUM
 CREATE TABLE hh.vacancy
 (
   vacancy_id  SERIAL PRIMARY KEY,
-  user_id     INTEGER NOT NULL REFERENCES hh.employers (user_id),
-  position_id INTEGER NOT NULL REFERENCES hh.positions (position_id),
-  city_id     INTEGER NOT NULL REFERENCES hh.towns (city_id),
+  account_id  INTEGER NOT NULL REFERENCES hh.employer,
+  position_id INTEGER NOT NULL REFERENCES hh.position,
+  city_id     INTEGER NOT NULL REFERENCES hh.city,
   salary_from INTEGER,
   salary_to   INTEGER,
   about       TEXT,
   status      hh.vacancy_status_type
 );
 
-CREATE TABLE hh.vacancy_to_skills
+CREATE TABLE hh.vacancy_to_skill
 (
-  vacancy_id INTEGER NOT NULL REFERENCES hh.vacancy (vacancy_id),
-  skill_id   INTEGER NOT NULL REFERENCES hh.skills (skill_id),
+  vacancy_id INTEGER NOT NULL REFERENCES hh.vacancy,
+  skill_id   INTEGER NOT NULL REFERENCES hh.skill,
   PRIMARY KEY (vacancy_id, skill_id)
 );
 
@@ -216,11 +216,11 @@ CREATE TYPE hh.talks_status_type AS ENUM
     'ACCEPT'
     );
 
-CREATE TABLE hh.talks
+CREATE TABLE hh.talk
 (
   talk_id    SERIAL PRIMARY KEY,
-  resume_id  INTEGER NOT NULL REFERENCES hh.resume (resume_id),
-  vacancy_id INTEGER NOT NULL REFERENCES hh.vacancy (vacancy_id),
+  resume_id  INTEGER NOT NULL REFERENCES hh.resume,
+  vacancy_id INTEGER NOT NULL REFERENCES hh.vacancy,
   status     hh.talks_status_type
 );
 
@@ -232,10 +232,10 @@ CREATE TYPE hh.message_type AS ENUM
     'TEXT_EMP'
     );
 
-CREATE TABLE hh.messages
+CREATE TABLE hh.message
 (
   message_id SERIAL PRIMARY KEY,
-  talk_id    INTEGER NOT NULL REFERENCES hh.talks (talk_id),
+  talk_id    INTEGER NOT NULL REFERENCES hh.talk,
   send_time  TIMESTAMP,
   type       hh.message_type,
   body       TEXT
