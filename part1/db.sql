@@ -149,7 +149,7 @@ CREATE TABLE hh.resume
   applicant_id INTEGER NOT NULL REFERENCES hh.applicant,
   phone        VARCHAR(20),
   position_id  INTEGER NOT NULL REFERENCES hh.position,
-  salary       VARCHAR(20),
+  salary       INTEGER,
   about        TEXT,
   shedule      hh.SCHEDULE_TYPE,
   status       hh.RESUME_STATUS
