@@ -190,15 +190,16 @@ VALUES (1, 1, 'OPEN'),
        (4, 4, 'ACCEPT_EMP'),
        (5, 5, 'OPEN');
 
-INSERT INTO hh.message(talk_id, send_time, type, body)
-VALUES (1, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL),
-       (2, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'VACANCY', NULL),
-       (3, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'VACANCY', NULL),
-       (4, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL),
-       (5, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL);
-INSERT INTO hh.message(talk_id, send_time, type, body)
+INSERT INTO hh.message(talk_id, send_time, type, body, view)
+VALUES (1, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL, TRUE),
+       (2, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'VACANCY', NULL, TRUE),
+       (3, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'VACANCY', NULL, TRUE),
+       (4, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL, TRUE),
+       (5, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL, TRUE);
+INSERT INTO hh.message(talk_id, send_time, type, body, view)
 SELECT TRUNC(RANDOM() * 5 + 1),
        date(now() - trunc(1000 * random()) * '1 hour'::interval),
        CASE WHEN (random() > 0.5) THEN hh.MESSAGE_TYPE('TEXT_APP') ELSE hh.MESSAGE_TYPE('TEXT_EMP') END,
-       'some message text'
+       'some message text',
+       CASE WHEN (random() > 0.5) THEN TRUE ELSE FALSE END
 FROM generate_series(1, 50);

@@ -238,5 +238,6 @@ CREATE TABLE hh.message
   talk_id    INTEGER NOT NULL REFERENCES hh.talk,
   send_time  TIMESTAMP,
   type       hh.MESSAGE_TYPE,
-  body       TEXT
+  body       TEXT,
+  view       BOOLEAN NOT NULL
 );
