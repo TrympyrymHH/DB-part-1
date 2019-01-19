@@ -4,7 +4,7 @@ SELECT
 	resume_id,
 	time_created,
 	time_updated,
-	"position",
+	position,
 	fio,
 	date_part('year',age(birthday)) as age,
 	salary_min,
@@ -58,14 +58,14 @@ WHERE
 -- if user have resume - check messages to his resumes
 	((headhunter.message.resume_id in (SELECT resume_id FROM resume_ids)
 		AND
-	headhunter.message.message_type IN ('invite','message_to_resume')))
+	headhunter.message.message_type IN ('INVITE','MESSAGE_TO_RESUME')))
 
 			OR
 
 -- if user has relations to company, check nessages for vacansies of his companys
 	((headhunter.message.vacancy_id IN (SELECT vacancy_id FROM vacancy_ids))
 		AND
-	headhunter.message.message_type IN ('reply','message_to_vacancy'))
+	headhunter.message.message_type IN ('REPLY','MESSAGE_TO_VACANCY'))
 
 			AND
 	headhunter.message.unread = true

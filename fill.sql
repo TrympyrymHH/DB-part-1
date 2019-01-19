@@ -1,7 +1,6 @@
 ﻿TRUNCATE headhunter.account CASCADE;
 
 INSERT INTO headhunter.account(account_id, login, password, time_register)
-OVERRIDING SYSTEM VALUE
 VALUES
     (1,'vasya', 	md5('querty'), now()),
     (2,'petya', 	md5('123456'), now()),
@@ -12,6 +11,8 @@ VALUES
     (7,'vova', 	  md5('querty'), now()),
     (8,'superman',md5('querty'), now()),
     (9,'batman', 	md5('querty'), now());
+
+ALTER SEQUENCE IF EXISTS headhunter.account_account_id_seq RESTART WITH 10;
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -26,6 +27,8 @@ VALUES
     (4, 'ИП Виноградова', 'В 2018 году мы подняли продажи на 100%, реализовав целых 2 принтера!', 'c:/logos/ms.logo'),
     (5, 'ООО "Рога & Копыта"', 'Магазин охотничьих трофеев', 'c:/logos/ms.logo');
 
+ALTER SEQUENCE IF EXISTS headhunter.company_company_id_seq RESTART WITH 6;
+
 ------------------------------------------------------------------------------------------------------------------------
 
 TRUNCATE headhunter.account_to_company_right;
@@ -37,6 +40,8 @@ VALUES
     (1,'Администратор',       'Смотрящий без права просмотра откликов'),
     (2,'HR',                  'Человек, рулящий вакансиями в организации'),
     (3,'Младший помошник HR', 'Просмотр откликов без возможности редактирования');
+
+ALTER SEQUENCE IF EXISTS headhunter.account_to_company_right_account_to_company_right_id_seq RESTART WITH 4;
 
 ------------------------------------------------------------------------------------------------------------------------
 TRUNCATE headhunter.skill;
@@ -65,12 +70,16 @@ VALUES
     (19, 'Helpdesk'),
     (20, 'Работа в SONY VEGAS 7'),
     (21, 'Производство'),
-    (22, 'Технологии успеха');
-    (22, 'Технологии');
+    (22, 'Технологии успеха'),
+    (23, 'Технологии');
+
+ALTER SEQUENCE IF EXISTS headhunter.skill_skill_id_seq RESTART WITH 24;
 
 ------------------------------------------------------------------------------------------------------------------------
 
 TRUNCATE headhunter.account_to_company_relation;
+
+ALTER SEQUENCE IF EXISTS headhunter.account_to_company_relation_account_to_company_relation_id_seq RESTART;
 
 INSERT INTO headhunter.account_to_company_relation(account_id, company_id, rights, time_updated,who_update)
 VALUES
@@ -85,9 +94,11 @@ VALUES
 
 TRUNCATE headhunter.vacancy CASCADE;
 
+ALTER SEQUENCE IF EXISTS headhunter.vacancy_vacancy_id_seq RESTART;
+
 INSERT INTO headhunter.vacancy
 (	company_id,
-	"position",
+	position,
 	description,
 	salary_min, salary_max,
 	wanted_experience,
@@ -144,9 +155,11 @@ VALUES
 ------------------------------------------------------------------------------------------------------------------------
 TRUNCATE headhunter.resume CASCADE;
 
+ALTER SEQUENCE IF EXISTS headhunter.resume_resume_id_seq RESTART;
+
 INSERT INTO headhunter.resume
 (	account_id,
-	"position",
+	position,
 	fio,
 	birthday,
   salary_min,
@@ -209,40 +222,44 @@ VALUES
 ------------------------------------------------------------------------------------------------------------------------
 TRUNCATE headhunter.resume_experience CASCADE;
 
+ALTER SEQUENCE IF EXISTS headhunter.resume_experience_resume_experience_id_seq RESTART;
+
 INSERT INTO headhunter.resume_experience(
-            resume_id, 	time_start, 	time_finish, 	"position", 	description)
+            resume_id, 	date_start, 	date_finish, 	position, 	description)
 VALUES
 (		2,	'2017-01-05',	'2018-05-01',	'инженер-программист',	
 'Должность: инженер-программист.
 Деятельность: разработка системы визуализации территории и объектов военных действий, оснащённой функциями масштабирования, измерения углов, расстояний и определения относительных координат, для береговых ракетных систем средней дальности.'
 ),
 
-(		2,	'2015-05-01',	'2019-01-02',	'ведущий инженер отдела',	
+(		3,	'2015-05-01',	'2019-01-02',	'ведущий инженер отдела',
 'Деятельность: разработка программного обеспечения для систем автоматического управления и обмена информацией со спутниками связи. Разработка велась под Linux (Debian, МСВС) с использованием Qt, выдача заданий в виде UML-диаграмм. Контроль версий с помощью SVN.'
 ),
 
-(		2,	'2019-01-02',	'2020-04-06',	'программист',	
+(		4,	'2019-01-02',	'2020-04-06',	'программист',
 'Деятельность: разработка программного обеспечения для систем тестирования и программирования гиростабиллизированных платформ с блоком акселерометров третьего поколения для ракетных систем'
 ),
 
-(		2,	'2011-02-02',	'2017-01-05',	'ведущий инженер',	
+(		5,	'2011-02-02',	'2017-01-05',	'ведущий инженер',
 'Должность: программист.
 Деятельность: разработка программного обеспечения для устройств коммутации и программирования, а также обработки и воспроизведения звуковой информации со звукозаписывающих устройств'
 ),
 
-(		2,	'2009-01-05',	'2011-02-01',	'Программист C/С++',	
+(		5,	'2009-01-05',	'2011-02-01',	'Программист C/С++',
 'Разработка и поддержка программного обеспечения для учёта, внесения в БД и обработки данных абонентов, а также тех. поддержка менеджеров по вопросам использования ПО.Написание SQL-запросов для построения сложных отчётов, интеграция SQL-запросов в C++ приложения, разработка приложений на C++ Builder и Delphi с использованием FastReport, EhLib, DevExpress, ODAC, MyDAC. Контроль версий с помощью Git.'
 );
 ------------------------------------------------------------------------------------------------------------------------
 TRUNCATE headhunter.message CASCADE;
 
+ALTER SEQUENCE IF EXISTS headhunter.message_message_id_seq RESTART;
+
 INSERT INTO headhunter.message
 	(vacancy_id, resume_id, article, description, message_type, unread ,time_create)
 	SELECT
 		ROUND(1 + RANDOM()*4),
 		ROUND(1 + RANDOM()*4),
 		'art'||random(),'art'||random(),
-		'invite',
+		'INVITE',
 		CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END,
 		date(now() - trunc(random()  * 365) * '1 day'::interval)
 	FROM
@@ -254,7 +271,7 @@ INSERT INTO headhunter.message
 		ROUND(1 + RANDOM()*4),
 		ROUND(1 + RANDOM()*4),
 		'art'||random(),'art'||random(),
-		'reply',
+		'REPLY',
 		CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END,
 		date(now() - trunc(random()  * 365) * '1 day'::interval)
 	FROM
@@ -266,7 +283,7 @@ INSERT INTO headhunter.message
 		ROUND(1 + RANDOM()*4),
 		ROUND(1 + RANDOM()*4),
 		'art'||random(),'art'||random(),
-		'message_to_resume',
+		'MESSAGE_TO_RESUME',
 		CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END,
 		date(now() - trunc(random()  * 365) * '1 day'::interval)
 	FROM
@@ -278,7 +295,7 @@ INSERT INTO headhunter.message
 		ROUND(1 + RANDOM()*4),
 		ROUND(1 + RANDOM()*4),
 		'art'||random(),'art'||random(),
-		'message_to_vacancy',
+		'MESSAGE_TO_VACANCY',
 		CASE WHEN (random()>0.9) THEN TRUE ELSE FALSE END,
 		date(now() - trunc(random()  * 365) * '1 day'::interval)
 	FROM
