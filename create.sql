@@ -35,9 +35,9 @@ CREATE INDEX ON headhunter.account_to_company_relation (account_id);
 CREATE INDEX ON headhunter.account_to_company_relation (company_id);
 
 -------------------------------------------------------------------------------------------------------------
-CREATE TABLE headhunter.account_to_company_right
+CREATE TABLE headhunter.account_to_company_permission
 (
-  account_to_company_right_id SERIAL PRIMARY KEY,
+  account_to_company_permission_id SERIAL PRIMARY KEY,
   name VARCHAR(256),
   description TEXT
 );
@@ -54,7 +54,7 @@ CREATE TABLE headhunter.vacancy
 (
   vacancy_id SERIAL PRIMARY KEY,
   company_id INTEGER REFERENCES headhunter.company (company_id),
-  "position" VARCHAR(512) NOT NULL,
+  position VARCHAR(512) NOT NULL,
   description TEXT,
   salary_min INTEGER NOT NULL,
   salary_max INTEGER,
@@ -73,7 +73,7 @@ CREATE TABLE headhunter.resume
   account_id INTEGER REFERENCES headhunter.account (account_id),
   time_created TIMESTAMP WITH TIME ZONE NOT NULL,
   time_updated TIMESTAMP WITH TIME ZONE,
-  "position" VARCHAR(512) NOT NULL,
+  position VARCHAR(512) NOT NULL,
   fio VARCHAR(512) NOT NULL,
   birthday DATE NOT NULL,
   salary_min INTEGER NOT NULL,
@@ -90,6 +90,7 @@ CREATE TABLE headhunter.resume_experience
   resume_id INTEGER REFERENCES headhunter.resume (resume_id),
   date_start DATE NOT NULL,
   date_finish DATE NOT NULL,
+  company_name VARCHAR(512) NOT NULL,
   position VARCHAR(512) NOT NULL,
   description TEXT
 );

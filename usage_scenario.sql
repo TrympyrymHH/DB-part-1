@@ -88,12 +88,12 @@ order by
 
 -- далее, поскольку мы получили кодом resume_id, можем запихнуть resume_experience
 INSERT INTO headhunter.resume_experience
-	(resume_id, date_start, date_finish,
+	(resume_id, date_start, date_finish, company_name,
 	position, description)
 VALUES
-	(2, '2011-03-04', '2011-06-06',
+	(2, '2011-03-04', '2011-06-06', 'компания N',
 	'технический специалист', 'работал замечательно'),
-	(2, '2012-01-01', '2012-01-07',
+	(2, '2012-01-01', '2012-01-07','компания 2N',
 	'системный администратор', 'пахал как краб на галерах');
 
 -- 2.2 соискатель приходит на следующий день и смотрит список своих резюме и рядом циферки, ----------------------------
@@ -148,6 +148,7 @@ SELECT
   date_start,
   date_finish,
   position,
+  company_name,
   description
 FROM headhunter.resume_experience
 WHERE resume_id = 2
@@ -200,7 +201,7 @@ WHERE
 -------------
 UPDATE headhunter.resume_experience
    SET date_start='2011-05-05', date_finish='2013-05-06',
-       "position"='Другая позиция', description='Другое описание'
+       position='Другая позиция', description='Другое описание'
 WHERE resume_id=2;
 
 UPDATE
