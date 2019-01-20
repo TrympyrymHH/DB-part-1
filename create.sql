@@ -84,35 +84,6 @@ CREATE TABLE headhunter.resume
 CREATE INDEX ON headhunter.resume (account_id);
 
 -------------------------------------------------------------------------------------------------------------
-DROP FUNCTION IF EXISTS  headhunter.update_resume_date;
-
-CREATE FUNCTION headhunter.update_resume_date() RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE headhunter.resume SET time_updated = now() WHERE resume_id = NEW.resume_id;
-    RETURN NEW;
-END; $$
-LANGUAGE plpgsql;
-
--------------------------------------------------------------------------------------------------------------
-DROP FUNCTION IF EXISTS  headhunter.update_resume_date_on_delete CASCADE;
-
-CREATE FUNCTION headhunter.update_resume_date_on_delete() RETURNS TRIGGER AS $$
-BEGIN
-    UPDATE headhunter.resume SET time_updated = now() WHERE resume_id = OLD.resume_id;
-    RETURN NEW;
-END; $$
-LANGUAGE plpgsql;
-
--------------------------------------------------------------------------------------------------------------
-DROP TRIGGER IF EXISTS resume_update_trigger ON headhunter.resume;
-
-CREATE TRIGGER resume_update_trigger
-  AFTER UPDATE OF position, fio, birthday, salary_min, salary_max, skill_ids
-  ON headhunter.resume
-  FOR EACH ROW
-  EXECUTE PROCEDURE headhunter.update_resume_date();
-
--------------------------------------------------------------------------------------------------------------
 CREATE TABLE headhunter.resume_experience
 (
   resume_experience_id SERIAL PRIMARY KEY,
@@ -124,33 +95,6 @@ CREATE TABLE headhunter.resume_experience
 );
 
 CREATE INDEX ON headhunter.resume_experience (resume_id);
-
--------------------------------------------------------------------------------------------------------------
-DROP TRIGGER IF EXISTS resume_experience_update ON headhunter.resume_experience;
-
-CREATE TRIGGER resume_experience_update
-  AFTER UPDATE OF date_start, date_finish, "position", description
-  ON headhunter.resume_experience
-  FOR EACH ROW
-  EXECUTE PROCEDURE headhunter.update_resume_date();
-
--------------------------------------------------------------------------------------------------------------
-DROP TRIGGER IF EXISTS resume_experience_insert ON headhunter.resume_experience;
-
-CREATE TRIGGER resume_experience_insert
-  AFTER INSERT
-  ON headhunter.resume_experience
-  FOR EACH ROW
-  EXECUTE PROCEDURE headhunter.update_resume_date();
-
--------------------------------------------------------------------------------------------------------------
-DROP TRIGGER IF EXISTS resume_experience_delete ON headhunter.resume_experience;
-
-CREATE TRIGGER resume_experience_delete
-  BEFORE DELETE
-  ON headhunter.resume_experience
-  FOR EACH ROW
-  EXECUTE PROCEDURE headhunter.update_resume_date_on_delete();
 
 -------------------------------------------------------------------------------------------------------------
 DROP TYPE IF EXISTS message_type CASCADE;
