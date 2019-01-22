@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS hh.account CASCADE;
 DROP TYPE IF EXISTS hh.GENDER CASCADE;
-DROP TABLE IF EXISTS hh.applicant CASCADE;
 DROP TYPE IF EXISTS hh.EDUCATION_TYPE CASCADE;
 DROP TYPE IF EXISTS hh.SCHEDULE_TYPE CASCADE;
 DROP TYPE IF EXISTS hh.RESUME_STATUS CASCADE;
@@ -25,15 +24,6 @@ CREATE TYPE hh.GENDER AS ENUM
     'MAN',
     'WOMAN'
     );
-
-CREATE TABLE hh.applicant
-(
-  account_id INTEGER NOT NULL PRIMARY KEY REFERENCES hh.account,
-  name       VARCHAR(100),
-  gender     hh.GENDER,
-  birthday   DATE,
-  city       VARCHAR(100)
-);
 
 CREATE TYPE hh.EDUCATION_TYPE AS ENUM
   (
@@ -65,15 +55,19 @@ CREATE TYPE hh.RESUME_STATUS AS ENUM
 
 CREATE TABLE hh.resume
 (
-  resume_id       SERIAL PRIMARY KEY,
-  applicant_id    INTEGER NOT NULL REFERENCES hh.applicant (account_id),
-  phone           VARCHAR(20),
-  position        VARCHAR(100),
-  salary          INTEGER,
-  about           TEXT,
-  shedule         hh.SCHEDULE_TYPE,
-  status          hh.RESUME_STATUS,
-  education_level hh.EDUCATION_TYPE,
+  resume_id        SERIAL PRIMARY KEY,
+  account_id       INTEGER NOT NULL REFERENCES hh.account,
+  name             VARCHAR(100),
+  gender           hh.GENDER,
+  birthday         DATE,
+  city             VARCHAR(100),
+  phone            VARCHAR(20),
+  position         VARCHAR(100),
+  salary           INTEGER,
+  about            TEXT,
+  shedule          hh.SCHEDULE_TYPE,
+  status           hh.RESUME_STATUS,
+  education_level  hh.EDUCATION_TYPE,
   experience_years INTEGER
 );
 

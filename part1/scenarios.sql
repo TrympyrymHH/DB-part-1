@@ -1,15 +1,7 @@
 ﻿--1. Соискатель
 --    1. Хочу зарегистрироваться
-WITH created_account AS
-       (
-         INSERT INTO hh.account (email, password)
-           VALUES ('michnick@mail.ru', md5('password'))
-           RETURNING account_id
-       )
-INSERT
-INTO hh.applicant (account_id, name, gender, birthday, city)
-VALUES ((SELECT account_id FROM created_account), 'Васечкин Михаил Николаевич', 'MAN', '1975-03-08',
-        'Краснодар') RETURNING account_id;
+INSERT INTO hh.account (email, password)
+VALUES ('michnick@mail.ru', md5('password')) RETURNING account_id;
 
 --    2. Хочу войти
 WITH logged_account AS
@@ -33,9 +25,11 @@ WITH logged_account AS
            AND session_password = md5('12345')
        )
 INSERT
-INTO hh.resume (applicant_id, phone, position, salary, about, shedule, status, education_level, experience_years)
-VALUES ((SELECT account_id FROM logged_account), '+79151234567', 'Ведущий разработчик PHP', 150000,
-        'Я очень хороший человек', 'FLEXIBLE', 'SHOW', 'SPECIALIST', 20);
+INTO hh.resume (account_id, name, gender, birthday, city, phone, position, salary, about, shedule, status,
+                education_level, experience_years)
+VALUES ((SELECT account_id FROM logged_account), 'Васечкин Михаил Николаевич', 'MAN', '1975-03-08', 'Краснодар',
+        '+79151234567', 'Ведущий разработчик PHP', 150000, 'Я очень хороший человек', 'FLEXIBLE', 'SHOW', 'SPECIALIST',
+        20);
 
 --    4. Хочу найти вакансию
 WITH logged_account AS
@@ -46,7 +40,7 @@ WITH logged_account AS
            AND session_password = md5('12345')
        ),
      my_resume AS
-       (SELECT resume_id FROM hh.resume WHERE applicant_id = (SELECT account_id FROM logged_account))
+       (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account))
 SELECT vacancy_id,
        vacancy.position,
        employer.organization_name,
@@ -54,7 +48,6 @@ SELECT vacancy_id,
        vacancy.salary_to,
        vacancy.about
 FROM hh.resume
-       JOIN hh.applicant ON (resume.applicant_id = applicant.account_id)
        JOIN hh.vacancy USING (position, city)
        JOIN hh.employer USING (employer_id)
 WHERE resume_id = (SELECT resume_id FROM my_resume)
@@ -69,11 +62,10 @@ WITH logged_account AS
            AND session_password = md5('12345')
        ),
      my_resume AS
-       (SELECT resume_id FROM hh.resume WHERE applicant_id = (SELECT account_id FROM logged_account)),
+       (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account)),
      vacancy_for_me AS
        (SELECT vacancy_id
         FROM hh.resume
-               JOIN hh.applicant ON (resume.applicant_id = applicant.account_id)
                JOIN hh.vacancy USING (position, city)
                JOIN hh.employer USING (employer_id)
         WHERE resume_id = (SELECT resume_id FROM my_resume)
@@ -94,8 +86,8 @@ WITH logged_account AS
 SELECT vacancy_id
 FROM hh.message
        JOIN hh.resume USING (resume_id)
-WHERE resume.applicant_id = (SELECT account_id FROM logged_account)
-  AND resume.applicant_id != message.account_id
+WHERE resume.account_id = (SELECT account_id FROM logged_account)
+  AND resume.account_id != message.account_id
   AND message.view = FALSE;
 
 --    7. Хочу написать работодателю с вакансией 2
@@ -107,7 +99,7 @@ WITH logged_account AS
            AND session_password = md5('12345')
        ),
      my_resume AS
-       (SELECT resume_id FROM hh.resume WHERE applicant_id = (SELECT account_id FROM logged_account))
+       (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account))
 INSERT
 INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
 VALUES ((SELECT resume_id FROM my_resume), 2, (SELECT account_id FROM logged_account), now(), 'TEXT_APP', 'Привет',
@@ -122,7 +114,7 @@ WITH logged_account AS
            AND session_password = md5('12345')
        ),
      my_resume AS
-       (SELECT resume_id FROM hh.resume WHERE applicant_id = (SELECT account_id FROM logged_account))
+       (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account))
 UPDATE hh.resume
 SET status = 'HIDE'
 WHERE resume_id in (SELECT resume_id FROM my_resume) RETURNING resume_id;
@@ -187,13 +179,12 @@ WITH logged_account AS
        (SELECT vacancy_id FROM hh.vacancy WHERE employer_id = (SELECT employer_id FROM my_employer))
 SELECT resume_id,
        resume.position,
-       applicant.name,
-       applicant.gender,
-       applicant.birthday,
+       resume.name,
+       resume.gender,
+       resume.birthday,
        resume.salary,
        resume.about
 FROM hh.resume
-       JOIN hh.applicant ON (resume.applicant_id = applicant.account_id)
        JOIN hh.vacancy USING (position, city)
 WHERE vacancy_id = (SELECT vacancy_id FROM my_vacancy)
   AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary)
