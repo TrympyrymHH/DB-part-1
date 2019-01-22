@@ -3,13 +3,12 @@ DROP TYPE IF EXISTS hh.GENDER CASCADE;
 DROP TABLE IF EXISTS hh.applicant CASCADE;
 DROP TYPE IF EXISTS hh.EDUCATION_TYPE CASCADE;
 DROP TABLE IF EXISTS hh.education CASCADE;
-DROP TABLE IF EXISTS hh.experience CASCADE;
 DROP TABLE IF EXISTS hh.skill CASCADE;
 DROP TYPE IF EXISTS hh.SCHEDULE_TYPE CASCADE;
 DROP TYPE IF EXISTS hh.RESUME_STATUS CASCADE;
 DROP TABLE IF EXISTS hh.resume CASCADE;
 DROP TABLE IF EXISTS hh.resume_education CASCADE;
-DROP TABLE IF EXISTS hh.resume_experience CASCADE;
+DROP TABLE IF EXISTS hh.experience CASCADE;
 DROP TABLE IF EXISTS hh.resume_skill CASCADE;
 DROP TABLE IF EXISTS hh.employer CASCADE;
 DROP TABLE IF EXISTS hh.employer_account CASCADE;
@@ -64,17 +63,6 @@ CREATE TABLE hh.education
   year         INTEGER
 );
 
-CREATE TABLE hh.experience
-(
-  experience_id     SERIAL PRIMARY KEY,
-  applicant_id      INTEGER NOT NULL REFERENCES hh.applicant (account_id),
-  date_begin        DATE    NOT NULL,
-  date_end          DATE,
-  organization_name VARCHAR(100),
-  position          VARCHAR(100),
-  about             TEXT
-);
-
 CREATE TABLE hh.skill
 (
   skill_id SERIAL PRIMARY KEY,
@@ -115,11 +103,15 @@ CREATE TABLE hh.resume_education
   PRIMARY KEY (resume_id, education_id)
 );
 
-CREATE TABLE hh.resume_experience
+CREATE TABLE hh.experience
 (
-  resume_id     INTEGER NOT NULL REFERENCES hh.resume,
-  experience_id INTEGER NOT NULL REFERENCES hh.experience,
-  PRIMARY KEY (resume_id, experience_id)
+  experience_id     SERIAL PRIMARY KEY,
+  resume_id         INTEGER NOT NULL REFERENCES hh.resume,
+  date_begin        DATE    NOT NULL,
+  date_end          DATE,
+  organization_name VARCHAR(100),
+  position          VARCHAR(100),
+  about             TEXT
 );
 
 CREATE TABLE hh.resume_skill

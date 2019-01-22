@@ -47,12 +47,9 @@ WITH logged_account AS
          VALUES ((SELECT resume_id FROM my_resume), (SELECT education_id FROM my_education))),
      --Добавляем опыт
      my_experience AS
-       (INSERT INTO hh.experience (applicant_id, date_begin, date_end, organization_name, position, about)
-         VALUES ((SELECT account_id FROM logged_account), '1998-09-01', NULL, 'Технопарк', 'PHP разработчик',
+       (INSERT INTO hh.experience (resume_id, date_begin, date_end, organization_name, position, about)
+         VALUES ((SELECT resume_id FROM my_resume), '1998-09-01', NULL, 'Технопарк', 'PHP разработчик',
                  'Работал очень хорошо') RETURNING experience_id),
-     my_resume_experience AS
-       (INSERT INTO hh.resume_experience (resume_id, experience_id)
-         VALUES ((SELECT resume_id FROM my_resume), (SELECT experience_id FROM my_experience))),
      --Добавляем умения
      my_skill AS
        (SELECT skill_id

@@ -3,14 +3,13 @@ ALTER SEQUENCE IF EXISTS hh.account_account_id_seq RESTART;
 TRUNCATE hh.applicant CASCADE;
 TRUNCATE hh.education CASCADE;
 ALTER SEQUENCE IF EXISTS hh.education_education_id_seq RESTART;
-TRUNCATE hh.experience CASCADE;
-ALTER SEQUENCE IF EXISTS hh.experience_experience_id_seq RESTART;
 TRUNCATE hh.skill CASCADE;
 ALTER SEQUENCE IF EXISTS hh.skill_skill_id_seq RESTART;
 TRUNCATE hh.resume CASCADE;
 ALTER SEQUENCE IF EXISTS hh.resume_resume_id_seq RESTART;
 TRUNCATE hh.resume_education CASCADE;
-TRUNCATE hh.resume_experience CASCADE;
+TRUNCATE hh.experience CASCADE;
+ALTER SEQUENCE IF EXISTS hh.experience_experience_id_seq RESTART;
 TRUNCATE hh.resume_skill CASCADE;
 TRUNCATE hh.employer CASCADE;
 ALTER SEQUENCE IF EXISTS hh.employer_employer_id_seq RESTART;
@@ -47,12 +46,6 @@ VALUES (1, 'MASTER', 'Уральский государственный педа
        (4, 'SPECIALIST', 'Московский Энергетический Институт, Москва: АВТИ: Вычислительные Машины, Комплексы, Системы и Сети', 1997),
        (5, 'AVERAGE_SCHOOL', '', 2019);
 
-INSERT INTO hh.experience(applicant_id, date_begin, date_end, organization_name, position, about)
-VALUES (1, '2015-09-01', NULL, 'Ломоносовская школа', 'Учитель русского языка и литературы', 'Работал очень хорошо'),
-       (2, '2010-08-01', NULL, 'ГБОУ Школа № 1741', 'Учитель физики', 'Ну очень хорошо работал'),
-       (3, '1984-07-01', NULL, 'ООО "Озеленитель Строй"', 'Агроном - почвовед', 'Лучший почвовед'),
-       (4, '1997-06-01', NULL, 'ООО Центр Управления Ресурсами', 'PHP разработчик', 'Есть рекомендации');
-
 INSERT INTO hh.skill(title)
 VALUES ('Преподавание русского языка'),
        ('Обучение и развитие'),
@@ -75,11 +68,11 @@ VALUES (1, 1),
        (4, 4),
        (5, 5);
 
-INSERT INTO hh.resume_experience(resume_id, experience_id)
-VALUES (1, 1),
-       (2, 2),
-       (3, 3),
-       (4, 4);
+INSERT INTO hh.experience(resume_id, date_begin, date_end, organization_name, position, about)
+VALUES (1, '2015-09-01', NULL, 'Ломоносовская школа', 'Учитель русского языка и литературы', 'Работал очень хорошо'),
+       (2, '2010-08-01', NULL, 'ГБОУ Школа № 1741', 'Учитель физики', 'Ну очень хорошо работал'),
+       (3, '1984-07-01', NULL, 'ООО "Озеленитель Строй"', 'Агроном - почвовед', 'Лучший почвовед'),
+       (4, '1997-06-01', NULL, 'ООО Центр Управления Ресурсами', 'PHP разработчик', 'Есть рекомендации');
 
 INSERT INTO hh.resume_skill(resume_id, skill_id)
 VALUES (1, 1),
