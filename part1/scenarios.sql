@@ -98,8 +98,9 @@ WITH logged_account AS
                JOIN hh.employer_account USING (employer_id)
         WHERE employer_account.account_id = (SELECT account_id FROM logged_account))
 INSERT
-INTO hh.vacancy (employer_id, position, city, salary_from, salary_to, about, status)
-VALUES ((SELECT employer_id FROM my_employer), 'Врач-куратор', 'Калуга', 75000, 75000,
+INTO hh.vacancy(employer_id, city, position, shedule, education_level, experience_years, salary_from, salary_to, about,
+                status)
+VALUES ((SELECT employer_id FROM my_employer), 'Калуга', 'Врач-куратор', 'FULL_DAY', 'SPECIALIST', 1, 75000, 75000,
         'В связи с внедрением новых услуг по ДМС компания увеличивает штат сотрудников.', 'OPEN');
 
 --    4. Хочу найти резюме

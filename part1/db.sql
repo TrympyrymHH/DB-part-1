@@ -73,14 +73,17 @@ CREATE TYPE hh.VACANCY_STATUS AS ENUM
 
 CREATE TABLE hh.vacancy
 (
-  vacancy_id  SERIAL PRIMARY KEY,
-  employer_id INTEGER NOT NULL REFERENCES hh.employer,
-  position    VARCHAR(100),
-  city        VARCHAR(100),
-  salary_from INTEGER,
-  salary_to   INTEGER,
-  about       TEXT,
-  status      hh.VACANCY_STATUS
+  vacancy_id       SERIAL PRIMARY KEY,
+  employer_id      INTEGER NOT NULL REFERENCES hh.employer,
+  city             VARCHAR(100),
+  position         VARCHAR(100),
+  shedule          hh.SCHEDULE_TYPE,
+  education_level  hh.EDUCATION_TYPE,
+  experience_years INTEGER,
+  salary_from      INTEGER,
+  salary_to        INTEGER,
+  about            TEXT,
+  status           hh.VACANCY_STATUS
 );
 
 CREATE TYPE hh.MESSAGE_TYPE AS ENUM
