@@ -4,26 +4,15 @@ INSERT INTO hh.account (email, password)
 VALUES ('michnick@mail.ru', md5('password')) RETURNING account_id;
 
 --    2. Хочу войти
-WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'michnick@mail.ru'
-           AND password = md5('password')
-       )
-UPDATE hh.account
-SET session_password = md5('12345')
-WHERE account_id in (SELECT account_id FROM logged_account) RETURNING account_id;
+SELECT account_id
+FROM hh.account
+WHERE email = 'michnick@mail.ru'
+  AND password = md5('password');
 
 --    3. Хочу создать резюме
 --Добавляем резюме
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'michnick@mail.ru'
-           AND session_password = md5('12345')
-       )
+       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password'))
 INSERT
 INTO hh.resume (account_id, name, gender, birthday, city, phone, position, salary, about, shedule, status,
                 education_level, experience_years)
@@ -33,12 +22,7 @@ VALUES ((SELECT account_id FROM logged_account), 'Васечкин Михаил 
 
 --    4. Хочу найти вакансию
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'michnick@mail.ru'
-           AND session_password = md5('12345')
-       ),
+       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password')),
      my_resume AS
        (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account))
 SELECT vacancy_id,
@@ -55,12 +39,7 @@ WHERE resume_id = (SELECT resume_id FROM my_resume)
 
 --    5. Хочу откликнуться на вакансию (отправить резюме)
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'michnick@mail.ru'
-           AND session_password = md5('12345')
-       ),
+       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password')),
      my_resume AS
        (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account)),
      vacancy_for_me AS
@@ -77,12 +56,7 @@ VALUES ((SELECT resume_id FROM my_resume), (SELECT vacancy_id FROM vacancy_for_m
 
 --    6. Хочу посмотреть работодателей, которые мне ответили
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'michnick@mail.ru'
-           AND session_password = md5('12345')
-       )
+       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password'))
 SELECT vacancy_id
 FROM hh.message
        JOIN hh.resume USING (resume_id)
@@ -92,12 +66,7 @@ WHERE resume.account_id = (SELECT account_id FROM logged_account)
 
 --    7. Хочу написать работодателю с вакансией 2
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'michnick@mail.ru'
-           AND session_password = md5('12345')
-       ),
+       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password')),
      my_resume AS
        (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account))
 INSERT
@@ -107,12 +76,7 @@ VALUES ((SELECT resume_id FROM my_resume), 2, (SELECT account_id FROM logged_acc
 
 --    8. Хочу закрыть резюме
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'michnick@mail.ru'
-           AND session_password = md5('12345')
-       ),
+       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password')),
      my_resume AS
        (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account))
 UPDATE hh.resume
@@ -122,9 +86,7 @@ WHERE resume_id in (SELECT resume_id FROM my_resume) RETURNING resume_id;
 --2. Работодатель
 --    1. Хочу зарегистрироваться
 WITH created_account AS
-       (
-         INSERT INTO hh.account (email, password) VALUES ('zharinova@vsk.ru', md5('password')) RETURNING account_id
-       ),
+       (INSERT INTO hh.account (email, password) VALUES ('zharinova@vsk.ru', md5('password')) RETURNING account_id),
      created_employer AS
        (INSERT INTO hh.employer (organization_name) VALUES ('ВСК, САО') RETURNING employer_id)
 INSERT
@@ -132,26 +94,15 @@ INTO hh.employer_account (employer_id, account_id)
 VALUES ((SELECT employer_id FROM created_employer), (SELECT account_id FROM created_account)) RETURNING account_id;
 
 --    2. Хочу войти
-WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'zharinova@vsk.ru'
-           AND password = md5('password')
-       )
-UPDATE hh.account
-SET session_password = md5('12345')
-WHERE account_id in (SELECT account_id FROM logged_account) RETURNING account_id;
+SELECT account_id
+FROM hh.account
+WHERE email = 'zharinova@vsk.ru'
+  AND password = md5('password');
 
 --    3. Хочу создать вакансию
 --Добавляем вакансию
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'zharinova@vsk.ru'
-           AND session_password = md5('12345')
-       ),
+       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
      my_employer AS
        (SELECT employer_id
         FROM hh.employer
@@ -164,12 +115,7 @@ VALUES ((SELECT employer_id FROM my_employer), 'Врач-куратор', 'Ка�
 
 --    4. Хочу найти резюме
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'zharinova@vsk.ru'
-           AND session_password = md5('12345')
-       ),
+       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
      my_employer AS
        (SELECT employer_id
         FROM hh.employer
@@ -192,12 +138,7 @@ WHERE vacancy_id = (SELECT vacancy_id FROM my_vacancy)
 
 --    5. Хочу предложить вакансию
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'zharinova@vsk.ru'
-           AND session_password = md5('12345')
-       ),
+       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
      my_employer AS
        (SELECT employer_id
         FROM hh.employer
@@ -212,12 +153,7 @@ VALUES (1, (SELECT vacancy_id FROM my_vacancy),
 
 --    6. Хочу посмотреть соискателей, которые мне ответили
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'zharinova@vsk.ru'
-           AND session_password = md5('12345')
-       ),
+       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
      my_employer AS
        (SELECT employer_id
         FROM hh.employer
@@ -232,12 +168,7 @@ WHERE vacancy.employer_id = (SELECT employer_id FROM my_employer)
 
 --    7. Хочу написать соискателю с резюме 1
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'zharinova@vsk.ru'
-           AND session_password = md5('12345')
-       ),
+       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
      my_employer AS
        (SELECT employer_id
         FROM hh.employer
@@ -252,12 +183,7 @@ VALUES (1, (SELECT vacancy_id FROM my_vacancy),
 
 --    8. Хочу закрыть вакансию
 WITH logged_account AS
-       (
-         SELECT account_id
-         FROM hh.account
-         WHERE email = 'michnick@mail.ru'
-           AND session_password = md5('12345')
-       ),
+       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
      my_employer AS
        (SELECT employer_id
         FROM hh.employer

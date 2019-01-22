@@ -13,10 +13,9 @@ DROP TABLE IF EXISTS hh.message CASCADE;
 
 CREATE TABLE hh.account
 (
-  account_id       SERIAL PRIMARY KEY,
-  email            VARCHAR(50) NOT NULL,
-  password         VARCHAR(50) NOT NULL,
-  session_password VARCHAR(50)
+  account_id SERIAL PRIMARY KEY,
+  email      VARCHAR(50) NOT NULL,
+  password   VARCHAR(50) NOT NULL
 );
 
 CREATE TYPE hh.GENDER AS ENUM
