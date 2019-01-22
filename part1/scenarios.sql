@@ -14,11 +14,9 @@ WHERE email = 'michnick@mail.ru'
 WITH logged_account AS
        (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password'))
 INSERT
-INTO hh.resume (account_id, name, gender, birthday, city, phone, position, salary, about, shedule, status,
-                education_level, experience_years)
-VALUES ((SELECT account_id FROM logged_account), 'Васечкин Михаил Николаевич', 'MAN', '1975-03-08', 'Краснодар',
-        '+79151234567', 'Ведущий разработчик PHP', 150000, 'Я очень хороший человек', 'FLEXIBLE', 'SHOW', 'SPECIALIST',
-        20);
+INTO hh.resume(account_id, name, city, position, shedule, education_level, experience_years, salary, about)
+VALUES ((SELECT account_id FROM logged_account), 'Васечкин Михаил Николаевич', 'Краснодар', 'Ведущий разработчик PHP',
+        'FLEXIBLE', 'SPECIALIST', 20, 150000, 'Я очень хороший человек');
 
 --    4. Хочу найти вакансию
 WITH logged_account AS
@@ -74,15 +72,6 @@ INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
 VALUES ((SELECT resume_id FROM my_resume), 2, (SELECT account_id FROM logged_account), now(), 'TEXT_APP', 'Привет',
         FALSE);
 
---    8. Хочу закрыть резюме
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password')),
-     my_resume AS
-       (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account))
-UPDATE hh.resume
-SET status = 'HIDE'
-WHERE resume_id in (SELECT resume_id FROM my_resume) RETURNING resume_id;
-
 --2. Работодатель
 --    1. Хочу зарегистрироваться
 WITH created_account AS
@@ -126,8 +115,6 @@ WITH logged_account AS
 SELECT resume_id,
        resume.position,
        resume.name,
-       resume.gender,
-       resume.birthday,
        resume.salary,
        resume.about
 FROM hh.resume
