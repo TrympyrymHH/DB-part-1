@@ -1,36 +1,34 @@
 ﻿TRUNCATE hh.account CASCADE;
 ALTER SEQUENCE IF EXISTS hh.account_account_id_seq RESTART;
-TRUNCATE hh.city CASCADE;
-ALTER SEQUENCE IF EXISTS hh.city_city_id_seq RESTART;
---TRUNCATE hh.applicant CASCADE;
---TRUNCATE hh.educational_institution CASCADE;
+TRUNCATE hh.applicant CASCADE;
+TRUNCATE hh.educational_institution CASCADE;
 ALTER SEQUENCE IF EXISTS hh.educational_institution_institution_id_seq RESTART;
---TRUNCATE hh.faculty CASCADE;
+TRUNCATE hh.faculty CASCADE;
 ALTER SEQUENCE IF EXISTS hh.faculty_faculty_id_seq RESTART;
---TRUNCATE hh.speciality CASCADE;
+TRUNCATE hh.speciality CASCADE;
 ALTER SEQUENCE IF EXISTS hh.speciality_speciality_id_seq RESTART;
---TRUNCATE hh.education CASCADE;
+TRUNCATE hh.education CASCADE;
 ALTER SEQUENCE IF EXISTS hh.education_education_id_seq RESTART;
 TRUNCATE hh.organization CASCADE;
 ALTER SEQUENCE IF EXISTS hh.organization_organization_id_seq RESTART;
 TRUNCATE hh.position CASCADE;
 ALTER SEQUENCE IF EXISTS hh.position_position_id_seq RESTART;
---TRUNCATE hh.experience CASCADE;
+TRUNCATE hh.experience CASCADE;
 ALTER SEQUENCE IF EXISTS hh.experience_experience_id_seq RESTART;
 TRUNCATE hh.skill CASCADE;
 ALTER SEQUENCE IF EXISTS hh.skill_skill_id_seq RESTART;
---TRUNCATE hh.resume CASCADE;
+TRUNCATE hh.resume CASCADE;
 ALTER SEQUENCE IF EXISTS hh.resume_resume_id_seq RESTART;
---TRUNCATE hh.resume_to_education CASCADE;
---TRUNCATE hh.resume_to_experience CASCADE;
---TRUNCATE hh.resume_to_skill CASCADE;
---TRUNCATE hh.employer CASCADE;
+TRUNCATE hh.resume_education CASCADE;
+TRUNCATE hh.resume_experience CASCADE;
+TRUNCATE hh.resume_skill CASCADE;
+TRUNCATE hh.employer CASCADE;
 ALTER SEQUENCE IF EXISTS hh.employer_employer_id_seq RESTART;
---TRUNCATE hh.employer_account CASCADE;
---TRUNCATE hh.vacancy CASCADE;
+TRUNCATE hh.employer_account CASCADE;
+TRUNCATE hh.vacancy CASCADE;
 ALTER SEQUENCE IF EXISTS hh.vacancy_vacancy_id_seq RESTART;
---TRUNCATE hh.vacancy_to_skill CASCADE;
---TRUNCATE hh.message CASCADE;
+TRUNCATE hh.vacancy_skill CASCADE;
+TRUNCATE hh.message CASCADE;
 ALTER SEQUENCE IF EXISTS hh.message_message_id_seq RESTART;
 
 INSERT INTO hh.account(email, password)
@@ -45,32 +43,19 @@ VALUES ('vasya@gmail.com', md5('000000')),
        ('kadri@technopark.ru', md5('lkjhgf')),
        ('svetlana.smirnova01@megafon-retail.ru', md5('mnbvcx'));
 
-INSERT INTO hh.city(title)
-VALUES ('Москва'),
-       ('Санкт-Петербург'),
-       ('Владивосток'),
-       ('Волгоград'),
-       ('Воронеж'),
-       ('Екатеринбург'),
-       ('Казань'),
-       ('Калуга'),
-       ('Краснодар'),
-       ('Красноярск'),
-       ('Нижний Новгород');
+INSERT INTO hh.applicant(account_id, name, gender, birthday, city)
+VALUES (1, 'Пупкин Василий Владимирович', 'MAN', '1991-06-27', 'Москва'),
+       (2, 'Иванов Пётр Васильевич', 'MAN', '1987-05-14', 'Санкт-Петербург'),
+       (3, 'Петров Николай Петрович', 'MAN', '1961-01-01', 'Нижний Новгород'),
+       (4, 'Сидоров Александр Николаевич', 'MAN', '1974-03-08', 'Краснодар'),
+       (5, 'Попова Екатерина Андреевна', 'WOMAN', '2001-01-17', 'Воронеж');
 
-INSERT INTO hh.applicant(account_id, name, gender, birthday, city_id)
-VALUES (1, 'Пупкин Василий Владимирович', 'MAN', '1991-06-27', 1),
-       (2, 'Иванов Пётр Васильевич', 'MAN', '1987-05-14', 2),
-       (3, 'Петров Николай Петрович', 'MAN', '1961-01-01', 11),
-       (4, 'Сидоров Александр Николаевич', 'MAN', '1974-03-08', 9),
-       (5, 'Попова Екатерина Андреевна', 'WOMAN', '2001-01-17', 5);
-
-INSERT INTO hh.educational_institution(short_name, name, city_id)
-VALUES ('МЭИ (ТУ)', 'Московский Энергетический Институт', 1),
-       ('МГУ', 'Московский государственный университет им. М.В. Ломоносова', 1),
-       ('ДВФУ', 'Дальневосточный федеральный университет', 3),
-       ('ВолгГТУ', 'Волгоградский государственный технический университет', 4),
-       ('УрГПУ', 'Уральский государственный педагогический университет', 6);
+INSERT INTO hh.educational_institution(short_name, name, city)
+VALUES ('МЭИ (ТУ)', 'Московский Энергетический Институт', 'Москва'),
+       ('МГУ', 'Московский государственный университет им. М.В. Ломоносова', 'Москва'),
+       ('ДВФУ', 'Дальневосточный федеральный университет', 'Владивосток'),
+       ('ВолгГТУ', 'Волгоградский государственный технический университет', 'Волгоград'),
+       ('УрГПУ', 'Уральский государственный педагогический университет', 'Екатеринбург');
 
 INSERT INTO hh.faculty(institution_id, name)
 VALUES (1, 'АВТИ'),
@@ -169,19 +154,19 @@ VALUES (1, 6),
        (4, 9),
        (5, 10);
 
-INSERT INTO hh.vacancy(employer_id, position_id, city_id, salary_from, salary_to, about, status)
-VALUES (1, 1, 1, NULL, NULL,
+INSERT INTO hh.vacancy(employer_id, position_id, city, salary_from, salary_to, about, status)
+VALUES (1, 1, 'Москва', NULL, NULL,
         'Школа «Летово» — школа-пансион для одаренных и мотивированных детей, реализует обучение по стандартам ФГОС и программе Международного Бакалавриата.',
         'OPEN'),
-       (2, 2, 2, 50000, 100000,
+       (2, 2, 'Санкт-Петербург', 50000, 100000,
         'Предприятие, входящее в группу компаний радиоэлектронной отрасли, ищет технического руководителя для долгосрочной работы.',
         'OPEN'),
-       (3, 3, 11, NULL, NULL,
+       (3, 3, 'Нижний Новгород', NULL, NULL,
         'Отбор проб компонентов окружающей среды и проведение инструментальных замеров в полевых условиях.', 'OPEN'),
-       (4, 4, 9, 180000, NULL,
+       (4, 4, 'Краснодар', 180000, NULL,
         'Поддержка и развитие сайта technopark.ru и других проектов холдинга. Поддержка и на высоком уровне культуры разработки и эффективности взаимодействия в команде.',
         'OPEN'),
-       (5, 5, 5, 48000, NULL,
+       (5, 5, 'Воронеж', 48000, NULL,
         'Привет, друг! Ты сделал правильный выбор, кликнув на нашу вакансию, потому что «МегаФон Ритейл» – лучшая компания для тебя и твоей карьеры.',
         'OPEN');
 

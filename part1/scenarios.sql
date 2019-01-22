@@ -5,15 +5,11 @@ WITH created_account AS
          INSERT INTO hh.account (email, password)
            VALUES ('michnick@mail.ru', md5('password'))
            RETURNING account_id
-       ),
-     my_city AS
-       (SELECT city_id
-        from hh.city
-        WHERE title = 'Краснодар')
+       )
 INSERT
-INTO hh.applicant (account_id, name, gender, birthday, city_id)
+INTO hh.applicant (account_id, name, gender, birthday, city)
 VALUES ((SELECT account_id FROM created_account), 'Васечкин Михаил Николаевич', 'MAN', '1975-03-08',
-        (SELECT city_id FROM my_city)) RETURNING account_id;
+        'Краснодар') RETURNING account_id;
 
 --    2. Хочу войти
 WITH logged_account AS
@@ -103,7 +99,7 @@ SELECT vacancy_id, position.title, organization.name, vacancy.salary_from, vacan
 FROM hh.resume
        JOIN hh.applicant ON (resume.applicant_id = applicant.account_id)
        JOIN hh.position USING (position_id)
-       JOIN hh.vacancy USING (position_id, city_id)
+       JOIN hh.vacancy USING (position_id, city)
        JOIN hh.employer USING (employer_id)
        JOIN hh.organization USING (organization_id)
 WHERE resume_id = (SELECT resume_id FROM my_resume)
@@ -124,7 +120,7 @@ WITH logged_account AS
         FROM hh.resume
                JOIN hh.applicant ON (resume.applicant_id = applicant.account_id)
                JOIN hh.position USING (position_id)
-               JOIN hh.vacancy USING (position_id, city_id)
+               JOIN hh.vacancy USING (position_id, city)
                JOIN hh.employer USING (employer_id)
                JOIN hh.organization USING (organization_id)
         WHERE resume_id = (SELECT resume_id FROM my_resume)
@@ -226,14 +222,9 @@ WITH logged_account AS
         WHERE employer_account.account_id = (SELECT account_id FROM logged_account)),
      my_position AS
        (INSERT INTO hh.position (title) VALUES ('Врач-куратор') RETURNING position_id),
-     my_city AS
-       (SELECT city_id
-        from hh.city
-        WHERE title = 'Калуга'),
      my_vacancy AS
-       (INSERT INTO hh.vacancy (employer_id, position_id, city_id, salary_from, salary_to, about, status)
-         VALUES ((SELECT employer_id FROM my_employer), (SELECT position_id FROM my_position),
-                 (SELECT city_id FROM my_city), 75000, 75000,
+       (INSERT INTO hh.vacancy (employer_id, position_id, city, salary_from, salary_to, about, status)
+         VALUES ((SELECT employer_id FROM my_employer), (SELECT position_id FROM my_position), 'Калуга', 75000, 75000,
                  'В связи с внедрением новых услуг по ДМС компания увеличивает штат сотрудников.',
                  'OPEN') RETURNING vacancy_id),
      --Добавляем умения
@@ -270,7 +261,7 @@ SELECT resume_id,
 FROM hh.resume
        JOIN hh.applicant ON (resume.applicant_id = applicant.account_id)
        JOIN hh.position USING (position_id)
-       JOIN hh.vacancy USING (position_id, city_id)
+       JOIN hh.vacancy USING (position_id, city)
 WHERE vacancy_id = (SELECT vacancy_id FROM my_vacancy)
   AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary)
   AND (vacancy.salary_from ISNULL OR vacancy.salary_from <= resume.salary);

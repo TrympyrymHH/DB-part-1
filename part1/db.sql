@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS hh.account CASCADE;
 DROP TYPE IF EXISTS hh.GENDER CASCADE;
-DROP TABLE IF EXISTS hh.city CASCADE;
 DROP TABLE IF EXISTS hh.applicant CASCADE;
 DROP TYPE IF EXISTS hh.EDUCATION_TYPE CASCADE;
 DROP TABLE IF EXISTS hh.educational_institution CASCADE;
@@ -39,19 +38,13 @@ CREATE TYPE hh.GENDER AS ENUM
     'WOMAN'
     );
 
-CREATE TABLE hh.city
-(
-  city_id SERIAL PRIMARY KEY,
-  title   varchar(100)
-);
-
 CREATE TABLE hh.applicant
 (
   account_id INTEGER NOT NULL PRIMARY KEY REFERENCES hh.account,
-  name       varchar(100),
+  name       VARCHAR(100),
   gender     hh.GENDER,
   birthday   DATE,
-  city_id    INTEGER REFERENCES hh.city
+  city       VARCHAR(100)
 );
 
 CREATE TYPE hh.EDUCATION_TYPE AS ENUM
@@ -72,7 +65,7 @@ CREATE TABLE hh.educational_institution
   institution_id SERIAL PRIMARY KEY,
   short_name     VARCHAR(20),
   name           VARCHAR(100),
-  city_id        INTEGER REFERENCES hh.city
+  city           VARCHAR(100)
 );
 
 CREATE TABLE hh.faculty
@@ -199,7 +192,7 @@ CREATE TABLE hh.vacancy
   vacancy_id  SERIAL PRIMARY KEY,
   employer_id INTEGER NOT NULL REFERENCES hh.employer,
   position_id INTEGER NOT NULL REFERENCES hh.position,
-  city_id     INTEGER NOT NULL REFERENCES hh.city,
+  city        VARCHAR(100),
   salary_from INTEGER,
   salary_to   INTEGER,
   about       TEXT,
