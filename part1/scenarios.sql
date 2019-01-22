@@ -61,17 +61,14 @@ WITH logged_account AS
        (INSERT INTO hh.resume_education (resume_id, education_id)
          VALUES ((SELECT resume_id FROM my_resume), (SELECT education_id FROM my_education))),
      --Добавляем опыт
-     my_old_organization AS
-         (SELECT organization_id FROM hh.organization WHERE name = 'Технопарк'),
      my_old_position AS
        (SELECT position_id
         FROM hh.position
         WHERE title ~* 'PHP разработчик'),
      my_experience AS
-       (INSERT INTO hh.experience (applicant_id, date_begin, date_end, organization_id, position_id, about)
-         VALUES ((SELECT account_id FROM logged_account), '1998-09-01', NULL,
-                 (SELECT organization_id FROM my_old_organization), (SELECT position_id FROM my_old_position),
-                 'Работал очень хорошо') RETURNING experience_id),
+       (INSERT INTO hh.experience (applicant_id, date_begin, date_end, organization_name, position_id, about)
+         VALUES ((SELECT account_id FROM logged_account), '1998-09-01', NULL, 'Технопарк',
+                 (SELECT position_id FROM my_old_position), 'Работал очень хорошо') RETURNING experience_id),
      my_resume_experience AS
        (INSERT INTO hh.resume_experience (resume_id, experience_id)
          VALUES ((SELECT resume_id FROM my_resume), (SELECT experience_id FROM my_experience))),
@@ -95,13 +92,12 @@ WITH logged_account AS
        ),
      my_resume AS
        (SELECT resume_id FROM hh.resume WHERE applicant_id = (SELECT account_id FROM logged_account))
-SELECT vacancy_id, position.title, organization.name, vacancy.salary_from, vacancy.salary_to, vacancy.about
+SELECT vacancy_id, position.title, employer.organization_name, vacancy.salary_from, vacancy.salary_to, vacancy.about
 FROM hh.resume
        JOIN hh.applicant ON (resume.applicant_id = applicant.account_id)
        JOIN hh.position USING (position_id)
        JOIN hh.vacancy USING (position_id, city)
        JOIN hh.employer USING (employer_id)
-       JOIN hh.organization USING (organization_id)
 WHERE resume_id = (SELECT resume_id FROM my_resume)
   AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary);
 
@@ -116,13 +112,12 @@ WITH logged_account AS
      my_resume AS
        (SELECT resume_id FROM hh.resume WHERE applicant_id = (SELECT account_id FROM logged_account)),
      vacancy_for_me AS
-       (SELECT vacancy_id, position.title, organization.name, vacancy.salary_from, vacancy.salary_to, vacancy.about
+       (SELECT vacancy_id
         FROM hh.resume
                JOIN hh.applicant ON (resume.applicant_id = applicant.account_id)
                JOIN hh.position USING (position_id)
                JOIN hh.vacancy USING (position_id, city)
                JOIN hh.employer USING (employer_id)
-               JOIN hh.organization USING (organization_id)
         WHERE resume_id = (SELECT resume_id FROM my_resume)
           AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary))
 INSERT
@@ -178,18 +173,10 @@ WHERE resume_id in (SELECT resume_id FROM my_resume) RETURNING resume_id;
 --    1. Хочу зарегистрироваться
 WITH created_account AS
        (
-         INSERT INTO hh.account (email, password)
-           VALUES ('zharinova@vsk.ru', md5('password'))
-           RETURNING account_id
+         INSERT INTO hh.account (email, password) VALUES ('zharinova@vsk.ru', md5('password')) RETURNING account_id
        ),
-     created_organization AS
-       (INSERT INTO hh.organization (name)
-         VALUES ('ВСК, САО')
-         RETURNING organization_id),
      created_employer AS
-       (INSERT INTO hh.employer (organization_id)
-         VALUES ((SELECT organization_id FROM created_organization))
-         RETURNING employer_id)
+       (INSERT INTO hh.employer (organization_name) VALUES ('ВСК, САО') RETURNING employer_id)
 INSERT
 INTO hh.employer_account (employer_id, account_id)
 VALUES ((SELECT employer_id FROM created_employer), (SELECT account_id FROM created_account)) RETURNING account_id;

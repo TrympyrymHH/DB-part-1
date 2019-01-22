@@ -9,8 +9,6 @@ TRUNCATE hh.speciality CASCADE;
 ALTER SEQUENCE IF EXISTS hh.speciality_speciality_id_seq RESTART;
 TRUNCATE hh.education CASCADE;
 ALTER SEQUENCE IF EXISTS hh.education_education_id_seq RESTART;
-TRUNCATE hh.organization CASCADE;
-ALTER SEQUENCE IF EXISTS hh.organization_organization_id_seq RESTART;
 TRUNCATE hh.position CASCADE;
 ALTER SEQUENCE IF EXISTS hh.position_position_id_seq RESTART;
 TRUNCATE hh.experience CASCADE;
@@ -78,17 +76,6 @@ VALUES (1, 'MASTER', 5, 2015),
        (4, 'SPECIALIST', 1, 1997),
        (5, 'AVERAGE_SCHOOL', NULL, 2019);
 
-INSERT INTO hh.organization(name)
-VALUES ('Школа Летово'),
-       ('ООО Оптофарм'),
-       ('ООО Малое инновационное предприятие Почвенного института им. В.В. Докучаева'),
-       ('Технопарк'),
-       ('АО МегаФон Ритейл'),
-       ('Ломоносовская школа'),
-       ('ГБОУ Школа № 1741'),
-       ('ООО "Озеленитель Строй"'),
-       ('ООО Центр Управления Ресурсами');
-
 INSERT INTO hh.position(title)
 VALUES ('Учитель русского языка'),
        ('Технический руководитель проектов по разработке аналитического оборудования/биофизика'),
@@ -100,11 +87,11 @@ VALUES ('Учитель русского языка'),
        ('Агроном - почвовед'),
        ('PHP разработчик');
 
-INSERT INTO hh.experience(applicant_id, date_begin, date_end, organization_id, position_id, about)
-VALUES (1, '2015-09-01', NULL, 6, 6, 'Работал очень хорошо'),
-       (2, '2010-08-01', NULL, 7, 7, 'Ну очень хорошо работал'),
-       (3, '1984-07-01', NULL, 8, 8, 'Лучший почвовед'),
-       (4, '1997-06-01', NULL, 9, 9, 'Есть рекомендации');
+INSERT INTO hh.experience(applicant_id, date_begin, date_end, organization_name, position_id, about)
+VALUES (1, '2015-09-01', NULL, 'Ломоносовская школа', 6, 'Работал очень хорошо'),
+       (2, '2010-08-01', NULL, 'ГБОУ Школа № 1741', 7, 'Ну очень хорошо работал'),
+       (3, '1984-07-01', NULL, 'ООО "Озеленитель Строй"', 8, 'Лучший почвовед'),
+       (4, '1997-06-01', NULL, 'ООО Центр Управления Ресурсами', 9, 'Есть рекомендации');
 
 INSERT INTO hh.skill(title)
 VALUES ('Преподавание русского языка'),
@@ -140,12 +127,12 @@ VALUES (1, 1),
        (4, 4),
        (5, 5);
 
-INSERT INTO hh.employer(organization_id)
-VALUES (1),
-       (2),
-       (3),
-       (4),
-       (5);
+INSERT INTO hh.employer(organization_name)
+VALUES ('Школа Летово'),
+       ('ООО Оптофарм'),
+       ('ООО Малое инновационное предприятие Почвенного института им. В.В. Докучаева'),
+       ('Технопарк'),
+       ('АО МегаФон Ритейл');
 
 INSERT INTO hh.employer_account(employer_id, account_id)
 VALUES (1, 6),

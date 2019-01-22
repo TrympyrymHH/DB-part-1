@@ -6,7 +6,6 @@ DROP TABLE IF EXISTS hh.educational_institution CASCADE;
 DROP TABLE IF EXISTS hh.faculty CASCADE;
 DROP TABLE IF EXISTS hh.speciality CASCADE;
 DROP TABLE IF EXISTS hh.education CASCADE;
-DROP TABLE IF EXISTS hh.organization CASCADE;
 DROP TABLE IF EXISTS hh.position CASCADE;
 DROP TABLE IF EXISTS hh.experience CASCADE;
 DROP TABLE IF EXISTS hh.skill CASCADE;
@@ -91,12 +90,6 @@ CREATE TABLE hh.education
   year          INTEGER
 );
 
-CREATE TABLE hh.organization
-(
-  organization_id SERIAL PRIMARY KEY,
-  name            VARCHAR(100)
-);
-
 CREATE TABLE hh.position
 (
   position_id SERIAL PRIMARY KEY,
@@ -105,13 +98,13 @@ CREATE TABLE hh.position
 
 CREATE TABLE hh.experience
 (
-  experience_id   SERIAL PRIMARY KEY,
-  applicant_id    INTEGER NOT NULL REFERENCES hh.applicant (account_id),
-  date_begin      DATE    NOT NULL,
-  date_end        DATE,
-  organization_id INTEGER NOT NULL REFERENCES hh.organization,
-  position_id     INTEGER NOT NULL REFERENCES hh.position,
-  about           TEXT
+  experience_id     SERIAL PRIMARY KEY,
+  applicant_id      INTEGER NOT NULL REFERENCES hh.applicant (account_id),
+  date_begin        DATE    NOT NULL,
+  date_end          DATE,
+  organization_name VARCHAR(100),
+  position_id       INTEGER NOT NULL REFERENCES hh.position,
+  about             TEXT
 );
 
 CREATE TABLE hh.skill
@@ -170,8 +163,8 @@ CREATE TABLE hh.resume_skill
 
 CREATE TABLE hh.employer
 (
-  employer_id     SERIAL PRIMARY KEY,
-  organization_id INTEGER NOT NULL REFERENCES hh.organization
+  employer_id       SERIAL PRIMARY KEY,
+  organization_name VARCHAR(100)
 );
 
 CREATE TABLE hh.employer_account
