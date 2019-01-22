@@ -41,21 +41,11 @@ WITH logged_account AS
        (INSERT INTO hh.education (resume_id, level, about, year)
          VALUES ((SELECT resume_id FROM my_resume), 'SPECIALIST',
                  'Московский Энергетический Институт, Москва: АВТИ: Вычислительные Машины, Комплексы, Системы и Сети',
-                 1998) RETURNING education_id),
+                 1998) RETURNING education_id)
      --Добавляем опыт
-     my_experience AS
-       (INSERT INTO hh.experience (resume_id, date_begin, date_end, organization_name, position, about)
-         VALUES ((SELECT resume_id FROM my_resume), '1998-09-01', NULL, 'Технопарк', 'PHP разработчик',
-                 'Работал очень хорошо') RETURNING experience_id),
-     --Добавляем умения
-     my_skill AS
-       (SELECT skill_id
-        FROM hh.skill
-        WHERE title ~* 'коман')
 INSERT
-INTO hh.resume_skill (resume_id, skill_id)
-VALUES ((SELECT resume_id FROM my_resume), (SELECT skill_id
-                                            FROM my_skill));
+INTO hh.experience (resume_id, date_begin, date_end, organization_name, position, about)
+VALUES ((SELECT resume_id FROM my_resume), '1998-09-01', NULL, 'Технопарк', 'PHP разработчик', 'Работал очень хорошо');
 
 --    4. Хочу найти вакансию
 WITH logged_account AS
@@ -184,20 +174,11 @@ WITH logged_account AS
        (SELECT employer_id
         FROM hh.employer
                JOIN hh.employer_account USING (employer_id)
-        WHERE employer_account.account_id = (SELECT account_id FROM logged_account)),
-     my_vacancy AS
-       (INSERT INTO hh.vacancy (employer_id, position, city, salary_from, salary_to, about, status)
-         VALUES ((SELECT employer_id FROM my_employer), 'Врач-куратор', 'Калуга', 75000, 75000,
-                 'В связи с внедрением новых услуг по ДМС компания увеличивает штат сотрудников.',
-                 'OPEN') RETURNING vacancy_id),
-     --Добавляем умения
-     my_skill AS
-       (SELECT skill_id
-        FROM hh.skill
-        WHERE title ~* 'результат')
+        WHERE employer_account.account_id = (SELECT account_id FROM logged_account))
 INSERT
-INTO hh.vacancy_skill (vacancy_id, skill_id)
-VALUES ((SELECT vacancy_id FROM my_vacancy), (SELECT skill_id FROM my_skill));
+INTO hh.vacancy (employer_id, position, city, salary_from, salary_to, about, status)
+VALUES ((SELECT employer_id FROM my_employer), 'Врач-куратор', 'Калуга', 75000, 75000,
+        'В связи с внедрением новых услуг по ДМС компания увеличивает штат сотрудников.', 'OPEN');
 
 --    4. Хочу найти резюме
 WITH logged_account AS

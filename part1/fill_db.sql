@@ -1,21 +1,17 @@
 ﻿TRUNCATE hh.account CASCADE;
 ALTER SEQUENCE IF EXISTS hh.account_account_id_seq RESTART;
 TRUNCATE hh.applicant CASCADE;
-TRUNCATE hh.skill CASCADE;
-ALTER SEQUENCE IF EXISTS hh.skill_skill_id_seq RESTART;
 TRUNCATE hh.resume CASCADE;
 ALTER SEQUENCE IF EXISTS hh.resume_resume_id_seq RESTART;
 TRUNCATE hh.education CASCADE;
 ALTER SEQUENCE IF EXISTS hh.education_education_id_seq RESTART;
 TRUNCATE hh.experience CASCADE;
 ALTER SEQUENCE IF EXISTS hh.experience_experience_id_seq RESTART;
-TRUNCATE hh.resume_skill CASCADE;
 TRUNCATE hh.employer CASCADE;
 ALTER SEQUENCE IF EXISTS hh.employer_employer_id_seq RESTART;
 TRUNCATE hh.employer_account CASCADE;
 TRUNCATE hh.vacancy CASCADE;
 ALTER SEQUENCE IF EXISTS hh.vacancy_vacancy_id_seq RESTART;
-TRUNCATE hh.vacancy_skill CASCADE;
 TRUNCATE hh.message CASCADE;
 ALTER SEQUENCE IF EXISTS hh.message_message_id_seq RESTART;
 
@@ -38,13 +34,6 @@ VALUES (1, 'Пупкин Василий Владимирович', 'MAN', '1991-
        (4, 'Сидоров Александр Николаевич', 'MAN', '1974-03-08', 'Краснодар'),
        (5, 'Попова Екатерина Андреевна', 'WOMAN', '2001-01-17', 'Воронеж');
 
-INSERT INTO hh.skill(title)
-VALUES ('Преподавание русского языка'),
-       ('Обучение и развитие'),
-       ('Ориентация на результат'),
-       ('Работа в команде'),
-       ('Стрессоустойчивость');
-
 INSERT INTO hh.resume(applicant_id, phone, position, salary, about, shedule, status)
 VALUES (1, '+79101234567', 'Учитель русского языка', 100000, 'Я очень ценный учитель', 'FULL_DAY', 'SHOW'),
        (2, '+79031234567', 'Технический руководитель проектов по разработке аналитического оборудования/биофизика',
@@ -65,13 +54,6 @@ VALUES (1, '2015-09-01', NULL, 'Ломоносовская школа', 'Учи�
        (2, '2010-08-01', NULL, 'ГБОУ Школа № 1741', 'Учитель физики', 'Ну очень хорошо работал'),
        (3, '1984-07-01', NULL, 'ООО "Озеленитель Строй"', 'Агроном - почвовед', 'Лучший почвовед'),
        (4, '1997-06-01', NULL, 'ООО Центр Управления Ресурсами', 'PHP разработчик', 'Есть рекомендации');
-
-INSERT INTO hh.resume_skill(resume_id, skill_id)
-VALUES (1, 1),
-       (2, 2),
-       (3, 3),
-       (4, 4),
-       (5, 5);
 
 INSERT INTO hh.employer(organization_name)
 VALUES ('Школа Летово'),
@@ -103,11 +85,6 @@ VALUES (1, 'Учитель русского языка', 'Москва', NULL, N
        (5, 'Продавец-консультант', 'Воронеж', 48000, NULL,
         'Привет, друг! Ты сделал правильный выбор, кликнув на нашу вакансию, потому что «МегаФон Ритейл» – лучшая компания для тебя и твоей карьеры.',
         'OPEN');
-
-INSERT INTO hh.vacancy_skill(vacancy_id, skill_id)
-VALUES (1, 1),
-       (4, 4),
-       (5, 5);
 
 INSERT INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
 VALUES (1, 1, 1, date(now() - trunc(1000 * random()) * '1 hour'::interval), 'RESUME', NULL, TRUE),
