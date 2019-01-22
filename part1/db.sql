@@ -5,7 +5,6 @@ DROP TYPE IF EXISTS hh.EDUCATION_TYPE CASCADE;
 DROP TYPE IF EXISTS hh.SCHEDULE_TYPE CASCADE;
 DROP TYPE IF EXISTS hh.RESUME_STATUS CASCADE;
 DROP TABLE IF EXISTS hh.resume CASCADE;
-DROP TABLE IF EXISTS hh.experience CASCADE;
 DROP TABLE IF EXISTS hh.employer CASCADE;
 DROP TABLE IF EXISTS hh.employer_account CASCADE;
 DROP TYPE IF EXISTS hh.VACANCY_STATUS CASCADE;
@@ -74,18 +73,8 @@ CREATE TABLE hh.resume
   about           TEXT,
   shedule         hh.SCHEDULE_TYPE,
   status          hh.RESUME_STATUS,
-  education_level hh.EDUCATION_TYPE
-);
-
-CREATE TABLE hh.experience
-(
-  experience_id     SERIAL PRIMARY KEY,
-  resume_id         INTEGER NOT NULL REFERENCES hh.resume,
-  date_begin        DATE    NOT NULL,
-  date_end          DATE,
-  organization_name VARCHAR(100),
-  position          VARCHAR(100),
-  about             TEXT
+  education_level hh.EDUCATION_TYPE,
+  experience_years INTEGER
 );
 
 CREATE TABLE hh.employer

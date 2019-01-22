@@ -31,15 +31,11 @@ WITH logged_account AS
          FROM hh.account
          WHERE email = 'michnick@mail.ru'
            AND session_password = md5('12345')
-       ),
-     my_resume AS
-       (INSERT INTO hh.resume (applicant_id, phone, position, salary, about, shedule, status, education_level)
-         VALUES ((SELECT account_id FROM logged_account), '+79151234567', 'Ведущий разработчик PHP', 150000,
-                 'Я очень хороший человек', 'FLEXIBLE', 'SHOW', 'SPECIALIST') RETURNING resume_id)
-     --Добавляем опыт
+       )
 INSERT
-INTO hh.experience (resume_id, date_begin, date_end, organization_name, position, about)
-VALUES ((SELECT resume_id FROM my_resume), '1998-09-01', NULL, 'Технопарк', 'PHP разработчик', 'Работал очень хорошо');
+INTO hh.resume (applicant_id, phone, position, salary, about, shedule, status, education_level, experience_years)
+VALUES ((SELECT account_id FROM logged_account), '+79151234567', 'Ведущий разработчик PHP', 150000,
+        'Я очень хороший человек', 'FLEXIBLE', 'SHOW', 'SPECIALIST', 20);
 
 --    4. Хочу найти вакансию
 WITH logged_account AS
