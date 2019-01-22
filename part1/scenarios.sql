@@ -37,21 +37,10 @@ WITH logged_account AS
          VALUES ((SELECT account_id FROM logged_account), '+79151234567', 'Ведущий разработчик PHP', 150000,
                  'Я очень хороший человек', 'FLEXIBLE', 'SHOW') RETURNING resume_id),
      --Добавляем образование
-     my_educational_institution AS
-       (SELECT institution_id FROM hh.educational_institution WHERE short_name = 'МЭИ (ТУ)'),
-     my_faculty AS
-       (SELECT faculty_id
-        FROM hh.faculty
-        WHERE institution_id in (SELECT institution_id FROM my_educational_institution)
-          AND name = 'АВТИ'),
-     my_speciality AS
-       (SELECT speciality_id
-        FROM hh.speciality
-        WHERE faculty_id in (SELECT faculty_id FROM my_faculty)
-          AND name ~* 'Вычислительные'),
      my_education AS
-       (INSERT INTO hh.education (applicant_id, level, speciality_id, year)
-         VALUES ((SELECT account_id FROM logged_account), 'SPECIALIST', (SELECT speciality_id FROM my_speciality),
+       (INSERT INTO hh.education (applicant_id, level, about, year)
+         VALUES ((SELECT account_id FROM logged_account), 'SPECIALIST',
+                 'Московский Энергетический Институт, Москва: АВТИ: Вычислительные Машины, Комплексы, Системы и Сети',
                  1998) RETURNING education_id),
      my_resume_education AS
        (INSERT INTO hh.resume_education (resume_id, education_id)

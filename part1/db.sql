@@ -2,9 +2,6 @@ DROP TABLE IF EXISTS hh.account CASCADE;
 DROP TYPE IF EXISTS hh.GENDER CASCADE;
 DROP TABLE IF EXISTS hh.applicant CASCADE;
 DROP TYPE IF EXISTS hh.EDUCATION_TYPE CASCADE;
-DROP TABLE IF EXISTS hh.educational_institution CASCADE;
-DROP TABLE IF EXISTS hh.faculty CASCADE;
-DROP TABLE IF EXISTS hh.speciality CASCADE;
 DROP TABLE IF EXISTS hh.education CASCADE;
 DROP TABLE IF EXISTS hh.experience CASCADE;
 DROP TABLE IF EXISTS hh.skill CASCADE;
@@ -58,35 +55,13 @@ CREATE TYPE hh.EDUCATION_TYPE AS ENUM
     'TOP_SKILLS'
     );
 
-CREATE TABLE hh.educational_institution
-(
-  institution_id SERIAL PRIMARY KEY,
-  short_name     VARCHAR(20),
-  name           VARCHAR(100),
-  city           VARCHAR(100)
-);
-
-CREATE TABLE hh.faculty
-(
-  faculty_id     SERIAL PRIMARY KEY,
-  institution_id INTEGER NOT NULL REFERENCES hh.educational_institution,
-  name           VARCHAR(100)
-);
-
-CREATE TABLE hh.speciality
-(
-  speciality_id SERIAL PRIMARY KEY,
-  faculty_id    INTEGER NOT NULL REFERENCES hh.faculty,
-  name          VARCHAR(100)
-);
-
 CREATE TABLE hh.education
 (
-  education_id  SERIAL PRIMARY KEY,
-  applicant_id  INTEGER NOT NULL REFERENCES hh.applicant (account_id),
-  level         hh.EDUCATION_TYPE,
-  speciality_id INTEGER REFERENCES hh.speciality,
-  year          INTEGER
+  education_id SERIAL PRIMARY KEY,
+  applicant_id INTEGER NOT NULL REFERENCES hh.applicant (account_id),
+  level        hh.EDUCATION_TYPE,
+  about        TEXT,
+  year         INTEGER
 );
 
 CREATE TABLE hh.experience

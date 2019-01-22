@@ -1,12 +1,6 @@
 ﻿TRUNCATE hh.account CASCADE;
 ALTER SEQUENCE IF EXISTS hh.account_account_id_seq RESTART;
 TRUNCATE hh.applicant CASCADE;
-TRUNCATE hh.educational_institution CASCADE;
-ALTER SEQUENCE IF EXISTS hh.educational_institution_institution_id_seq RESTART;
-TRUNCATE hh.faculty CASCADE;
-ALTER SEQUENCE IF EXISTS hh.faculty_faculty_id_seq RESTART;
-TRUNCATE hh.speciality CASCADE;
-ALTER SEQUENCE IF EXISTS hh.speciality_speciality_id_seq RESTART;
 TRUNCATE hh.education CASCADE;
 ALTER SEQUENCE IF EXISTS hh.education_education_id_seq RESTART;
 TRUNCATE hh.experience CASCADE;
@@ -46,33 +40,12 @@ VALUES (1, 'Пупкин Василий Владимирович', 'MAN', '1991-
        (4, 'Сидоров Александр Николаевич', 'MAN', '1974-03-08', 'Краснодар'),
        (5, 'Попова Екатерина Андреевна', 'WOMAN', '2001-01-17', 'Воронеж');
 
-INSERT INTO hh.educational_institution(short_name, name, city)
-VALUES ('МЭИ (ТУ)', 'Московский Энергетический Институт', 'Москва'),
-       ('МГУ', 'Московский государственный университет им. М.В. Ломоносова', 'Москва'),
-       ('ДВФУ', 'Дальневосточный федеральный университет', 'Владивосток'),
-       ('ВолгГТУ', 'Волгоградский государственный технический университет', 'Волгоград'),
-       ('УрГПУ', 'Уральский государственный педагогический университет', 'Екатеринбург');
-
-INSERT INTO hh.faculty(institution_id, name)
-VALUES (1, 'АВТИ'),
-       (2, 'Физический факультет'),
-       (3, 'Школа естественных наук'),
-       (4, 'Факультет экономики и управления'),
-       (5, 'Институт филологии, культурологии и межкультурной коммуникации');
-
-INSERT INTO hh.speciality(faculty_id, name)
-VALUES (1, 'Вычислительные Машины, Комплексы, Системы и Сети'),
-       (2, 'Кафедра молекулярной физики'),
-       (3, 'Кафедра почвоведения'),
-       (4, 'Мировая экономика и экономическая теория'),
-       (5, 'Кафедра общего языкознания и русского языка');
-
-INSERT INTO hh.education(applicant_id, level, speciality_id, year)
-VALUES (1, 'MASTER', 5, 2015),
-       (2, 'SPECIALIST', 2, 2010),
-       (3, 'SPECIALIST', 3, 1984),
-       (4, 'SPECIALIST', 1, 1997),
-       (5, 'AVERAGE_SCHOOL', NULL, 2019);
+INSERT INTO hh.education(applicant_id, level, about, year)
+VALUES (1, 'MASTER', 'Уральский государственный педагогический университет, Екатеринбург: Институт филологии, культурологии и межкультурной коммуникации: Кафедра общего языкознания и русского языка', 2015),
+       (2, 'SPECIALIST', 'Московский государственный университет им. М.В. Ломоносова, Москва: Физический факультет: Кафедра молекулярной физики', 2010),
+       (3, 'SPECIALIST', 'Дальневосточный федеральный университет, Владивосток: Школа естественных наук: Кафедра почвоведения', 1984),
+       (4, 'SPECIALIST', 'Московский Энергетический Институт, Москва: АВТИ: Вычислительные Машины, Комплексы, Системы и Сети', 1997),
+       (5, 'AVERAGE_SCHOOL', '', 2019);
 
 INSERT INTO hh.experience(applicant_id, date_begin, date_end, organization_name, position, about)
 VALUES (1, '2015-09-01', NULL, 'Ломоносовская школа', 'Учитель русского языка и литературы', 'Работал очень хорошо'),
