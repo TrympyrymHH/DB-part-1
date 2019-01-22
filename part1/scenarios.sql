@@ -32,13 +32,9 @@ WITH logged_account AS
          WHERE email = 'michnick@mail.ru'
            AND session_password = md5('12345')
        ),
-     my_position AS
-       (SELECT position_id
-        FROM hh.position
-        WHERE title = 'Ведущий разработчик PHP'),
      my_resume AS
-       (INSERT INTO hh.resume (applicant_id, phone, position_id, salary, about, shedule, status)
-         VALUES ((SELECT account_id FROM logged_account), '+79151234567', (SELECT position_id FROM my_position), 150000,
+       (INSERT INTO hh.resume (applicant_id, phone, position, salary, about, shedule, status)
+         VALUES ((SELECT account_id FROM logged_account), '+79151234567', 'Ведущий разработчик PHP', 150000,
                  'Я очень хороший человек', 'FLEXIBLE', 'SHOW') RETURNING resume_id),
      --Добавляем образование
      my_educational_institution AS
@@ -61,14 +57,10 @@ WITH logged_account AS
        (INSERT INTO hh.resume_education (resume_id, education_id)
          VALUES ((SELECT resume_id FROM my_resume), (SELECT education_id FROM my_education))),
      --Добавляем опыт
-     my_old_position AS
-       (SELECT position_id
-        FROM hh.position
-        WHERE title ~* 'PHP разработчик'),
      my_experience AS
-       (INSERT INTO hh.experience (applicant_id, date_begin, date_end, organization_name, position_id, about)
-         VALUES ((SELECT account_id FROM logged_account), '1998-09-01', NULL, 'Технопарк',
-                 (SELECT position_id FROM my_old_position), 'Работал очень хорошо') RETURNING experience_id),
+       (INSERT INTO hh.experience (applicant_id, date_begin, date_end, organization_name, position, about)
+         VALUES ((SELECT account_id FROM logged_account), '1998-09-01', NULL, 'Технопарк', 'PHP разработчик',
+                 'Работал очень хорошо') RETURNING experience_id),
      my_resume_experience AS
        (INSERT INTO hh.resume_experience (resume_id, experience_id)
          VALUES ((SELECT resume_id FROM my_resume), (SELECT experience_id FROM my_experience))),
@@ -92,11 +84,15 @@ WITH logged_account AS
        ),
      my_resume AS
        (SELECT resume_id FROM hh.resume WHERE applicant_id = (SELECT account_id FROM logged_account))
-SELECT vacancy_id, position.title, employer.organization_name, vacancy.salary_from, vacancy.salary_to, vacancy.about
+SELECT vacancy_id,
+       vacancy.position,
+       employer.organization_name,
+       vacancy.salary_from,
+       vacancy.salary_to,
+       vacancy.about
 FROM hh.resume
        JOIN hh.applicant ON (resume.applicant_id = applicant.account_id)
-       JOIN hh.position USING (position_id)
-       JOIN hh.vacancy USING (position_id, city)
+       JOIN hh.vacancy USING (position, city)
        JOIN hh.employer USING (employer_id)
 WHERE resume_id = (SELECT resume_id FROM my_resume)
   AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary);
@@ -115,8 +111,7 @@ WITH logged_account AS
        (SELECT vacancy_id
         FROM hh.resume
                JOIN hh.applicant ON (resume.applicant_id = applicant.account_id)
-               JOIN hh.position USING (position_id)
-               JOIN hh.vacancy USING (position_id, city)
+               JOIN hh.vacancy USING (position, city)
                JOIN hh.employer USING (employer_id)
         WHERE resume_id = (SELECT resume_id FROM my_resume)
           AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary))
@@ -207,11 +202,9 @@ WITH logged_account AS
         FROM hh.employer
                JOIN hh.employer_account USING (employer_id)
         WHERE employer_account.account_id = (SELECT account_id FROM logged_account)),
-     my_position AS
-       (INSERT INTO hh.position (title) VALUES ('Врач-куратор') RETURNING position_id),
      my_vacancy AS
-       (INSERT INTO hh.vacancy (employer_id, position_id, city, salary_from, salary_to, about, status)
-         VALUES ((SELECT employer_id FROM my_employer), (SELECT position_id FROM my_position), 'Калуга', 75000, 75000,
+       (INSERT INTO hh.vacancy (employer_id, position, city, salary_from, salary_to, about, status)
+         VALUES ((SELECT employer_id FROM my_employer), 'Врач-куратор', 'Калуга', 75000, 75000,
                  'В связи с внедрением новых услуг по ДМС компания увеличивает штат сотрудников.',
                  'OPEN') RETURNING vacancy_id),
      --Добавляем умения
@@ -239,7 +232,7 @@ WITH logged_account AS
      my_vacancy AS
        (SELECT vacancy_id FROM hh.vacancy WHERE employer_id = (SELECT employer_id FROM my_employer))
 SELECT resume_id,
-       position.title,
+       resume.position,
        applicant.name,
        applicant.gender,
        applicant.birthday,
@@ -247,8 +240,7 @@ SELECT resume_id,
        resume.about
 FROM hh.resume
        JOIN hh.applicant ON (resume.applicant_id = applicant.account_id)
-       JOIN hh.position USING (position_id)
-       JOIN hh.vacancy USING (position_id, city)
+       JOIN hh.vacancy USING (position, city)
 WHERE vacancy_id = (SELECT vacancy_id FROM my_vacancy)
   AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary)
   AND (vacancy.salary_from ISNULL OR vacancy.salary_from <= resume.salary);

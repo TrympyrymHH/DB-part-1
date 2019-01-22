@@ -6,7 +6,6 @@ DROP TABLE IF EXISTS hh.educational_institution CASCADE;
 DROP TABLE IF EXISTS hh.faculty CASCADE;
 DROP TABLE IF EXISTS hh.speciality CASCADE;
 DROP TABLE IF EXISTS hh.education CASCADE;
-DROP TABLE IF EXISTS hh.position CASCADE;
 DROP TABLE IF EXISTS hh.experience CASCADE;
 DROP TABLE IF EXISTS hh.skill CASCADE;
 DROP TYPE IF EXISTS hh.SCHEDULE_TYPE CASCADE;
@@ -90,12 +89,6 @@ CREATE TABLE hh.education
   year          INTEGER
 );
 
-CREATE TABLE hh.position
-(
-  position_id SERIAL PRIMARY KEY,
-  title       VARCHAR(100)
-);
-
 CREATE TABLE hh.experience
 (
   experience_id     SERIAL PRIMARY KEY,
@@ -103,7 +96,7 @@ CREATE TABLE hh.experience
   date_begin        DATE    NOT NULL,
   date_end          DATE,
   organization_name VARCHAR(100),
-  position_id       INTEGER NOT NULL REFERENCES hh.position,
+  position          VARCHAR(100),
   about             TEXT
 );
 
@@ -133,7 +126,7 @@ CREATE TABLE hh.resume
   resume_id    SERIAL PRIMARY KEY,
   applicant_id INTEGER NOT NULL REFERENCES hh.applicant (account_id),
   phone        VARCHAR(20),
-  position_id  INTEGER NOT NULL REFERENCES hh.position,
+  position     VARCHAR(100),
   salary       INTEGER,
   about        TEXT,
   shedule      hh.SCHEDULE_TYPE,
@@ -184,7 +177,7 @@ CREATE TABLE hh.vacancy
 (
   vacancy_id  SERIAL PRIMARY KEY,
   employer_id INTEGER NOT NULL REFERENCES hh.employer,
-  position_id INTEGER NOT NULL REFERENCES hh.position,
+  position    VARCHAR(100),
   city        VARCHAR(100),
   salary_from INTEGER,
   salary_to   INTEGER,
