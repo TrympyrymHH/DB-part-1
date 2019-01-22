@@ -38,13 +38,10 @@ WITH logged_account AS
                  'Я очень хороший человек', 'FLEXIBLE', 'SHOW') RETURNING resume_id),
      --Добавляем образование
      my_education AS
-       (INSERT INTO hh.education (applicant_id, level, about, year)
-         VALUES ((SELECT account_id FROM logged_account), 'SPECIALIST',
+       (INSERT INTO hh.education (resume_id, level, about, year)
+         VALUES ((SELECT resume_id FROM my_resume), 'SPECIALIST',
                  'Московский Энергетический Институт, Москва: АВТИ: Вычислительные Машины, Комплексы, Системы и Сети',
                  1998) RETURNING education_id),
-     my_resume_education AS
-       (INSERT INTO hh.resume_education (resume_id, education_id)
-         VALUES ((SELECT resume_id FROM my_resume), (SELECT education_id FROM my_education))),
      --Добавляем опыт
      my_experience AS
        (INSERT INTO hh.experience (resume_id, date_begin, date_end, organization_name, position, about)

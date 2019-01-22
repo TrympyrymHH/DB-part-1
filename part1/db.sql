@@ -2,12 +2,11 @@ DROP TABLE IF EXISTS hh.account CASCADE;
 DROP TYPE IF EXISTS hh.GENDER CASCADE;
 DROP TABLE IF EXISTS hh.applicant CASCADE;
 DROP TYPE IF EXISTS hh.EDUCATION_TYPE CASCADE;
-DROP TABLE IF EXISTS hh.education CASCADE;
 DROP TABLE IF EXISTS hh.skill CASCADE;
 DROP TYPE IF EXISTS hh.SCHEDULE_TYPE CASCADE;
 DROP TYPE IF EXISTS hh.RESUME_STATUS CASCADE;
 DROP TABLE IF EXISTS hh.resume CASCADE;
-DROP TABLE IF EXISTS hh.resume_education CASCADE;
+DROP TABLE IF EXISTS hh.education CASCADE;
 DROP TABLE IF EXISTS hh.experience CASCADE;
 DROP TABLE IF EXISTS hh.resume_skill CASCADE;
 DROP TABLE IF EXISTS hh.employer CASCADE;
@@ -54,15 +53,6 @@ CREATE TYPE hh.EDUCATION_TYPE AS ENUM
     'TOP_SKILLS'
     );
 
-CREATE TABLE hh.education
-(
-  education_id SERIAL PRIMARY KEY,
-  applicant_id INTEGER NOT NULL REFERENCES hh.applicant (account_id),
-  level        hh.EDUCATION_TYPE,
-  about        TEXT,
-  year         INTEGER
-);
-
 CREATE TABLE hh.skill
 (
   skill_id SERIAL PRIMARY KEY,
@@ -96,11 +86,13 @@ CREATE TABLE hh.resume
   status       hh.RESUME_STATUS
 );
 
-CREATE TABLE hh.resume_education
+CREATE TABLE hh.education
 (
+  education_id SERIAL PRIMARY KEY,
   resume_id    INTEGER NOT NULL REFERENCES hh.resume,
-  education_id INTEGER NOT NULL REFERENCES hh.education,
-  PRIMARY KEY (resume_id, education_id)
+  level        hh.EDUCATION_TYPE,
+  about        TEXT,
+  year         INTEGER
 );
 
 CREATE TABLE hh.experience
