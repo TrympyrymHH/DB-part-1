@@ -5,7 +5,6 @@ DROP TYPE IF EXISTS hh.EDUCATION_TYPE CASCADE;
 DROP TYPE IF EXISTS hh.SCHEDULE_TYPE CASCADE;
 DROP TYPE IF EXISTS hh.RESUME_STATUS CASCADE;
 DROP TABLE IF EXISTS hh.resume CASCADE;
-DROP TABLE IF EXISTS hh.education CASCADE;
 DROP TABLE IF EXISTS hh.experience CASCADE;
 DROP TABLE IF EXISTS hh.employer CASCADE;
 DROP TABLE IF EXISTS hh.employer_account CASCADE;
@@ -67,23 +66,15 @@ CREATE TYPE hh.RESUME_STATUS AS ENUM
 
 CREATE TABLE hh.resume
 (
-  resume_id    SERIAL PRIMARY KEY,
-  applicant_id INTEGER NOT NULL REFERENCES hh.applicant (account_id),
-  phone        VARCHAR(20),
-  position     VARCHAR(100),
-  salary       INTEGER,
-  about        TEXT,
-  shedule      hh.SCHEDULE_TYPE,
-  status       hh.RESUME_STATUS
-);
-
-CREATE TABLE hh.education
-(
-  education_id SERIAL PRIMARY KEY,
-  resume_id    INTEGER NOT NULL REFERENCES hh.resume,
-  level        hh.EDUCATION_TYPE,
-  about        TEXT,
-  year         INTEGER
+  resume_id       SERIAL PRIMARY KEY,
+  applicant_id    INTEGER NOT NULL REFERENCES hh.applicant (account_id),
+  phone           VARCHAR(20),
+  position        VARCHAR(100),
+  salary          INTEGER,
+  about           TEXT,
+  shedule         hh.SCHEDULE_TYPE,
+  status          hh.RESUME_STATUS,
+  education_level hh.EDUCATION_TYPE
 );
 
 CREATE TABLE hh.experience

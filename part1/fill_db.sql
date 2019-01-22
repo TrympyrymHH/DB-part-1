@@ -3,8 +3,6 @@ ALTER SEQUENCE IF EXISTS hh.account_account_id_seq RESTART;
 TRUNCATE hh.applicant CASCADE;
 TRUNCATE hh.resume CASCADE;
 ALTER SEQUENCE IF EXISTS hh.resume_resume_id_seq RESTART;
-TRUNCATE hh.education CASCADE;
-ALTER SEQUENCE IF EXISTS hh.education_education_id_seq RESTART;
 TRUNCATE hh.experience CASCADE;
 ALTER SEQUENCE IF EXISTS hh.experience_experience_id_seq RESTART;
 TRUNCATE hh.employer CASCADE;
@@ -34,20 +32,15 @@ VALUES (1, 'Пупкин Василий Владимирович', 'MAN', '1991-
        (4, 'Сидоров Александр Николаевич', 'MAN', '1974-03-08', 'Краснодар'),
        (5, 'Попова Екатерина Андреевна', 'WOMAN', '2001-01-17', 'Воронеж');
 
-INSERT INTO hh.resume(applicant_id, phone, position, salary, about, shedule, status)
-VALUES (1, '+79101234567', 'Учитель русского языка', 100000, 'Я очень ценный учитель', 'FULL_DAY', 'SHOW'),
+INSERT INTO hh.resume(applicant_id, phone, position, salary, about, shedule, status, education_level)
+VALUES (1, '+79101234567', 'Учитель русского языка', 100000, 'Я очень ценный учитель', 'FULL_DAY', 'SHOW', 'MASTER'),
        (2, '+79031234567', 'Технический руководитель проектов по разработке аналитического оборудования/биофизика',
-        90000, 'Я очень ценный физик', 'FULL_DAY', 'SHOW'),
-       (3, '+79261234567', 'Инженер-эколог', 45000, 'Я очень ценный почвовед', 'FULL_DAY', 'SHOW'),
-       (4, '+79161234567', 'Ведущий разработчик PHP', 200000, 'Я очень ценный разработчик', 'FULL_DAY', 'SHOW'),
-       (5, '+79051234567', 'Продавец-консультант', 50000, 'Я очень хочу работать', 'FULL_DAY', 'SHOW');
-
-INSERT INTO hh.education(resume_id, level, about, year)
-VALUES (1, 'MASTER', 'Уральский государственный педагогический университет, Екатеринбург: Институт филологии, культурологии и межкультурной коммуникации: Кафедра общего языкознания и русского языка', 2015),
-       (2, 'SPECIALIST', 'Московский государственный университет им. М.В. Ломоносова, Москва: Физический факультет: Кафедра молекулярной физики', 2010),
-       (3, 'SPECIALIST', 'Дальневосточный федеральный университет, Владивосток: Школа естественных наук: Кафедра почвоведения', 1984),
-       (4, 'SPECIALIST', 'Московский Энергетический Институт, Москва: АВТИ: Вычислительные Машины, Комплексы, Системы и Сети', 1997),
-       (5, 'AVERAGE_SCHOOL', '', 2019);
+        90000, 'Я очень ценный физик', 'FULL_DAY', 'SHOW', 'SPECIALIST'),
+       (3, '+79261234567', 'Инженер-эколог', 45000, 'Я очень ценный почвовед', 'FULL_DAY', 'SHOW', 'SPECIALIST'),
+       (4, '+79161234567', 'Ведущий разработчик PHP', 200000, 'Я очень ценный разработчик', 'FULL_DAY', 'SHOW',
+        'SPECIALIST'),
+       (5, '+79051234567', 'Продавец-консультант', 50000, 'Я очень хочу работать', 'FULL_DAY', 'SHOW',
+        'AVERAGE_SCHOOL');
 
 INSERT INTO hh.experience(resume_id, date_begin, date_end, organization_name, position, about)
 VALUES (1, '2015-09-01', NULL, 'Ломоносовская школа', 'Учитель русского языка и литературы', 'Работал очень хорошо'),

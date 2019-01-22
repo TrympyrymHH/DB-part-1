@@ -33,15 +33,9 @@ WITH logged_account AS
            AND session_password = md5('12345')
        ),
      my_resume AS
-       (INSERT INTO hh.resume (applicant_id, phone, position, salary, about, shedule, status)
+       (INSERT INTO hh.resume (applicant_id, phone, position, salary, about, shedule, status, education_level)
          VALUES ((SELECT account_id FROM logged_account), '+79151234567', 'Ведущий разработчик PHP', 150000,
-                 'Я очень хороший человек', 'FLEXIBLE', 'SHOW') RETURNING resume_id),
-     --Добавляем образование
-     my_education AS
-       (INSERT INTO hh.education (resume_id, level, about, year)
-         VALUES ((SELECT resume_id FROM my_resume), 'SPECIALIST',
-                 'Московский Энергетический Институт, Москва: АВТИ: Вычислительные Машины, Комплексы, Системы и Сети',
-                 1998) RETURNING education_id)
+                 'Я очень хороший человек', 'FLEXIBLE', 'SHOW', 'SPECIALIST') RETURNING resume_id)
      --Добавляем опыт
 INSERT
 INTO hh.experience (resume_id, date_begin, date_end, organization_name, position, about)
