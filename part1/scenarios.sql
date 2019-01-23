@@ -27,30 +27,23 @@ WHERE email = 'zharinova@vsk.ru'
   AND password = md5('password');
 
 --    1. Хочу создать резюме
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password')),
-     my_resume AS
-       (
-         INSERT
-           INTO hh.resume (account_id, name, city, position, shedule, education_level, experience_years, salary, about,
-                           status)
-             VALUES ((SELECT account_id FROM logged_account), 'Васечкин Михаил Николаевич', 'Калуга', 'Врач-куратор',
-                     'FULL_DAY', 'SPECIALIST', '6+', 75000, 'Я очень хороший человек', 'SHOW') RETURNING resume_id
-       )
-INSERT
-INTO hh.experience (resume_id, date_begin, date_end, organization_name, position, about)
-VALUES ((SELECT resume_id FROM my_resume), '1998-09-01', NULL, 'Технопарк', 'PHP разработчик', 'Работал очень хорошо');
+INSERT INTO hh.resume (account_id, name, city, position, shedule, education_level, experience_years, salary, about,
+                       status)
+VALUES (11, 'Васечкин Михаил Николаевич', 'Калуга', 'Врач-куратор', 'FULL_DAY', 'SPECIALIST', '6+', 75000,
+        'Я очень хороший человек', 'SHOW');
+
+--    1. Хочу добавить прежднее место работы
+INSERT INTO hh.experience (resume_id, date_begin, date_end, organization_name, position, about)
+VALUES (6, '1998-09-01', NULL, 'Технопарк', 'PHP разработчик', 'Работал очень хорошо');
 
 --    2. Хочу создать вакансию
 --Добавляем вакансию
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
-     my_employer AS
+WITH my_employer AS
        (
          SELECT employer_id
          FROM hh.employer
                 JOIN hh.employer_account USING (employer_id)
-         WHERE employer_account.account_id = (SELECT account_id FROM logged_account)
+         WHERE employer_account.account_id = 12
        )
 INSERT
 INTO hh.vacancy(employer_id, city, position, shedule, education_level, experience_years, salary_from, salary_to, about,
@@ -59,10 +52,6 @@ VALUES ((SELECT employer_id FROM my_employer), 'Калуга', 'Врач-кур�
         'В связи с внедрением новых услуг по ДМС компания увеличивает штат сотрудников.', 'OPEN');
 
 --    1. Хочу найти вакансию
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password')),
-     my_resume AS
-       (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account))
 SELECT vacancy_id,
        employer.organization_name,
        vacancy.city,
@@ -76,25 +65,21 @@ SELECT vacancy_id,
 FROM hh.vacancy
        JOIN hh.employer USING (employer_id)
        JOIN hh.resume USING (city, position, shedule)
-WHERE resume_id = (SELECT resume_id FROM my_resume)
+WHERE resume_id = 6
   AND vacancy.status = 'OPEN'
   AND vacancy.education_level <= resume.education_level
   AND vacancy.experience_years <= resume.experience_years
-  AND (vacancy.salary_from ISNULL OR vacancy.salary_from <= resume.salary)
-  AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary);
+  AND (vacancy.salary_from IS NULL OR vacancy.salary_from <= resume.salary)
+  AND (vacancy.salary_to IS NULL OR vacancy.salary_to >= resume.salary);
 
 --    2. Хочу найти резюме
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
-     my_employer AS
+WITH my_employer AS
        (
          SELECT employer_id
          FROM hh.employer
                 JOIN hh.employer_account USING (employer_id)
-         WHERE employer_account.account_id = (SELECT account_id FROM logged_account)
-       ),
-     my_vacancy AS
-       (SELECT vacancy_id FROM hh.vacancy WHERE employer_id = (SELECT employer_id FROM my_employer))
+         WHERE employer_account.account_id = 12
+       )
 SELECT resume_id,
        resume.name,
        resume.city,
@@ -106,154 +91,113 @@ SELECT resume_id,
        resume.about
 FROM hh.resume
        JOIN hh.vacancy USING (city, position, shedule)
-WHERE vacancy_id = (SELECT vacancy_id FROM my_vacancy)
+WHERE vacancy_id = 6
   AND resume.status = 'SHOW'
   AND vacancy.education_level <= resume.education_level
   AND vacancy.experience_years <= resume.experience_years
-  AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary)
-  AND (vacancy.salary_from ISNULL OR vacancy.salary_from <= resume.salary);
+  AND (vacancy.salary_to IS NULL OR vacancy.salary_to >= resume.salary)
+  AND (vacancy.salary_from IS NULL OR vacancy.salary_from <= resume.salary);
 
 --    1. Хочу откликнуться на вакансию (отправить резюме)
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password')),
-     my_resume AS
-       (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account)),
-     vacancy_for_me AS
-       (
-         SELECT vacancy_id
-         FROM hh.vacancy
-                JOIN hh.resume USING (city, position, shedule)
-         WHERE resume_id = (SELECT resume_id FROM my_resume)
-           AND vacancy.status = 'OPEN'
-           AND vacancy.education_level <= resume.education_level
-           AND vacancy.experience_years <= resume.experience_years
-           AND (vacancy.salary_from ISNULL OR vacancy.salary_from <= resume.salary)
-           AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary)
-       )
-INSERT
-INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
-VALUES ((SELECT resume_id FROM my_resume), (SELECT vacancy_id FROM vacancy_for_me),
-        (SELECT account_id FROM logged_account), now(), 'RESUME', 'Моё резюме', FALSE);
+INSERT INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
+VALUES (6, 6, 11, now(), 'RESUME', 'Моё резюме', FALSE);
 
 --    2. Хочу предложить вакансию
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
-     my_employer AS
-       (
-         SELECT employer_id
-         FROM hh.employer
-                JOIN hh.employer_account USING (employer_id)
-         WHERE employer_account.account_id = (SELECT account_id FROM logged_account)
-       ),
-     my_vacancy AS
-       (SELECT vacancy_id FROM hh.vacancy WHERE employer_id = (SELECT employer_id FROM my_employer)),
-     resume_for_me AS
-       (
-         SELECT resume_id
-         FROM hh.resume
-                JOIN hh.vacancy USING (city, position, shedule)
-         WHERE vacancy_id = (SELECT vacancy_id FROM my_vacancy)
-           AND resume.status = 'SHOW'
-           AND vacancy.education_level <= resume.education_level
-           AND vacancy.experience_years <= resume.experience_years
-           AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary)
-           AND (vacancy.salary_from ISNULL OR vacancy.salary_from <= resume.salary)
-       )
 INSERT
 INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
-VALUES ((SELECT resume_id FROM resume_for_me), (SELECT vacancy_id FROM my_vacancy),
-        (SELECT account_id FROM logged_account), now(), 'VACANCY', 'Наша вакансия', FALSE);
+VALUES (6, 6, 12, now(), 'VACANCY', 'Наша вакансия', FALSE);
 
 --    1. Хочу посмотреть работодателей, которые мне написали/ответили
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password'))
 SELECT vacancy_id
 FROM hh.message
        JOIN hh.resume USING (resume_id)
-WHERE resume.account_id = (SELECT account_id FROM logged_account)
+WHERE resume.account_id = 11
   AND resume.account_id != message.account_id
   AND message.view = FALSE;
 
 --    2. Хочу посмотреть переписки, в которых появились новые сообщения
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
-     my_employer AS
+WITH my_employer AS
        (
          SELECT employer_id
          FROM hh.employer
                 JOIN hh.employer_account USING (employer_id)
-         WHERE employer_account.account_id = (SELECT account_id FROM logged_account)
+         WHERE employer_account.account_id = 12
        )
 SELECT resume_id
 FROM hh.message
        JOIN hh.vacancy USING (vacancy_id)
 WHERE vacancy.employer_id = (SELECT employer_id FROM my_employer)
-  AND message.account_id != (SELECT account_id FROM logged_account)
+  AND message.account_id != 12
   AND message.view = FALSE;
 
---    1. Хочу написать работодателю
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password')),
-     my_resume AS
-       (SELECT resume_id FROM hh.resume WHERE account_id = (SELECT account_id FROM logged_account)),
-     vacancy_for_me AS
+--    1. Хочу прочитать сообщения от работодателя
+WITH messages AS
        (
-         SELECT vacancy_id
-         FROM hh.vacancy
-                JOIN hh.resume USING (city, position, shedule)
-         WHERE resume_id = (SELECT resume_id FROM my_resume)
-           AND vacancy.status = 'OPEN'
-           AND vacancy.education_level <= resume.education_level
-           AND vacancy.experience_years <= resume.experience_years
-           AND (vacancy.salary_from ISNULL OR vacancy.salary_from <= resume.salary)
-           AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary)
+         SELECT message.message_id,
+                message.account_id,
+                account.email,
+                message.send_time,
+                message.type,
+                message.body,
+                message.view
+         FROM hh.message
+                JOIN hh.account USING (account_id)
+         WHERE message.resume_id = 6
+           AND message.vacancy_id = 6
+         ORDER BY send_time
+       ),
+     update_messages AS
+       (
+         UPDATE hh.message
+           SET view = TRUE
+           WHERE message_id in (SELECT message_id FROM messages)
+             AND account_id != 11
        )
-INSERT
-INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
-VALUES ((SELECT resume_id FROM my_resume), (SELECT vacancy_id FROM vacancy_for_me),
-        (SELECT account_id FROM logged_account), now(), 'TEXT_APP', 'Привет', FALSE);
+SELECT *
+FROM messages;
+
+--    1. Хочу прочитать сообщения от соискателя
+WITH messages AS
+       (
+         SELECT message.message_id,
+                resume.account_id AS applicant_id,
+                message.account_id,
+                account.email,
+                message.send_time,
+                message.type,
+                message.body,
+                message.view
+         FROM hh.message
+                JOIN hh.account USING (account_id)
+                JOIN hh.resume USING (resume_id)
+         WHERE message.resume_id = 6
+           AND message.vacancy_id = 6
+         ORDER BY send_time
+       ),
+     update_messages AS
+       (
+         UPDATE hh.message
+           SET view = TRUE
+           WHERE message_id IN (SELECT message_id FROM messages)
+             AND (account_id IN (SELECT applicant_id FROM messages))
+       )
+SELECT *
+FROM messages;
+
+--    1. Хочу написать работодателю
+INSERT INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
+VALUES (6, 6, 11, now(), 'TEXT_APP', 'Привет', FALSE);
 
 --    2. Хочу написать соискателю
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
-     my_employer AS
-       (
-         SELECT employer_id
-         FROM hh.employer
-                JOIN hh.employer_account USING (employer_id)
-         WHERE employer_account.account_id = (SELECT account_id FROM logged_account)
-       ),
-     my_vacancy AS
-       (SELECT vacancy_id FROM hh.vacancy WHERE employer_id = (SELECT employer_id FROM my_employer)),
-     resume_for_me AS
-       (
-         SELECT resume_id
-         FROM hh.resume
-                JOIN hh.vacancy USING (city, position, shedule)
-         WHERE vacancy_id = (SELECT vacancy_id FROM my_vacancy)
-           AND resume.status = 'SHOW'
-           AND vacancy.education_level <= resume.education_level
-           AND vacancy.experience_years <= resume.experience_years
-           AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary)
-           AND (vacancy.salary_from ISNULL OR vacancy.salary_from <= resume.salary)
-       )
-INSERT
-INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
-VALUES ((SELECT resume_id FROM resume_for_me), (SELECT vacancy_id FROM my_vacancy),
-        (SELECT account_id FROM logged_account), now(), 'TEXT_EMP', 'Привет', FALSE);
+INSERT INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
+VALUES (6, 6, 12, now(), 'TEXT_EMP', 'Привет', FALSE);
+
+--    1. Хочу скрыть резюме
+UPDATE hh.resume
+SET status = 'HIDE'
+WHERE resume_id = 6;
 
 --    2. Хочу закрыть вакансию
-WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'zharinova@vsk.ru' AND password = md5('password')),
-     my_employer AS
-       (
-         SELECT employer_id
-         FROM hh.employer
-                JOIN hh.employer_account USING (employer_id)
-         WHERE employer_account.account_id = (SELECT account_id FROM logged_account)
-       ),
-     my_vacancy AS
-       (SELECT vacancy_id FROM hh.vacancy WHERE employer_id = (SELECT employer_id FROM my_employer))
 UPDATE hh.vacancy
 SET status = 'CLOSE'
-WHERE vacancy_id in (SELECT vacancy_id FROM my_vacancy);
+WHERE vacancy_id = 6;
