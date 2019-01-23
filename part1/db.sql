@@ -1,7 +1,10 @@
 DROP TABLE IF EXISTS hh.account CASCADE;
-DROP TYPE IF EXISTS hh.EDUCATION_TYPE CASCADE;
 DROP TYPE IF EXISTS hh.SCHEDULE_TYPE CASCADE;
+DROP TYPE IF EXISTS hh.EDUCATION_TYPE CASCADE;
+DROP TYPE IF EXISTS hh.EXPERIENCE_YEARS CASCADE;
+DROP TYPE IF EXISTS hh.RESUME_STATUS CASCADE;
 DROP TABLE IF EXISTS hh.resume CASCADE;
+DROP TABLE IF EXISTS hh.experience CASCADE;
 DROP TABLE IF EXISTS hh.employer CASCADE;
 DROP TABLE IF EXISTS hh.employer_account CASCADE;
 DROP TYPE IF EXISTS hh.VACANCY_STATUS CASCADE;
@@ -16,6 +19,15 @@ CREATE TABLE hh.account
   password   VARCHAR(50) NOT NULL
 );
 
+CREATE TYPE hh.SCHEDULE_TYPE AS ENUM
+  (
+    'FULL_DAY',
+    'REPLACEABLE',
+    'FLEXIBLE',
+    'DISTANT',
+    'SHIFT_METHOD'
+    );
+
 CREATE TYPE hh.EDUCATION_TYPE AS ENUM
   (
     'PRESCHOOL',
@@ -29,13 +41,18 @@ CREATE TYPE hh.EDUCATION_TYPE AS ENUM
     'TOP_SKILLS'
     );
 
-CREATE TYPE hh.SCHEDULE_TYPE AS ENUM
+CREATE TYPE hh.EXPERIENCE_YEARS AS ENUM (
+  'ANY',
+  '0-1',
+  '1-3',
+  '3-6',
+  '6+'
+  );
+
+CREATE TYPE hh.RESUME_STATUS AS ENUM
   (
-    'FULL_DAY',
-    'REPLACEABLE',
-    'FLEXIBLE',
-    'DISTANT',
-    'SHIFT_METHOD'
+    'SHOW',
+    'HIDE'
     );
 
 CREATE TABLE hh.resume
@@ -47,9 +64,21 @@ CREATE TABLE hh.resume
   position         VARCHAR(100),
   shedule          hh.SCHEDULE_TYPE,
   education_level  hh.EDUCATION_TYPE,
-  experience_years INTEGER,
+  experience_years hh.EXPERIENCE_YEARS,
   salary           INTEGER,
-  about            TEXT
+  about            TEXT,
+  status           hh.RESUME_STATUS
+);
+
+CREATE TABLE hh.experience
+(
+  experience_id     SERIAL PRIMARY KEY,
+  resume_id         INTEGER NOT NULL REFERENCES hh.resume,
+  date_begin        DATE    NOT NULL,
+  date_end          DATE,
+  organization_name VARCHAR(100),
+  position          VARCHAR(100),
+  about             TEXT
 );
 
 CREATE TABLE hh.employer
@@ -79,7 +108,7 @@ CREATE TABLE hh.vacancy
   position         VARCHAR(100),
   shedule          hh.SCHEDULE_TYPE,
   education_level  hh.EDUCATION_TYPE,
-  experience_years INTEGER,
+  experience_years hh.EXPERIENCE_YEARS,
   salary_from      INTEGER,
   salary_to        INTEGER,
   about            TEXT,

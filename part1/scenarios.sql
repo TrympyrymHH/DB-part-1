@@ -28,11 +28,18 @@ WHERE email = 'zharinova@vsk.ru'
 
 --    1. Хочу создать резюме
 WITH logged_account AS
-       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password'))
+       (SELECT account_id FROM hh.account WHERE email = 'michnick@mail.ru' AND password = md5('password')),
+     my_resume AS
+       (
+         INSERT
+           INTO hh.resume (account_id, name, city, position, shedule, education_level, experience_years, salary, about,
+                           status)
+             VALUES ((SELECT account_id FROM logged_account), 'Васечкин Михаил Николаевич', 'Калуга', 'Врач-куратор',
+                     'FULL_DAY', 'SPECIALIST', '6+', 75000, 'Я очень хороший человек', 'SHOW') RETURNING resume_id
+       )
 INSERT
-INTO hh.resume(account_id, name, city, position, shedule, education_level, experience_years, salary, about)
-VALUES ((SELECT account_id FROM logged_account), 'Васечкин Михаил Николаевич', 'Калуга', 'Врач-куратор',
-        'FULL_DAY', 'SPECIALIST', 20, 75000, 'Я очень хороший человек');
+INTO hh.experience (resume_id, date_begin, date_end, organization_name, position, about)
+VALUES ((SELECT resume_id FROM my_resume), '1998-09-01', NULL, 'Технопарк', 'PHP разработчик', 'Работал очень хорошо');
 
 --    2. Хочу создать вакансию
 --Добавляем вакансию
@@ -48,7 +55,7 @@ WITH logged_account AS
 INSERT
 INTO hh.vacancy(employer_id, city, position, shedule, education_level, experience_years, salary_from, salary_to, about,
                 status)
-VALUES ((SELECT employer_id FROM my_employer), 'Калуга', 'Врач-куратор', 'FULL_DAY', 'SPECIALIST', 1, 75000, 75000,
+VALUES ((SELECT employer_id FROM my_employer), 'Калуга', 'Врач-куратор', 'FULL_DAY', 'SPECIALIST', '1-3', 75000, 75000,
         'В связи с внедрением новых услуг по ДМС компания увеличивает штат сотрудников.', 'OPEN');
 
 --    1. Хочу найти вакансию
@@ -70,6 +77,7 @@ FROM hh.vacancy
        JOIN hh.employer USING (employer_id)
        JOIN hh.resume USING (city, position, shedule)
 WHERE resume_id = (SELECT resume_id FROM my_resume)
+  AND vacancy.status = 'OPEN'
   AND vacancy.education_level <= resume.education_level
   AND vacancy.experience_years <= resume.experience_years
   AND (vacancy.salary_from ISNULL OR vacancy.salary_from <= resume.salary)
@@ -99,6 +107,7 @@ SELECT resume_id,
 FROM hh.resume
        JOIN hh.vacancy USING (city, position, shedule)
 WHERE vacancy_id = (SELECT vacancy_id FROM my_vacancy)
+  AND resume.status = 'SHOW'
   AND vacancy.education_level <= resume.education_level
   AND vacancy.experience_years <= resume.experience_years
   AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary)
@@ -115,6 +124,7 @@ WITH logged_account AS
          FROM hh.vacancy
                 JOIN hh.resume USING (city, position, shedule)
          WHERE resume_id = (SELECT resume_id FROM my_resume)
+           AND vacancy.status = 'OPEN'
            AND vacancy.education_level <= resume.education_level
            AND vacancy.experience_years <= resume.experience_years
            AND (vacancy.salary_from ISNULL OR vacancy.salary_from <= resume.salary)
@@ -143,6 +153,7 @@ WITH logged_account AS
          FROM hh.resume
                 JOIN hh.vacancy USING (city, position, shedule)
          WHERE vacancy_id = (SELECT vacancy_id FROM my_vacancy)
+           AND resume.status = 'SHOW'
            AND vacancy.education_level <= resume.education_level
            AND vacancy.experience_years <= resume.experience_years
            AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary)
@@ -191,6 +202,7 @@ WITH logged_account AS
          FROM hh.vacancy
                 JOIN hh.resume USING (city, position, shedule)
          WHERE resume_id = (SELECT resume_id FROM my_resume)
+           AND vacancy.status = 'OPEN'
            AND vacancy.education_level <= resume.education_level
            AND vacancy.experience_years <= resume.experience_years
            AND (vacancy.salary_from ISNULL OR vacancy.salary_from <= resume.salary)
@@ -219,6 +231,7 @@ WITH logged_account AS
          FROM hh.resume
                 JOIN hh.vacancy USING (city, position, shedule)
          WHERE vacancy_id = (SELECT vacancy_id FROM my_vacancy)
+           AND resume.status = 'SHOW'
            AND vacancy.education_level <= resume.education_level
            AND vacancy.experience_years <= resume.experience_years
            AND (vacancy.salary_to ISNULL OR vacancy.salary_to >= resume.salary)

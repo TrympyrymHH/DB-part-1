@@ -2,6 +2,8 @@
 ALTER SEQUENCE IF EXISTS hh.account_account_id_seq RESTART;
 TRUNCATE hh.resume CASCADE;
 ALTER SEQUENCE IF EXISTS hh.resume_resume_id_seq RESTART;
+TRUNCATE hh.experience CASCADE;
+ALTER SEQUENCE IF EXISTS hh.experience_experience_id_seq RESTART;
 TRUNCATE hh.employer CASCADE;
 ALTER SEQUENCE IF EXISTS hh.employer_employer_id_seq RESTART;
 TRUNCATE hh.employer_account CASCADE;
@@ -22,18 +24,26 @@ VALUES ('vasya@gmail.com', md5('000000')),
        ('kadri@technopark.ru', md5('lkjhgf')),
        ('svetlana.smirnova01@megafon-retail.ru', md5('mnbvcx'));
 
-INSERT INTO hh.resume(account_id, name, city, position, shedule, education_level, experience_years, salary, about)
-VALUES (1, 'Пупкин Василий Владимирович', 'Москва', 'Учитель русского языка', 'FULL_DAY', 'MASTER', 3, 100000,
-        'Я очень ценный учитель'),
+INSERT INTO hh.resume(account_id, name, city, position, shedule, education_level, experience_years, salary, about,
+                      status)
+VALUES (1, 'Пупкин Василий Владимирович', 'Москва', 'Учитель русского языка', 'FULL_DAY', 'MASTER', '3-6', 100000,
+        'Я очень ценный учитель', 'SHOW'),
        (2, 'Иванов Пётр Васильевич', 'Санкт-Петербург',
         'Технический руководитель проектов по разработке аналитического оборудования/биофизика', 'FULL_DAY',
-        'SPECIALIST', 8, 90000, 'Я очень ценный физик'),
-       (3, 'Петров Николай Петрович', 'Нижний Новгород', 'Инженер-эколог', 'FULL_DAY', 'SPECIALIST', 34, 45000,
-        'Я очень ценный почвовед'),
-       (4, 'Сидоров Александр Николаевич', 'Краснодар', 'Ведущий разработчик PHP', 'FULL_DAY', 'SPECIALIST', 21, 200000,
-        'Я очень ценный разработчик'),
-       (5, 'Попова Екатерина Андреевна', 'Воронеж', 'Продавец-консультант', 'FULL_DAY', 'AVERAGE_SCHOOL', 0, 50000,
-        'Я очень хочу работать');
+        'SPECIALIST', '6+', 90000, 'Я очень ценный физик', 'SHOW'),
+       (3, 'Петров Николай Петрович', 'Нижний Новгород', 'Инженер-эколог', 'FULL_DAY', 'SPECIALIST', '6+', 45000,
+        'Я очень ценный почвовед', 'SHOW'),
+       (4, 'Сидоров Александр Николаевич', 'Краснодар', 'Ведущий разработчик PHP', 'FULL_DAY', 'SPECIALIST', '6+',
+        200000,
+        'Я очень ценный разработчик', 'SHOW'),
+       (5, 'Попова Екатерина Андреевна', 'Воронеж', 'Продавец-консультант', 'FULL_DAY', 'AVERAGE_SCHOOL', '0-1', 50000,
+        'Я очень хочу работать', 'SHOW');
+
+INSERT INTO hh.experience(resume_id, date_begin, date_end, organization_name, position, about)
+VALUES (1, '2015-09-01', NULL, 'Ломоносовская школа', 'Учитель русского языка и литературы', 'Работал очень хорошо'),
+       (2, '2010-08-01', NULL, 'ГБОУ Школа № 1741', 'Учитель физики', 'Ну очень хорошо работал'),
+       (3, '1984-07-01', NULL, 'ООО "Озеленитель Строй"', 'Агроном - почвовед', 'Лучший почвовед'),
+       (4, '1997-06-01', NULL, 'ООО Центр Управления Ресурсами', 'PHP разработчик', 'Есть рекомендации');
 
 INSERT INTO hh.employer(organization_name)
 VALUES ('Школа Летово'),
@@ -51,19 +61,19 @@ VALUES (1, 6),
 
 INSERT INTO hh.vacancy(employer_id, city, position, shedule, education_level, experience_years, salary_from, salary_to,
                        about, status)
-VALUES (1, 'Москва', 'Учитель русского языка', 'FULL_DAY', 'MASTER', 3, NULL, NULL,
+VALUES (1, 'Москва', 'Учитель русского языка', 'FULL_DAY', 'MASTER', '3-6', NULL, NULL,
         'Школа «Летово» — школа-пансион для одаренных и мотивированных детей, реализует обучение по стандартам ФГОС и программе Международного Бакалавриата.',
         'OPEN'),
        (2, 'Санкт-Петербург', 'Технический руководитель проектов по разработке аналитического оборудования/биофизика',
-        'FULL_DAY', 'MASTER', 5, 50000, 100000,
+        'FULL_DAY', 'MASTER', '3-6', 50000, 100000,
         'Предприятие, входящее в группу компаний радиоэлектронной отрасли, ищет технического руководителя для долгосрочной работы.',
         'OPEN'),
-       (3, 'Нижний Новгород', 'Инженер-эколог', 'FULL_DAY', 'MASTER', 3, NULL, NULL,
+       (3, 'Нижний Новгород', 'Инженер-эколог', 'FULL_DAY', 'MASTER', '3-6', NULL, NULL,
         'Отбор проб компонентов окружающей среды и проведение инструментальных замеров в полевых условиях.', 'OPEN'),
-       (4, 'Краснодар', 'Ведущий разработчик PHP', 'FULL_DAY', 'MASTER', 7, 180000, NULL,
+       (4, 'Краснодар', 'Ведущий разработчик PHP', 'FULL_DAY', 'MASTER', '6+', 180000, NULL,
         'Поддержка и развитие сайта technopark.ru и других проектов холдинга. Поддержка и на высоком уровне культуры разработки и эффективности взаимодействия в команде.',
         'OPEN'),
-       (5, 'Воронеж', 'Продавец-консультант', 'FULL_DAY', 'AVERAGE_SCHOOL', 0, 48000, NULL,
+       (5, 'Воронеж', 'Продавец-консультант', 'FULL_DAY', 'AVERAGE_SCHOOL', '0-1', 48000, NULL,
         'Привет, друг! Ты сделал правильный выбор, кликнув на нашу вакансию, потому что «МегаФон Ритейл» – лучшая компания для тебя и твоей карьеры.',
         'OPEN');
 
