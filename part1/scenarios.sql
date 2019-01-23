@@ -37,7 +37,6 @@ INSERT INTO hh.experience (resume_id, date_begin, date_end, organization_name, p
 VALUES (6, '1998-09-01', NULL, 'Технопарк', 'PHP разработчик', 'Работал очень хорошо');
 
 --    2. Хочу создать вакансию
---Добавляем вакансию
 WITH my_employer AS
        (
          SELECT employer_id
@@ -50,6 +49,23 @@ INTO hh.vacancy(employer_id, city, position, shedule, education_level, experienc
                 status)
 VALUES ((SELECT employer_id FROM my_employer), 'Калуга', 'Врач-куратор', 'FULL_DAY', 'SPECIALIST', '1-3', 75000, 75000,
         'В связи с внедрением новых услуг по ДМС компания увеличивает штат сотрудников.', 'OPEN');
+
+--    1. Хочу посмотреть список моих резюме
+SELECT resume_id,position
+FROM hh.resume
+WHERE account_id = 11;
+
+--    2. Хочу посмотреть список моих вакансий
+WITH my_employer AS
+       (
+         SELECT employer_id
+         FROM hh.employer
+                JOIN hh.employer_account USING (employer_id)
+         WHERE employer_account.account_id = 12
+       )
+SELECT vacancy_id,position
+FROM hh.vacancy
+WHERE employer_id IN (SELECT employer_id FROM my_employer);
 
 --    1. Хочу найти вакансию
 SELECT vacancy_id,
@@ -73,13 +89,6 @@ WHERE resume_id = 6
   AND (vacancy.salary_to IS NULL OR vacancy.salary_to >= resume.salary);
 
 --    2. Хочу найти резюме
-WITH my_employer AS
-       (
-         SELECT employer_id
-         FROM hh.employer
-                JOIN hh.employer_account USING (employer_id)
-         WHERE employer_account.account_id = 12
-       )
 SELECT resume_id,
        resume.name,
        resume.city,
@@ -107,7 +116,24 @@ INSERT
 INTO hh.message(resume_id, vacancy_id, account_id, send_time, type, body, view)
 VALUES (6, 6, 12, now(), 'VACANCY', 'Наша вакансия', FALSE);
 
---    1. Хочу посмотреть работодателей, которые мне написали/ответили
+--    1. Хочу посмотреть работодателей, с которыми я общался по определённому резюме
+SELECT employer.organization_name, vacancy.position, message.view, count(message.message_id)
+         FROM hh.message
+                JOIN hh.vacancy USING (vacancy_id)
+                JOIN hh.employer USING (employer_id)
+         WHERE message.resume_id = 6
+           AND message.account_id != 11
+         GROUP BY (employer.employer_id, vacancy.vacancy_id, message.view) ORDER BY message.view;
+
+--    2. Хочу посмотреть соискателей, с которыми я общался по определённой вакансии
+SELECT resume.name, resume.position, message.view, count(message.message_id)
+         FROM hh.message
+                JOIN hh.resume USING (resume_id)
+         WHERE message.vacancy_id = 6
+           AND message.account_id != 12
+         GROUP BY (resume.resume_id, message.view) ORDER BY message.view;
+
+     --    1. Хочу посмотреть работодателей, которые мне написали/ответили
 SELECT vacancy_id
 FROM hh.message
        JOIN hh.resume USING (resume_id)
