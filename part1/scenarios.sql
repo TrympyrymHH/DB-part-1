@@ -118,22 +118,24 @@ VALUES (6, 6, 12, now(), 'VACANCY', 'Наша вакансия', FALSE);
 
 --    1. Хочу посмотреть работодателей, с которыми я общался по определённому резюме
 SELECT employer.organization_name, vacancy.position, message.view, count(message.message_id)
-         FROM hh.message
-                JOIN hh.vacancy USING (vacancy_id)
-                JOIN hh.employer USING (employer_id)
-         WHERE message.resume_id = 6
-           AND message.account_id != 11
-         GROUP BY (employer.employer_id, vacancy.vacancy_id, message.view) ORDER BY message.view;
+FROM hh.message
+       JOIN hh.vacancy USING (vacancy_id)
+       JOIN hh.employer USING (employer_id)
+WHERE message.resume_id = 6
+  AND message.account_id != 11
+GROUP BY (employer.employer_id, vacancy.vacancy_id, message.view)
+ORDER BY message.view;
 
 --    2. Хочу посмотреть соискателей, с которыми я общался по определённой вакансии
 SELECT resume.name, resume.position, message.view, count(message.message_id)
-         FROM hh.message
-                JOIN hh.resume USING (resume_id)
-         WHERE message.vacancy_id = 6
-           AND message.account_id != 12
-         GROUP BY (resume.resume_id, message.view) ORDER BY message.view;
+FROM hh.message
+       JOIN hh.resume USING (resume_id)
+WHERE message.vacancy_id = 6
+  AND message.account_id != 12
+GROUP BY (resume.resume_id, message.view)
+ORDER BY message.view;
 
-     --    1. Хочу посмотреть работодателей, которые мне написали/ответили
+--    1. Хочу посмотреть работодателей, которые мне написали/ответили
 SELECT vacancy_id
 FROM hh.message
        JOIN hh.resume USING (resume_id)
@@ -179,7 +181,7 @@ WITH messages AS
            WHERE message_id in (SELECT message_id FROM messages)
              AND account_id != 11
        )
-SELECT *
+SELECT message_id, account_id, email, send_time, type, body, view
 FROM messages;
 
 --    1. Хочу прочитать сообщения от соискателя
@@ -207,7 +209,7 @@ WITH messages AS
            WHERE message_id IN (SELECT message_id FROM messages)
              AND (account_id IN (SELECT applicant_id FROM messages))
        )
-SELECT *
+SELECT message_id, applicant_id, account_id, email, send_time, type, body, view
 FROM messages;
 
 --    1. Хочу написать работодателю
