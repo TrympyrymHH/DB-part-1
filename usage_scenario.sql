@@ -405,3 +405,44 @@ LEFT JOIN headhunter.company USING (company_id)
 
 WHERE resume.resume_id = 2;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+insert into temp_data.table_serial_offset(table_name,serial_value_offset)
+VALUES (''account'',
+(select setval
+  (''headhunter.account_account_id_seq'',
+    (select
+      (currval(''headhunter.account_account_id_seq'')+
+          case when (SELECT pg_sleep(.12) is null) then 2 else 3 end
+      )
+    )
+  ) FOR UPDATE
+)
+);
