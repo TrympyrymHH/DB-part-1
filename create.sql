@@ -35,9 +35,9 @@ CREATE INDEX ON headhunter.account_to_company_relation (account_id);
 CREATE INDEX ON headhunter.account_to_company_relation (company_id);
 
 -------------------------------------------------------------------------------------------------------------
-CREATE TABLE headhunter.account_to_company_permission
+CREATE TABLE headhunter.acc_to_comp_permission
 (
-  account_to_company_permission_id SERIAL PRIMARY KEY,
+  acc_to_comp_permission_id SERIAL PRIMARY KEY,
   name VARCHAR(256),
   description TEXT
 );
@@ -99,7 +99,7 @@ CREATE INDEX ON headhunter.resume_experience (resume_id);
 
 -------------------------------------------------------------------------------------------------------------
 DROP TYPE IF EXISTS message_type CASCADE;
-CREATE TYPE message_type as ENUM ('INVITE','REPLY','MESSAGE_TO_RESUME', 'MESSAGE_TO_VACANCY');
+CREATE TYPE public.message_type as ENUM ('INVITE','REPLY','MESSAGE_TO_RESUME', 'MESSAGE_TO_VACANCY');
 
 CREATE TABLE headhunter.message
 (
@@ -109,7 +109,7 @@ CREATE TABLE headhunter.message
   article VARCHAR(512) ,
   description TEXT NOT NULL,
   time_create TIMESTAMP WITH TIME ZONE NOT NULL,
-  message_type message_type NOT NULL,
+  message_type public.message_type NOT NULL,
   unread BOOLEAN NOT NULL 
 );
 

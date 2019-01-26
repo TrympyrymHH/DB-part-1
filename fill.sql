@@ -2,15 +2,15 @@
 
 INSERT INTO headhunter.account(account_id, login, password, time_register)
 VALUES
-    (1,'vasya', 	md5('querty'), now()),
-    (2,'petya', 	md5('123456'), now()),
-    (3, 'kostya', 	md5('qazwsx'), now()),
-    (4,'vanya', 	md5('querty'), now()),
-    (5,'natasha', md5('000000'), now()),
-    (6,'sveta', 	md5('******'), now()),
-    (7,'vova', 	  md5('querty'), now()),
-    (8,'superman',md5('querty'), now()),
-    (9,'batman', 	md5('querty'), now());
+    (1,'vasy1a', 	md5('querty'), now()),
+    (2,'pety2a', 	md5('123456'), now()),
+    (3, 'kos3tya', 	md5('qazwsx'), now()),
+    (4,'vany4a', 	md5('querty'), now()),
+    (5,'nata5sha', md5('000000'), now()),
+    (6,'svet6a', 	md5('******'), now()),
+    (7,'vov7a', 	  md5('querty'), now()),
+    (8,'sup8erman',md5('querty'), now()),
+    (9,'bat9man', 	md5('querty'), now());
 
 ALTER SEQUENCE IF EXISTS headhunter.account_account_id_seq RESTART WITH 10;
 
@@ -19,7 +19,6 @@ ALTER SEQUENCE IF EXISTS headhunter.account_account_id_seq RESTART WITH 10;
 TRUNCATE headhunter.company CASCADE;
 
 INSERT INTO headhunter.company(company_id, name, description, path_to_logo)
-OVERRIDING SYSTEM VALUE
 VALUES
     (1, 'Майкрософт', 'молодая подающая надежды компания', 'c:/logos/ms.logo'),
     (2, 'Гугл', 'мы умеем говорить ОК', 'c:/logos/gl.logo'),
@@ -31,23 +30,22 @@ ALTER SEQUENCE IF EXISTS headhunter.company_company_id_seq RESTART WITH 6;
 
 ------------------------------------------------------------------------------------------------------------------------
 
-TRUNCATE headhunter.account_to_company_permission;
+TRUNCATE headhunter.acc_to_comp_permission;
 
-INSERT INTO headhunter.account_to_company_permission(account_to_company_permission_id, name, description)
-OVERRIDING SYSTEM VALUE
+INSERT INTO headhunter.acc_to_comp_permission(acc_to_comp_permission_id, name, description)
 VALUES
-    (0,'Создатель',           'Главный победитель и ROOT по жизни'),
-    (1,'Администратор',       'Смотрящий без права просмотра откликов'),
-    (2,'HR',                  'Человек, рулящий вакансиями в организации'),
-    (3,'Младший помошник HR', 'Просмотр откликов без возможности редактирования');
+    (1,'Создатель',           'Главный победитель и ROOT по жизни'),
+    (2,'Администратор',       'Смотрящий без права просмотра откликов'),
+    (3,'HR',                  'Человек, рулящий вакансиями в организации'),
+    (4,'Младший помошник HR', 'Просмотр откликов без возможности редактирования');
 
-ALTER SEQUENCE IF EXISTS headhunter.account_to_company_permission_account_to_company_permission_id_seq RESTART WITH 4;
+ALTER SEQUENCE IF EXISTS headhunter.acc_to_comp_permission_acc_to_comp_permission_id_seq RESTART WITH 4;
 
 ------------------------------------------------------------------------------------------------------------------------
 TRUNCATE headhunter.skill;
 
 INSERT INTO headhunter.skill(skill_id, name)
-OVERRIDING SYSTEM VALUE
+
 VALUES
     (1, '2 высших профильных образования'),
     (2, 'английский intermediate'),
