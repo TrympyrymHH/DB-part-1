@@ -404,3 +404,4 @@ LEFT JOIN headhunter.resume ON
 LEFT JOIN headhunter.company USING (company_id)
 
 WHERE resume.resume_id = 2;
+
