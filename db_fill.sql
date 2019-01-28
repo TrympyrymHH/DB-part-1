@@ -48,11 +48,11 @@ INSERT INTO request (is_invite, vacancy_id, applicant_id, seen) VALUES
 (TRUE, 4, 3, FALSE);
 
 INSERT INTO experience (resume_id, city_id, start_date, finish_date, occupation_id) VALUES
-(1, 1, '2009-01-01', '1970-01-01', 1),
-(2, 1, '2009-01-01', '1970-01-01', 1),
-(3, 1, '2009-01-01', '1970-01-01', 1),
-(4, 2, '2009-01-01', '1970-01-01', 1),
-(5, 2, '2009-01-01', '1970-01-01', 1);
+(1, 1, '2009-01-01', NULL, 1),
+(2, 1, '2009-01-01', NULL, 1),
+(3, 1, '2009-01-01', NULL, 1),
+(4, 2, '2009-01-01', NULL, 1),
+(5, 2, '2009-01-01', NULL, 1);
 
 INSERT INTO message (request_id, text, from_employer, time, seen) VALUES
 (1, 'We need you!', TRUE, '2019-01-21 12:30:00-15', TRUE),

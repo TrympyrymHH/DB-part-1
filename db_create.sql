@@ -31,7 +31,7 @@ CREATE TABLE applicant (
     login VARCHAR(50) NOT NULL,
     password VARCHAR(50) NOT NULL,
     login_timestamp TIMESTAMP NOT NULL,
-    logout_timestamp TIMESTAMP NOT NULL
+    logout_timestamp TIMESTAMP
 );
 
 CREATE TABLE resume (
@@ -55,7 +55,7 @@ CREATE TABLE experience (
     resume_id INTEGER REFERENCES resume(resume_id) NOT NULL,
     city_id INTEGER REFERENCES city(city_id) NOT NULL,
     start_date DATE NOT NULL,
-    finish_date DATE NOT NULL,
+    finish_date DATE,
     occupation_id INTEGER REFERENCES occupation(occupation_id) NOT NULL
 );
 

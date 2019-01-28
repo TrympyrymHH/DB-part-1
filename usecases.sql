@@ -43,7 +43,7 @@ INSERT INTO request (is_invite, vacancy_id, applicant_id, seen) VALUES (FALSE, 3
 
 -- соискатель логинится
 UPDATE applicant a
-SET (login_timestamp, logout_timestamp) = (NOW(), '1970-01-01 00:00:00')
+SET (login_timestamp, logout_timestamp) = (NOW(), NULL)
 WHERE a.applicant_id = (SELECT a.applicant_id FROM applicant a WHERE a.login = '1' AND a.password = '1');
 
 -- соискатель видит количество непрочитанных приглашений
