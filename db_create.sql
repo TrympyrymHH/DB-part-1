@@ -42,14 +42,9 @@ CREATE TABLE resume (
     city_id INTEGER REFERENCES city(city_id) NOT NULL
 );
 
-CREATE TABLE application (
-    application_id SERIAL PRIMARY KEY,
-    vacancy_id INTEGER REFERENCES vacancy(vacancy_id) NOT NULL,
-    applicant_id INTEGER REFERENCES applicant(applicant_id) NOT NULL
-);
-
-CREATE TABLE invite (
-    invite_id SERIAL PRIMARY KEY,
+CREATE TABLE request (
+    request_id SERIAL PRIMARY KEY,
+    is_invite BOOLEAN NOT NULL,
     vacancy_id INTEGER REFERENCES vacancy(vacancy_id) NOT NULL,
     applicant_id INTEGER REFERENCES applicant(applicant_id) NOT NULL,
     seen BOOLEAN NOT NULL
@@ -66,7 +61,7 @@ CREATE TABLE experience (
 
 CREATE TABLE message (
     message_id SERIAL PRIMARY KEY,
-    invite_id INTEGER REFERENCES invite(invite_id),
+    request_id INTEGER REFERENCES request(request_id),
     text VARCHAR (250) NOT NULL,
     from_employer BOOLEAN NOT NULL,
     time TIMESTAMP NOT NULL,

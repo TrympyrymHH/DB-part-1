@@ -36,18 +36,16 @@ INSERT INTO resume (applicant_id, occupation_id, text, city_id) VALUES
 (4, 1, 'I`m super Java dev!',   2),
 (5, 2, 'I`m super HR!',         2);
 
-INSERT INTO application (vacancy_id, applicant_id) VALUES
-(3, 1),
-(2, 2),
-(3, 3),
-(4, 4),
-(1, 2);
-
-INSERT INTO invite (vacancy_id, applicant_id, seen) VALUES
-(1, 2, FALSE),
-(2, 1, FALSE),
-(3, 4, FALSE),
-(4, 3, FALSE);
+INSERT INTO request (is_invite, vacancy_id, applicant_id, seen) VALUES
+(FALSE, 3, 1, FALSE),
+(FALSE, 2, 2, FALSE),
+(FALSE, 3, 3, FALSE),
+(FALSE, 4, 4, FALSE),
+(FALSE, 1, 2, FALSE),
+(TRUE, 1, 2, FALSE),
+(TRUE, 2, 1, FALSE),
+(TRUE, 3, 4, FALSE),
+(TRUE, 4, 3, FALSE);
 
 INSERT INTO experience (resume_id, city_id, start_date, finish_date, occupation_id) VALUES
 (1, 1, '2009-01-01', '1970-01-01', 1),
@@ -56,9 +54,7 @@ INSERT INTO experience (resume_id, city_id, start_date, finish_date, occupation_
 (4, 2, '2009-01-01', '1970-01-01', 1),
 (5, 2, '2009-01-01', '1970-01-01', 1);
 
-INSERT INTO message (invite_id, text, from_employer, time, seen) VALUES
+INSERT INTO message (request_id, text, from_employer, time, seen) VALUES
 (1, 'We need you!', TRUE, '2019-01-21 12:30:00-15', TRUE),
 (1, 'Thanks!', FALSE, '2019-01-21 12:31:00-15', TRUE),
 (1, 'See you tomorrow!', TRUE, '2019-01-21 12:32:00-15', FALSE);
-
-
