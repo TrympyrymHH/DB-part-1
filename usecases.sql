@@ -52,9 +52,30 @@ FROM request req
 JOIN applicant a USING (applicant_id)
 WHERE a.applicant_id = 1 AND req.is_invite AND req.seen = FALSE;
 
+-- соискатель видит список приглашений с отметкой просмотра
+SELECT v.text, req.seen
+FROM request req
+JOIN vacancy v USING (vacancy_id)
+JOIN applicant a USING (applicant_id)
+WHERE a.applicant_id = 1 AND req.is_invite;
+
 -- соискатель видит переписку по приглашению в обратном порядке
 SELECT m.time, ' : ', m.text, m.seen
 FROM message m
 WHERE m.request_id = 1
 ORDER BY m.time DESC;
 
+-- работодатель видит количество непрочитанных заявок по каждой вакансии
+SELECT v.vacancy_id, COUNT(req.request_id)
+FROM employer e
+JOIN vacancy v USING (employer_id)
+JOIN request req USING (vacancy_id)
+WHERE e.employer_id = 1 AND NOT req.is_invite AND req.seen = FALSE
+GROUP BY vacancy_id;
+
+-- работодатель видит список соискателей из заявок на конкретную вакансию
+SELECT a.applicant_id, req.seen
+FROM request req
+JOIN vacancy v USING (vacancy_id)
+JOIN applicant a USING (applicant_id)
+WHERE v.vacancy_id = 1 AND NOT req.is_invite;
