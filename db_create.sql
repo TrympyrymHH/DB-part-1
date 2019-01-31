@@ -25,6 +25,10 @@ CREATE TABLE vacancy (
     city_id INTEGER REFERENCES city(city_id) NOT NULL
 );
 
+CREATE INDEX ON vacancy(employer_id);
+CREATE INDEX ON vacancy(occupation_id);
+CREATE INDEX ON vacancy(city_id);
+
 CREATE TABLE applicant (
     applicant_id SERIAL PRIMARY KEY,
     name VARCHAR(50) NOT NULL,
@@ -42,6 +46,10 @@ CREATE TABLE resume (
     city_id INTEGER REFERENCES city(city_id) NOT NULL
 );
 
+CREATE INDEX ON resume(applicant_id);
+CREATE INDEX ON resume(occupation_id);
+CREATE INDEX ON resume(city_id);
+
 CREATE TABLE request (
     request_id SERIAL PRIMARY KEY,
     is_invite BOOLEAN NOT NULL,
@@ -49,6 +57,9 @@ CREATE TABLE request (
     applicant_id INTEGER REFERENCES applicant(applicant_id) NOT NULL,
     seen BOOLEAN NOT NULL
 );
+
+CREATE INDEX ON request(vacancy_id);
+CREATE INDEX ON request(applicant_id);
 
 CREATE TABLE experience (
     experience_id SERIAL PRIMARY KEY,
@@ -67,3 +78,5 @@ CREATE TABLE message (
     time TIMESTAMP NOT NULL,
     seen BOOLEAN NOT NULL
 );
+
+CREATE INDEX ON message(request_id);
