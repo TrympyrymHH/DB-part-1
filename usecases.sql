@@ -42,31 +42,31 @@ WHERE v.occupation_id = 1 AND v.experience <= 90;
 EXPLAIN ANALYZE INSERT INTO request (is_invite, vacancy_id, applicant_id, seen) VALUES (FALSE, 3, 1, FALSE);
 
 -- соискатель логинится
-EXPLAIN ANALYZE INSERT INTO request (is_invite, vacancy_id, applicant_id, seen) VALUES (FALSE, 3, 1, FALSE);UPDATE applicant a
+EXPLAIN ANALYZE UPDATE applicant a
 SET (login_timestamp, logout_timestamp) = (NOW(), NULL)
 WHERE a.applicant_id = (SELECT a.applicant_id FROM applicant a WHERE a.login = '1' AND a.password = '1');
 
 -- соискатель видит количество непрочитанных приглашений
-EXPLAIN ANALYZE INSERT INTO request (is_invite, vacancy_id, applicant_id, seen) VALUES (FALSE, 3, 1, FALSE);SELECT COUNT(req.request_id)
+EXPLAIN ANALYZE SELECT COUNT(req.request_id)
 FROM request req
 JOIN applicant a USING (applicant_id)
 WHERE a.applicant_id = 1 AND req.is_invite AND req.seen = FALSE;
 
 -- соискатель видит список приглашений с отметкой просмотра
-EXPLAIN ANALYZE INSERT INTO request (is_invite, vacancy_id, applicant_id, seen) VALUES (FALSE, 3, 1, FALSE);SELECT v.text, req.seen
+EXPLAIN ANALYZE SELECT v.text, req.seen
 FROM request req
 JOIN vacancy v USING (vacancy_id)
 JOIN applicant a USING (applicant_id)
 WHERE a.applicant_id = 1 AND req.is_invite;
 
 -- соискатель видит переписку по приглашению в обратном порядке
-EXPLAIN ANALYZE INSERT INTO request (is_invite, vacancy_id, applicant_id, seen) VALUES (FALSE, 3, 1, FALSE);SELECT m.time, ' : ', m.text, m.seen
+EXPLAIN ANALYZE SELECT m.time, ' : ', m.text, m.seen
 FROM message m
 WHERE m.request_id = 1
 ORDER BY m.time DESC;
 
 -- работодатель видит количество непрочитанных заявок по каждой вакансии
-EXPLAIN ANALYZE INSERT INTO request (is_invite, vacancy_id, applicant_id, seen) VALUES (FALSE, 3, 1, FALSE);SELECT v.vacancy_id, COUNT(req.request_id)
+EXPLAIN ANALYZE SELECT v.vacancy_id, COUNT(req.request_id)
 FROM employer e
 JOIN vacancy v USING (employer_id)
 JOIN request req USING (vacancy_id)
@@ -74,7 +74,7 @@ WHERE e.employer_id = 1 AND NOT req.is_invite AND req.seen = FALSE
 GROUP BY vacancy_id;
 
 -- работодатель видит список соискателей из заявок на конкретную вакансию
-EXPLAIN ANALYZE INSERT INTO request (is_invite, vacancy_id, applicant_id, seen) VALUES (FALSE, 3, 1, FALSE);SELECT a.applicant_id, req.seen
+EXPLAIN ANALYZE SELECT a.applicant_id, req.seen
 FROM request req
 JOIN vacancy v USING (vacancy_id)
 JOIN applicant a USING (applicant_id)
