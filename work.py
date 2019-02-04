@@ -367,12 +367,12 @@ def update_occupation_table(connection, cursor):
         cursor.execute(compare_occupation_indexes_sql)
         old_new_indexes = cursor.fetchall()
         
-        same_items = list(filter(lambda x: x[1] != None, old_new_indexes))
-        same_items_index_pair = list(map(lambda x: [x[0], x[1]], same_items))
+        same_items = [x for x in old_new_indexes if x[1] != None]
+        same_items_index_pair = [[x[0], x[1]] for x in same_items]
         
-        new_items = list(filter(lambda x: x[1] == None, old_new_indexes))
-        new_items_data = list(map(lambda x: (x[2], ), new_items))
-        new_items_indexes = list(map(lambda x: x[0], new_items))
+        new_items = [x for x in old_new_indexes if x[1] == None]
+        new_items_data = [(x[2], ) for x in new_items]
+        new_items_indexes = [x[0] for x in new_items]
 
         while len(new_items_data) > 0:
             items_to_insert = new_items_data[0 : N]
@@ -416,13 +416,13 @@ def update_employer_table(connection, cursor):
 
         cursor.execute(compare_employer_indexes_sql)
         old_new_indexes = cursor.fetchall()
+
+        same_items = [x for x in old_new_indexes if x[1] != None]
+        same_items_index_pair = [[x[0], x[1]] for x in same_items]
         
-        same_items = list(filter(lambda x: x[1] != None, old_new_indexes))
-        same_items_index_pair = list(map(lambda x: [x[0], x[1]], same_items))
-        
-        new_items = list(filter(lambda x: x[1] == None, old_new_indexes))
-        new_items_data = list(map(lambda x: (x[2], ), new_items))
-        new_items_indexes = list(map(lambda x: x[0], new_items))
+        new_items = [x for x in old_new_indexes if x[1] == None]
+        new_items_data = [(x[2], ) for x in new_items]
+        new_items_indexes = [x[0] for x in new_items]
 
         while len(new_items_data) > 0:
             items_to_insert = new_items_data[0 : N]
@@ -471,12 +471,12 @@ def update_city_table(connection, cursor):
         cursor.execute(compare_city_indexes_sql)
         old_new_indexes = cursor.fetchall()
         
-        same_cities = list(filter(lambda x: x[1] != None, old_new_indexes))
-        same_cities_index_pair = list(map(lambda x: [x[0], x[1]], same_cities))
+        same_cities = [x for x in old_new_indexes if x[1] != None]
+        same_cities_index_pair = [[x[0], x[1]] for x in same_cities]
         
-        new_cities = list(filter(lambda x: x[1] == None, old_new_indexes))
-        new_cities_data = list(map(lambda x: (x[2], ), new_cities))
-        new_cities_indexes = list(map(lambda x: x[0], new_cities))
+        new_cities = [x for x in old_new_indexes if x[1] == None]
+        new_cities_data = [(x[2], ) for x in new_cities]
+        new_cities_indexes = [x[0] for x in new_cities]
 
         while len(new_cities_data) > 0:
             cities_to_insert = new_cities_data[0 : N]
@@ -507,6 +507,14 @@ def add_db():
         connection = psycopg2.connect(host="localhost", database="postgres", user="postgres", password="")
         cursor = connection.cursor()
 
+        #add indexes
+        connection.autocommit = True
+        cursor.execute('CREATE INDEX city_name ON city(name);')
+        cursor.execute('CREATE INDEX employer_name ON employer(name);')
+        cursor.execute('CREATE INDEX occupation_name ON occupation(name);')
+        connection.autocommit = False
+
+
         print('city...')
         update_city_table(connection, cursor)
         print('employer...')
@@ -526,6 +534,12 @@ def add_db():
         print('message...')
         update_message_table(connection, cursor)
 
+        #delete indexes
+        connection.autocommit = True
+        cursor.execute('DROP INDEX city_name;')
+        cursor.execute('DROP INDEX employer_name;')
+        cursor.execute('DROP INDEX occupation_name;')
+        connection.autocommit = False
 
         cursor.close() 
     except (Exception, psycopg2.DatabaseError) as error:
