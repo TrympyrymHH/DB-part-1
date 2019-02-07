@@ -14,7 +14,7 @@ def update_message_table(connection, cursor):
         # request limit
         N = 10000
     
-        # update table indexes
+        # update table indices
         get_message_data_sql = """
         SELECT request_id, text, from_employer, time, seen
         FROM new_message
@@ -22,7 +22,7 @@ def update_message_table(connection, cursor):
 
         """
 
-        get_message_indexes_sql = """
+        get_message_indices_sql = """
         SELECT message_id
         FROM new_message
         ORDER BY message_id;
@@ -35,8 +35,8 @@ def update_message_table(connection, cursor):
 
         """
 
-        cursor.execute(get_message_indexes_sql)
-        new_items_indexes = cursor.fetchall()
+        cursor.execute(get_message_indices_sql)
+        new_items_indices = cursor.fetchall()
         
         same_items_index_pair = []
         
@@ -45,19 +45,19 @@ def update_message_table(connection, cursor):
 
         while len(new_items_data) > 0:
             items_to_insert = new_items_data[0 : N]
-            new_items_inserting_indexes = new_items_indexes[0 : N]
+            new_items_inserting_indices = new_items_indices[0 : N]
 
             new_items_data = new_items_data[N : ]
-            new_items_indexes = new_items_indexes[N : ]
+            new_items_indices = new_items_indices[N : ]
 
-            new_indexes = []
+            new_indices = []
 
             for i in items_to_insert:
                 cursor.execute(insert_new_message_sql, (i[0], i[1], i[2], i[3], i[4]))
-                new_indexes += [cursor.fetchone()[0]]
+                new_indices += [cursor.fetchone()[0]]
                             
-            new_items_inserting_indexes = list(map(lambda x: x[0], new_items_inserting_indexes))
-            new_index_pairs = list(zip(new_items_inserting_indexes, new_indexes))
+            new_items_inserting_indices = [x[0] for x in new_items_inserting_indices]
+            new_index_pairs = list(zip(new_items_inserting_indices, new_indices))
             same_items_index_pair += new_index_pairs
             
             connection.commit()
@@ -66,7 +66,7 @@ def update_request_table(connection, cursor):
         # request limit
         N = 10000
         
-        # update table indexes
+        # update table indices
         get_request_data_sql = """
         SELECT is_invite, vacancy_id, applicant_id, seen
         FROM new_request
@@ -74,7 +74,7 @@ def update_request_table(connection, cursor):
 
         """
 
-        get_request_indexes_sql = """
+        get_request_indices_sql = """
         SELECT request_id
         FROM new_request
         ORDER BY request_id;
@@ -89,8 +89,8 @@ def update_request_table(connection, cursor):
 
         update_message_request_sql = update_table_field_sql('new_message', 'request_id')
 
-        cursor.execute(get_request_indexes_sql)
-        new_items_indexes = cursor.fetchall()
+        cursor.execute(get_request_indices_sql)
+        new_items_indices = cursor.fetchall()
         
         same_items_index_pair = []
         
@@ -99,19 +99,19 @@ def update_request_table(connection, cursor):
 
         while len(new_items_data) > 0:
             items_to_insert = new_items_data[0 : N]
-            new_items_inserting_indexes = new_items_indexes[0 : N]
+            new_items_inserting_indices = new_items_indices[0 : N]
 
             new_items_data = new_items_data[N : ]
-            new_items_indexes = new_items_indexes[N : ]
+            new_items_indices = new_items_indices[N : ]
 
-            new_indexes = []
+            new_indices = []
 
             for i in items_to_insert:
                 cursor.execute(insert_new_request_sql, (i[0], i[1], i[2], i[3]))
-                new_indexes += [cursor.fetchone()[0]]
-                            
-            new_items_inserting_indexes = list(map(lambda x: x[0], new_items_inserting_indexes))
-            new_index_pairs = list(zip(new_items_inserting_indexes, new_indexes))
+                new_indices += [cursor.fetchone()[0]]
+
+            new_items_inserting_indices = [x[0] for x in new_items_inserting_indices]
+            new_index_pairs = list(zip(new_items_inserting_indices, new_indices))
             same_items_index_pair += new_index_pairs
             
             connection.commit()
@@ -122,7 +122,7 @@ def update_vacancy_table(connection, cursor):
         # request limit
         N = 10000
     
-        # update table indexes
+        # update table indices
         get_vacancy_data_sql = """
         SELECT text, employer_id, occupation_id, experience, city_id
         FROM new_vacancy
@@ -130,7 +130,7 @@ def update_vacancy_table(connection, cursor):
 
         """
 
-        get_vacancy_indexes_sql = """
+        get_vacancy_indices_sql = """
         SELECT vacancy_id
         FROM new_vacancy
         ORDER BY vacancy_id;
@@ -145,8 +145,8 @@ def update_vacancy_table(connection, cursor):
 
         update_request_vacancy_sql = update_table_field_sql('new_request', 'vacancy_id')
 
-        cursor.execute(get_vacancy_indexes_sql)
-        new_items_indexes = cursor.fetchall()
+        cursor.execute(get_vacancy_indices_sql)
+        new_items_indices = cursor.fetchall()
         
         same_items_index_pair = []
         
@@ -155,19 +155,19 @@ def update_vacancy_table(connection, cursor):
 
         while len(new_items_data) > 0:
             items_to_insert = new_items_data[0 : N]
-            new_items_inserting_indexes = new_items_indexes[0 : N]
+            new_items_inserting_indices = new_items_indices[0 : N]
 
             new_items_data = new_items_data[N : ]
-            new_items_indexes = new_items_indexes[N : ]
+            new_items_indices = new_items_indices[N : ]
 
-            new_indexes = []
+            new_indices = []
 
             for i in items_to_insert:
                 cursor.execute(insert_new_vacancy_sql, (i[0], i[1], i[2], i[3], i[4]))
-                new_indexes += [cursor.fetchone()[0]]
+                new_indices += [cursor.fetchone()[0]]
                             
-            new_items_inserting_indexes = list(map(lambda x: x[0], new_items_inserting_indexes))
-            new_index_pairs = list(zip(new_items_inserting_indexes, new_indexes))
+            new_items_inserting_indices = [x[0] for x in new_items_inserting_indices]
+            new_index_pairs = list(zip(new_items_inserting_indices, new_indices))
             same_items_index_pair += new_index_pairs
             
             connection.commit()
@@ -178,7 +178,7 @@ def update_experience_table(connection, cursor):
         # request limit
         N = 10000
     
-        # update table indexes
+        # update table indices
         get_experience_data_sql = """
         SELECT resume_id, city_id, start_date, finish_date, occupation_id
         FROM new_experience
@@ -186,7 +186,7 @@ def update_experience_table(connection, cursor):
 
         """
 
-        get_experience_indexes_sql = """
+        get_experience_indices_sql = """
         SELECT experience_id
         FROM new_experience
         ORDER BY experience_id;
@@ -199,8 +199,8 @@ def update_experience_table(connection, cursor):
 
         """
 
-        cursor.execute(get_experience_indexes_sql)
-        new_items_indexes = cursor.fetchall()
+        cursor.execute(get_experience_indices_sql)
+        new_items_indices = cursor.fetchall()
         
         same_items_index_pair = []
         
@@ -209,19 +209,19 @@ def update_experience_table(connection, cursor):
 
         while len(new_items_data) > 0:
             items_to_insert = new_items_data[0 : N]
-            new_items_inserting_indexes = new_items_indexes[0 : N]
+            new_items_inserting_indices = new_items_indices[0 : N]
 
             new_items_data = new_items_data[N : ]
-            new_items_indexes = new_items_indexes[N : ]
+            new_items_indices = new_items_indices[N : ]
 
-            new_indexes = []
+            new_indices = []
 
             for i in items_to_insert:
                 cursor.execute(insert_new_experience_sql, (i[0], i[1], i[2], i[3], i[4]))
-                new_indexes += [cursor.fetchone()[0]]
+                new_indices += [cursor.fetchone()[0]]
                             
-            new_items_inserting_indexes = list(map(lambda x: x[0], new_items_inserting_indexes))
-            new_index_pairs = list(zip(new_items_inserting_indexes, new_indexes))
+            new_items_inserting_indices = [x[0] for x in new_items_inserting_indices]
+            new_index_pairs = list(zip(new_items_inserting_indices, new_indices))
             same_items_index_pair += new_index_pairs
             
             connection.commit()
@@ -230,7 +230,7 @@ def update_resume_table(connection, cursor):
         # request limit
         N = 10000
 
-        # update table indexes
+        # update table indices
         get_resume_data_sql = """
         SELECT applicant_id, occupation_id, text, city_id
         FROM new_resume
@@ -238,7 +238,7 @@ def update_resume_table(connection, cursor):
 
         """
 
-        get_resume_indexes_sql = """
+        get_resume_indices_sql = """
         SELECT resume_id
         FROM new_resume
         ORDER BY resume_id;
@@ -253,8 +253,8 @@ def update_resume_table(connection, cursor):
 
         update_experience_resume_sql = update_table_field_sql('new_experience', 'resume_id')
 
-        cursor.execute(get_resume_indexes_sql)
-        new_items_indexes = cursor.fetchall()
+        cursor.execute(get_resume_indices_sql)
+        new_items_indices = cursor.fetchall()
         
         same_items_index_pair = []
         
@@ -263,19 +263,19 @@ def update_resume_table(connection, cursor):
 
         while len(new_items_data) > 0:
             items_to_insert = new_items_data[0 : N]
-            new_items_inserting_indexes = new_items_indexes[0 : N]
+            new_items_inserting_indices = new_items_indices[0 : N]
 
             new_items_data = new_items_data[N : ]
-            new_items_indexes = new_items_indexes[N : ]
+            new_items_indices = new_items_indices[N : ]
 
-            new_indexes = []
+            new_indices = []
 
             for i in items_to_insert:
                 cursor.execute(insert_new_resume_sql, (i[0], i[1], i[2], i[3]))
-                new_indexes += [cursor.fetchone()[0]]
+                new_indices += [cursor.fetchone()[0]]
                             
-            new_items_inserting_indexes = list(map(lambda x: x[0], new_items_inserting_indexes))
-            new_index_pairs = list(zip(new_items_inserting_indexes, new_indexes))
+            new_items_inserting_indices = [x[0] for x in new_items_inserting_indices]
+            new_index_pairs = list(zip(new_items_inserting_indices, new_indices))
             same_items_index_pair += new_index_pairs
             
             connection.commit()
@@ -286,7 +286,7 @@ def update_applicant_table(connection, cursor):
         # request limit
         N = 10000
 
-        # update table indexes
+        # update table indices
         get_applicant_data_sql = """
         SELECT name, login, password, login_timestamp, logout_timestamp
         FROM new_applicant
@@ -294,7 +294,7 @@ def update_applicant_table(connection, cursor):
 
         """
 
-        get_applicant_indexes_sql = """
+        get_applicant_indices_sql = """
         SELECT applicant_id
         FROM new_applicant
         ORDER BY applicant_id;
@@ -310,8 +310,8 @@ def update_applicant_table(connection, cursor):
         update_resume_applicant_sql = update_table_field_sql('new_resume', 'applicant_id')
         update_request_applicant_sql = update_table_field_sql('new_request', 'applicant_id')
 
-        cursor.execute(get_applicant_indexes_sql)
-        new_items_indexes = cursor.fetchall()
+        cursor.execute(get_applicant_indices_sql)
+        new_items_indices = cursor.fetchall()
         
         same_items_index_pair = []
         
@@ -320,19 +320,19 @@ def update_applicant_table(connection, cursor):
 
         while len(new_items_data) > 0:
             items_to_insert = new_items_data[0 : N]
-            new_items_inserting_indexes = new_items_indexes[0 : N]
+            new_items_inserting_indices = new_items_indices[0 : N]
 
             new_items_data = new_items_data[N : ]
-            new_items_indexes = new_items_indexes[N : ]
+            new_items_indices = new_items_indices[N : ]
 
-            new_indexes = []
+            new_indices = []
 
             for i in items_to_insert:
                 cursor.execute(insert_new_applicant_sql, (i[0], i[1], i[2], i[3], i[4]))
-                new_indexes += [cursor.fetchone()[0]]
+                new_indices += [cursor.fetchone()[0]]
                             
-            new_items_inserting_indexes = list(map(lambda x: x[0], new_items_inserting_indexes))
-            new_index_pairs = list(zip(new_items_inserting_indexes, new_indexes))
+            new_items_inserting_indices = [x[0] for x in new_items_inserting_indices]
+            new_index_pairs = list(zip(new_items_inserting_indices, new_indices))
             same_items_index_pair += new_index_pairs
             
             connection.commit()
@@ -344,14 +344,14 @@ def update_occupation_table(connection, cursor):
         # request limit
         N = 10000
 
-        # update table indexes
-        compare_occupation_indexes_sql = """
+        # update table indices
+        compare_occupation_indices_sql = """
         SELECT new_occupation.occupation_id, occupation.occupation_id, new_occupation.name
         FROM new_occupation
-        LEFT JOIN occupation USING (name);
+        LEFT JOIN occupation ON (lower(occupation.name) = lower(new_occupation.name));
         """
         
-        insert_new_occupation_indexes_sql = """
+        insert_new_occupation_indices_sql = """
         INSERT INTO occupation (name)
         SELECT field
         FROM unnest(%s) s(field)
@@ -364,29 +364,29 @@ def update_occupation_table(connection, cursor):
 
         update_experience_occupation_sql = update_table_field_sql('new_experience', 'occupation_id')
 
-        cursor.execute(compare_occupation_indexes_sql)
-        old_new_indexes = cursor.fetchall()
+        cursor.execute(compare_occupation_indices_sql)
+        old_new_indices = cursor.fetchall()
         
-        same_items = [x for x in old_new_indexes if x[1] != None]
+        same_items = [x for x in old_new_indices if x[1] != None]
         same_items_index_pair = [[x[0], x[1]] for x in same_items]
         
-        new_items = [x for x in old_new_indexes if x[1] == None]
+        new_items = [x for x in old_new_indices if x[1] == None]
         new_items_data = [(x[2], ) for x in new_items]
-        new_items_indexes = [x[0] for x in new_items]
+        new_items_indices = [x[0] for x in new_items]
 
         while len(new_items_data) > 0:
             items_to_insert = new_items_data[0 : N]
-            new_items_inserting_indexes = new_items_indexes[0 : N]
+            new_items_inserting_indices = new_items_indices[0 : N]
 
             new_items_data = new_items_data[N : ]
-            new_items_indexes = new_items_indexes[N : ]
+            new_items_indices = new_items_indices[N : ]
 
-            cursor.execute(insert_new_occupation_indexes_sql, (items_to_insert, ))
+            cursor.execute(insert_new_occupation_indices_sql, (items_to_insert, ))
 
-            new_indexes = cursor.fetchall()
-            new_indexes = list(map(lambda x: x[0], new_indexes))
+            new_indices = cursor.fetchall()
+            new_indices = [x[0] for x in new_indices]
 
-            new_index_pairs = list(zip(new_items_inserting_indexes, new_indexes))
+            new_index_pairs = list(zip(new_items_inserting_indices, new_indices))
 
             same_items_index_pair += new_index_pairs
             
@@ -398,14 +398,14 @@ def update_employer_table(connection, cursor):
         # request limit
         N = 10000
 
-        # update table indexes
-        compare_employer_indexes_sql = """
+        # update table indices
+        compare_employer_indices_sql = """
         SELECT new_employer.employer_id, employer.employer_id, new_employer.name
         FROM new_employer
-        LEFT JOIN employer USING (name);
+        LEFT JOIN employer ON (lower(employer.name) = lower(new_employer.name));
         """
         
-        insert_new_employer_indexes_sql = """
+        insert_new_employer_indices_sql = """
         INSERT INTO employer (name)
         SELECT field
         FROM unnest(%s) s(field)
@@ -414,29 +414,29 @@ def update_employer_table(connection, cursor):
 
         update_vacancy_employer_sql = update_table_field_sql('new_vacancy', 'employer_id')
 
-        cursor.execute(compare_employer_indexes_sql)
-        old_new_indexes = cursor.fetchall()
+        cursor.execute(compare_employer_indices_sql)
+        old_new_indices = cursor.fetchall()
 
-        same_items = [x for x in old_new_indexes if x[1] != None]
+        same_items = [x for x in old_new_indices if x[1] != None]
         same_items_index_pair = [[x[0], x[1]] for x in same_items]
         
-        new_items = [x for x in old_new_indexes if x[1] == None]
+        new_items = [x for x in old_new_indices if x[1] == None]
         new_items_data = [(x[2], ) for x in new_items]
-        new_items_indexes = [x[0] for x in new_items]
+        new_items_indices = [x[0] for x in new_items]
 
         while len(new_items_data) > 0:
             items_to_insert = new_items_data[0 : N]
-            new_items_inserting_indexes = new_items_indexes[0 : N]
+            new_items_inserting_indices = new_items_indices[0 : N]
 
             new_items_data = new_items_data[N : ]
-            new_items_indexes = new_items_indexes[N : ]
+            new_items_indices = new_items_indices[N : ]
 
-            cursor.execute(insert_new_employer_indexes_sql, (items_to_insert, ))
+            cursor.execute(insert_new_employer_indices_sql, (items_to_insert, ))
 
-            new_indexes = cursor.fetchall()
-            new_indexes = list(map(lambda x: x[0], new_indexes))
+            new_indices = cursor.fetchall()
+            new_indices = [x[0] for x in new_indices]
 
-            new_index_pairs = list(zip(new_items_inserting_indexes, new_indexes))
+            new_index_pairs = list(zip(new_items_inserting_indices, new_indices))
 
             same_items_index_pair += new_index_pairs
             
@@ -448,14 +448,14 @@ def update_city_table(connection, cursor):
         # request limit
         N = 10000
 
-        # update table indexes
-        compare_city_indexes_sql = """
+        # update table indices
+        compare_city_indices_sql = """
         SELECT new_city.city_id, city.city_id, new_city.name
         FROM new_city
-        LEFT JOIN city USING (name);
+        LEFT JOIN city ON (lower(city.name) = lower(new_city.name));
         """
         
-        insert_new_city_indexes_sql = """
+        insert_new_city_indices_sql = """
         INSERT INTO city (name)
         SELECT field
         FROM unnest(%s) s(field)
@@ -468,29 +468,29 @@ def update_city_table(connection, cursor):
 
         update_experience_city_sql = update_table_field_sql('new_experience', 'city_id')
 
-        cursor.execute(compare_city_indexes_sql)
-        old_new_indexes = cursor.fetchall()
+        cursor.execute(compare_city_indices_sql)
+        old_new_indices = cursor.fetchall()
         
-        same_cities = [x for x in old_new_indexes if x[1] != None]
+        same_cities = [x for x in old_new_indices if x[1] != None]
         same_cities_index_pair = [[x[0], x[1]] for x in same_cities]
         
-        new_cities = [x for x in old_new_indexes if x[1] == None]
+        new_cities = [x for x in old_new_indices if x[1] == None]
         new_cities_data = [(x[2], ) for x in new_cities]
-        new_cities_indexes = [x[0] for x in new_cities]
+        new_cities_indices = [x[0] for x in new_cities]
 
         while len(new_cities_data) > 0:
             cities_to_insert = new_cities_data[0 : N]
-            new_cities_inserting_indexes = new_cities_indexes[0 : N]
+            new_cities_inserting_indices = new_cities_indices[0 : N]
 
             new_cities_data = new_cities_data[N : ]
-            new_cities_indexes = new_cities_indexes[N : ]
+            new_cities_indices = new_cities_indices[N : ]
 
-            cursor.execute(insert_new_city_indexes_sql, (cities_to_insert, ))
+            cursor.execute(insert_new_city_indices_sql, (cities_to_insert, ))
 
-            new_indexes = cursor.fetchall()
-            new_indexes = list(map(lambda x: x[0], new_indexes))
+            new_indices = cursor.fetchall()
+            new_indices = [x[0] for x in new_indices]
 
-            new_index_pairs = list(zip(new_cities_inserting_indexes, new_indexes))
+            new_index_pairs = list(zip(new_cities_inserting_indices, new_indices))
 
             same_cities_index_pair += new_index_pairs
 
@@ -507,11 +507,11 @@ def add_db():
         connection = psycopg2.connect(host="localhost", database="postgres", user="postgres", password="")
         cursor = connection.cursor()
 
-        #add indexes
+        #add indices
         connection.autocommit = True
-        cursor.execute('CREATE INDEX city_name ON city(name);')
-        cursor.execute('CREATE INDEX employer_name ON employer(name);')
-        cursor.execute('CREATE INDEX occupation_name ON occupation(name);')
+        cursor.execute('CREATE INDEX CONCURRENTLY city_name ON city(lower(name));')
+        cursor.execute('CREATE INDEX CONCURRENTLY employer_name ON employer(lower(name));')
+        cursor.execute('CREATE INDEX CONCURRENTLY occupation_name ON occupation(lower(name));')
         connection.autocommit = False
 
 
@@ -534,11 +534,11 @@ def add_db():
         print('message...')
         update_message_table(connection, cursor)
 
-        #delete indexes
+        #delete indices
         connection.autocommit = True
-        cursor.execute('DROP INDEX city_name;')
-        cursor.execute('DROP INDEX employer_name;')
-        cursor.execute('DROP INDEX occupation_name;')
+        cursor.execute('DROP INDEX CONCURRENTLY city_name;')
+        cursor.execute('DROP INDEX CONCURRENTLY employer_name;')
+        cursor.execute('DROP INDEX CONCURRENTLY occupation_name;')
         connection.autocommit = False
 
         cursor.close() 

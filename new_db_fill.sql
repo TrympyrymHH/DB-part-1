@@ -74,8 +74,8 @@ CREATE TABLE new_request (
 );
 
 INSERT INTO new_request(request_id, is_invite, vacancy_id, applicant_id, seen) 
-        -- SELECT id, TRUE, ROUND(1 + RANDOM() * 999999), ROUND(1 + RANDOM() * 999), TRUE
-        SELECT id, TRUE, ROUND(1 + RANDOM() * 9999), ROUND(1 + RANDOM() * 999), TRUE
+        -- SELECT id, RANDOM() > 0.5, ROUND(1 + RANDOM() * 999999), ROUND(1 + RANDOM() * 999), TRUE
+        SELECT id, RANDOM() > 0.5, ROUND(1 + RANDOM() * 9999), ROUND(1 + RANDOM() * 999), TRUE
         -- FROM generate_series(1, 5000000) as req(id);
         FROM generate_series(1, 5000) as req(id);
 
@@ -90,8 +90,8 @@ CREATE TABLE new_experience (
 );
 
 INSERT INTO new_experience(experience_id, resume_id, city_id, start_date, finish_date, occupation_id) 
-        -- SELECT id, ROUND(1 + RANDOM() * 1999999), ROUND(1 + RANDOM() * 999), '2019-01-01', NULL, ROUND(1 + RANDOM() * 999)
-        SELECT id, ROUND(1 + RANDOM() * 19999), ROUND(1 + RANDOM() * 999), '2019-01-01', NULL, ROUND(1 + RANDOM() * 999)
+        -- SELECT id, ROUND(1 + RANDOM() * 1999999), ROUND(1 + RANDOM() * 999), '2010-01-30 11:00:00'::timestamp + id * interval '2 day', '2010-01-30 11:00:00'::timestamp + id * interval '1 day', ROUND(1 + RANDOM() * 999)
+        SELECT id, ROUND(1 + RANDOM() * 19999), ROUND(1 + RANDOM() * 999), '2010-01-30 11:00:00'::timestamp + id * interval '2 day', '2010-01-30 11:00:00'::timestamp + id * interval '1 day', ROUND(1 + RANDOM() * 999)
         FROM generate_series(1, 2000) as exp(id);
 
 
@@ -105,7 +105,7 @@ CREATE TABLE new_message (
 );
 
 INSERT INTO new_message(message_id, request_id, text, from_employer, time, seen) 
-        -- SELECT id, ROUND(1 + RANDOM() * 4999999), 'message' || id, TRUE, '2019-01-30', TRUE
-        SELECT id, ROUND(1 + RANDOM() * 4999), 'message' || id, TRUE, '2019-01-30', TRUE
+        -- SELECT id, ROUND(1 + RANDOM() * 4999999), 'message' || id, RANDOM() > 0.5, '2019-01-30 11:00:00'::timestamp + id * interval '5 sec', RANDOM() < 0.8
+        SELECT id, ROUND(1 + RANDOM() * 4999), 'message' || id, RANDOM() > 0.5, '2019-01-30 11:00:00'::timestamp + id * interval '5 sec', RANDOM() < 0.8
         -- FROM generate_series(1, 5000000) as exp(id);
         FROM generate_series(1, 5000) as exp(id);
