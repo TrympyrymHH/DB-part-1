@@ -136,6 +136,31 @@
 				 <td></td>
 				</tr>
 				<tr>
+				 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="account_id">account_id</span></td>
+				 <td>int4</td>
+				 <td>10</td>
+				 <td title='nullable'>√</td>
+				 <td title=''></td>
+				 <td>null</td>
+				 <td>
+				  <table border='0' cellspacing='0' cellpadding='0'>
+				  </table>				 
+				 </td>
+				 <td>
+				  <table border='0' cellspacing='0' cellpadding='0'>
+				   <tr>
+					<td title="employer.account_id references account.id via employer_account_id_fkey">
+						<a href='account.html'>account</a><span class='relatedKey'>.id</span>
+					</td>
+					<td class="constraint detail">
+						employer_account_id_fkey <span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span>
+					</td>
+				   </tr>
+				  </table>					 
+				 </td>
+				 <td></td>
+				</tr>
+				<tr>
 				 <td class='foreignKey' title='Foreign Key'><i class='icon ion-key iconkey' style='padding-left: 5px;'></i><span id="company_id">company_id</span></td>
 				 <td>int4</td>
 				 <td>10</td>
@@ -213,7 +238,7 @@
 				</tr>
 								</tbody>
 				</table>
-				<p title='5 columns'>Table contained <span id="recordNumber">0</span> rows<p/>
+				<p title='6 columns'>Table contained <span id="recordNumber">0</span> rows<p/>
 			</div>
 		</div>
 		<div class="box box-primary">		
@@ -245,6 +270,12 @@
 				  <td><span title='Ascending'>Asc</span></td>
 				  <td>id</td>
 				 </tr>				 
+				 <tr>
+				  <td class='uniqueKey' title='Unique Key'><i class='icon ion-key iconkey'></i> employer_account_id_key</td>
+				  <td>Must be unique</td>
+				  <td><span title='Ascending'>Asc</span></td>
+				  <td>account_id</td>
+				 </tr>				 
 				</tbody>
 				</table>   			  
 			</div><!-- /.box-body -->
@@ -272,21 +303,24 @@
             <div class="tab-content no-padding">            
 				<div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">					
 					<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="employer.html" title="employer" alt="" coords="264,91,533,307">
-<area shape="rect" id="node2" href="company.html" title="company" alt="" coords="5,123,220,240">
-<area shape="rect" id="node3" href="response.html" title="response" alt="" coords="577,5,837,211">
+<area shape="rect" id="node1" href="employer.html" title="employer" alt="" coords="289,91,559,336">
+<area shape="rect" id="node2" href="account.html" title="account" alt="" coords="5,55,245,201">
+<area shape="rect" id="node3" href="company.html" title="company" alt="" coords="18,219,233,336">
+<area shape="rect" id="node4" href="response.html" title="response" alt="" coords="603,5,863,211">
 </map>
 
 					<a name='diagram'><img id='oneDegreeImg' src='../diagrams/employer.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>							
 				</div>
 				<div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">					
 					<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="employer.html" title="employer" alt="" coords="264,216,533,432">
-<area shape="rect" id="node2" href="company.html" title="company" alt="" coords="5,179,220,296">
-<area shape="rect" id="node3" href="messages.html" title="messages" alt="" coords="881,52,1033,140">
-<area shape="rect" id="node4" href="response.html" title="response" alt="" coords="577,49,837,255">
-<area shape="rect" id="node5" href="cv.html" title="cv" alt="" coords="332,5,465,93">
-<area shape="rect" id="node6" href="vacancy.html" title="vacancy" alt="" coords="330,111,467,199">
+<area shape="rect" id="node1" href="cv.html" title="cv" alt="" coords="616,5,749,93">
+<area shape="rect" id="node2" href="employee.html" title="employee" alt="" coords="322,11,471,99">
+<area shape="rect" id="node3" href="account.html" title="account" alt="" coords="5,117,245,264">
+<area shape="rect" id="node4" href="employer.html" title="employer" alt="" coords="548,216,817,461">
+<area shape="rect" id="node5" href="company.html" title="company" alt="" coords="289,121,504,239">
+<area shape="rect" id="node6" href="messages.html" title="messages" alt="" coords="1165,52,1317,140">
+<area shape="rect" id="node7" href="response.html" title="response" alt="" coords="861,49,1121,255">
+<area shape="rect" id="node8" href="vacancy.html" title="vacancy" alt="" coords="614,111,751,199">
 </map>
 
 					<a name='diagram'><img id='twodegreesDegreeImg' src='../diagrams/employer.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>							

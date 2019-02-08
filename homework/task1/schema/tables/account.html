@@ -127,6 +127,14 @@
 						employee_account_id_fkey <span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span>
 					</td>
 				   </tr>
+				   <tr>
+					<td title="employer.account_id references account.id via employer_account_id_fkey">
+						<a href='employer.html'>employer</a><span class='relatedKey'>.account_id</span>
+					</td>
+					<td class="constraint detail">
+						employer_account_id_fkey <span title='Restrict delete:&#10;Parent cannot be deleted if children exist'>R</span>
+					</td>
+				   </tr>
 				  </table>				 
 				 </td>
 				 <td>
@@ -237,16 +245,20 @@
 				<div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">					
 					<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
 <area shape="rect" id="node1" href="employee.html" title="employee" alt="" coords="415,5,564,128">
-<area shape="rect" id="node2" href="account.html" title="account" alt="" coords="5,32,371,189">
+<area shape="rect" id="node2" href="account.html" title="account" alt="" coords="5,103,371,260">
+<area shape="rect" id="node3" href="employer.html" title="employer" alt="" coords="417,145,562,321">
 </map>
 
 					<a name='diagram'><img id='oneDegreeImg' src='../diagrams/account.1degree.png' usemap='#oneDegreeRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>							
 				</div>
 				<div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">					
 					<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="cv.html" title="cv" alt="" coords="608,8,741,96">
+<area shape="rect" id="node1" href="cv.html" title="cv" alt="" coords="614,8,747,96">
 <area shape="rect" id="node2" href="employee.html" title="employee" alt="" coords="415,5,564,128">
-<area shape="rect" id="node3" href="account.html" title="account" alt="" coords="5,32,371,189">
+<area shape="rect" id="node3" href="account.html" title="account" alt="" coords="5,68,371,225">
+<area shape="rect" id="node4" href="employer.html" title="employer" alt="" coords="608,113,753,289">
+<area shape="rect" id="node5" href="company.html" title="company" alt="" coords="418,181,561,269">
+<area shape="rect" id="node6" href="response.html" title="response" alt="" coords="797,63,945,151">
 </map>
 
 					<a name='diagram'><img id='twodegreesDegreeImg' src='../diagrams/account.2degrees.png' usemap='#twoDegreesRelationshipsDiagram' class='diagram' border='0' alt='' align='left'></a>							

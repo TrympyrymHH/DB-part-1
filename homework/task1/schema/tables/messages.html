@@ -153,7 +153,24 @@
 				 <td></td>
 				</tr>
 				<tr>
-				 <td><span id="message_timestamp">message_timestamp</span></td>
+				 <td><span id="is_new">is_new</span></td>
+				 <td>bool</td>
+				 <td>1</td>
+				 <td title='nullable'>√</td>
+				 <td title=''></td>
+				 <td>null</td>
+				 <td>
+				  <table border='0' cellspacing='0' cellpadding='0'>
+				  </table>				 
+				 </td>
+				 <td>
+				  <table border='0' cellspacing='0' cellpadding='0'>
+				  </table>					 
+				 </td>
+				 <td></td>
+				</tr>
+				<tr>
+				 <td class='indexedColumn' title='Indexed'><i class='fa fa-sitemap fa-rotate-120' style='padding-right: 5px;'></i><span id="message_timestamp">message_timestamp</span></td>
 				 <td>timestamp</td>
 				 <td>29,6</td>
 				 <td title='nullable'>√</td>
@@ -170,8 +187,8 @@
 				 <td></td>
 				</tr>
 				<tr>
-				 <td><span id="message_type">message_type</span></td>
-				 <td>message_type</td>
+				 <td><span id="message_source">message_source</span></td>
+				 <td>source</td>
 				 <td>2147483647</td>
 				 <td title='nullable'>√</td>
 				 <td title=''></td>
@@ -205,7 +222,7 @@
 				</tr>
 								</tbody>
 				</table>
-				<p title='5 columns'>Table contained <span id="recordNumber">0</span> rows<p/>
+				<p title='6 columns'>Table contained <span id="recordNumber">0</span> rows<p/>
 			</div>
 		</div>
 		<div class="box box-primary">		
@@ -237,6 +254,12 @@
 				  <td><span title='Ascending'>Asc</span></td>
 				  <td>id</td>
 				 </tr>				 
+				 <tr>
+				  <td title='Indexed'>ix_messages</td>
+				  <td>Performance</td>
+				  <td><span title='Ascending'>Asc</span>/<span title='Descending'>Desc</span></td>
+				  <td>response_id + message_timestamp</td>
+				 </tr>				 
 				</tbody>
 				</table>   			  
 			</div><!-- /.box-body -->
@@ -264,7 +287,7 @@
             <div class="tab-content no-padding">            
 				<div class="chart tab-pane active" id="oneDegreeImg-chart" style="position: relative; overflow-x:auto;">					
 					<map id="oneDegreeRelationshipsDiagram" name="oneDegreeRelationshipsDiagram">
-<area shape="rect" id="node1" href="messages.html" title="messages" alt="" coords="309,5,715,221">
+<area shape="rect" id="node1" href="messages.html" title="messages" alt="" coords="309,5,663,251">
 <area shape="rect" id="node2" href="response.html" title="response" alt="" coords="5,37,265,243">
 </map>
 
@@ -272,7 +295,7 @@
 				</div>
 				<div class="chart tab-pane " id="twodegreesDegreeImg-chart" style="position: relative; overflow-x:auto;">					
 					<map id="twoDegreesRelationshipsDiagram" name="twoDegreesRelationshipsDiagram">
-<area shape="rect" id="node1" href="messages.html" title="messages" alt="" coords="499,17,904,233">
+<area shape="rect" id="node1" href="messages.html" title="messages" alt="" coords="499,17,852,263">
 <area shape="rect" id="node2" href="response.html" title="response" alt="" coords="195,49,455,255">
 <area shape="rect" id="node3" href="cv.html" title="cv" alt="" coords="11,5,145,93">
 <area shape="rect" id="node4" href="employer.html" title="employer" alt="" coords="5,216,151,304">

@@ -4,6 +4,7 @@
       <table name="account" numRows="0" remarks="" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('account_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
             <child column="account_id" foreignKey="employee_account_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="employee"/>
+            <child column="account_id" foreignKey="employer_account_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="employer"/>
          </column>
          <column autoUpdated="false" digits="0" id="1" name="account_login" nullable="false" remarks="" size="2147483647" type="text"/>
          <column autoUpdated="false" digits="0" id="2" name="account_password_hash" nullable="false" remarks="" size="2147483647" type="text"/>
@@ -44,7 +45,7 @@
          <column autoUpdated="false" digits="0" id="5" name="photo_url" nullable="true" remarks="" size="2147483647" type="text"/>
          <column autoUpdated="false" digits="0" id="6" name="salary" nullable="true" remarks="" size="10" type="int4"/>
          <column autoUpdated="false" digits="0" id="7" name="place" nullable="true" remarks="" size="2147483647" type="text"/>
-         <column autoUpdated="false" digits="0" id="8" name="employment_type" nullable="true" remarks="" size="2147483647" type="_employment_type"/>
+         <column autoUpdated="false" digits="0" id="8" name="employment_types" nullable="true" remarks="" size="2147483647" type="_employment_type"/>
          <column autoUpdated="false" digits="0" id="9" name="spheres" nullable="true" remarks="" size="2147483647" type="_sphere"/>
          <column autoUpdated="false" digits="0" id="10" name="skills" nullable="true" remarks="" size="2147483647" type="_text"/>
          <column autoUpdated="false" digits="0" id="11" name="about_me" nullable="true" remarks="" size="2147483647" type="text"/>
@@ -111,20 +112,29 @@
          <index name="employee_pkey" unique="true">
             <column ascending="true" name="id"/>
          </index>
+         <index name="employee_account_id_key" unique="true">
+            <column ascending="true" name="account_id"/>
+         </index>
       </table>
       <table name="employer" numRows="0" remarks="" schema="public" type="TABLE">
          <column autoUpdated="true" defaultValue="nextval('employer_id_seq'::regclass)" digits="0" id="0" name="id" nullable="false" remarks="" size="10" type="serial">
             <child column="employer_id" foreignKey="response_employer_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="response"/>
          </column>
-         <column autoUpdated="false" digits="0" id="1" name="company_id" nullable="true" remarks="" size="10" type="int4">
+         <column autoUpdated="false" digits="0" id="1" name="account_id" nullable="true" remarks="" size="10" type="int4">
+            <parent column="id" foreignKey="employer_account_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="account"/>
+         </column>
+         <column autoUpdated="false" digits="0" id="2" name="company_id" nullable="true" remarks="" size="10" type="int4">
             <parent column="id" foreignKey="employer_company_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="company"/>
          </column>
-         <column autoUpdated="false" digits="0" id="2" name="full_name" nullable="false" remarks="" size="2147483647" type="text"/>
-         <column autoUpdated="false" digits="0" id="3" name="photo_url" nullable="true" remarks="" size="2147483647" type="text"/>
-         <column autoUpdated="false" digits="0" id="4" name="contact_info" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="3" name="full_name" nullable="false" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="4" name="photo_url" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="5" name="contact_info" nullable="true" remarks="" size="2147483647" type="text"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="employer_pkey" unique="true">
             <column ascending="true" name="id"/>
+         </index>
+         <index name="employer_account_id_key" unique="true">
+            <column ascending="true" name="account_id"/>
          </index>
       </table>
       <table name="messages" numRows="0" remarks="" schema="public" type="TABLE">
@@ -132,12 +142,17 @@
          <column autoUpdated="false" digits="0" id="1" name="response_id" nullable="true" remarks="" size="10" type="int4">
             <parent column="id" foreignKey="messages_response_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="response"/>
          </column>
-         <column autoUpdated="false" digits="6" id="2" name="message_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
-         <column autoUpdated="false" digits="0" id="3" name="message_type" nullable="true" remarks="" size="2147483647" type="message_type"/>
-         <column autoUpdated="false" digits="0" id="4" name="message_text" nullable="true" remarks="" size="2147483647" type="text"/>
+         <column autoUpdated="false" digits="0" id="2" name="is_new" nullable="true" remarks="" size="1" type="bool"/>
+         <column autoUpdated="false" digits="6" id="3" name="message_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="0" id="4" name="message_source" nullable="true" remarks="" size="2147483647" type="source"/>
+         <column autoUpdated="false" digits="0" id="5" name="message_text" nullable="true" remarks="" size="2147483647" type="text"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="messages_pkey" unique="true">
             <column ascending="true" name="id"/>
+         </index>
+         <index name="ix_messages" unique="false">
+            <column ascending="true" name="response_id"/>
+            <column ascending="false" name="message_timestamp"/>
          </index>
       </table>
       <table name="response" numRows="0" remarks="" schema="public" type="TABLE">
@@ -153,7 +168,7 @@
          <column autoUpdated="false" digits="0" id="3" name="employer_id" nullable="true" remarks="" size="10" type="int4">
             <parent column="id" foreignKey="response_employer_id_fkey" implied="false" onDeleteCascade="false" schema="public" table="employer"/>
          </column>
-         <column autoUpdated="false" digits="0" id="4" name="response_source" nullable="false" remarks="" size="2147483647" type="response_source"/>
+         <column autoUpdated="false" digits="0" id="4" name="response_source" nullable="false" remarks="" size="2147483647" type="source"/>
          <column autoUpdated="false" digits="0" id="5" name="response_status" nullable="false" remarks="" size="2147483647" type="response_status"/>
          <column autoUpdated="false" digits="6" id="6" name="created_timestamp" nullable="false" remarks="" size="29" type="timestamp"/>
          <column autoUpdated="false" digits="6" id="7" name="status_changed_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
@@ -175,12 +190,11 @@
          <column autoUpdated="false" digits="0" id="5" name="salary_min" nullable="true" remarks="" size="10" type="int4"/>
          <column autoUpdated="false" digits="0" id="6" name="salary_max" nullable="true" remarks="" size="10" type="int4"/>
          <column autoUpdated="false" digits="0" id="7" name="place" nullable="true" remarks="" size="2147483647" type="text"/>
-         <column autoUpdated="false" digits="0" id="8" name="employment_type" nullable="true" remarks="" size="2147483647" type="_employment_type"/>
+         <column autoUpdated="false" digits="0" id="8" name="employment_types" nullable="true" remarks="" size="2147483647" type="_employment_type"/>
          <column autoUpdated="false" digits="0" id="9" name="spheres" nullable="true" remarks="" size="2147483647" type="_sphere"/>
          <column autoUpdated="false" digits="0" id="10" name="skills" nullable="true" remarks="" size="2147483647" type="_text"/>
-         <column autoUpdated="false" digits="0" id="11" name="contact_info" nullable="true" remarks="" size="2147483647" type="text"/>
-         <column autoUpdated="false" digits="6" id="12" name="created_timestamp" nullable="false" remarks="" size="29" type="timestamp"/>
-         <column autoUpdated="false" digits="6" id="13" name="refreshed_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="11" name="created_timestamp" nullable="false" remarks="" size="29" type="timestamp"/>
+         <column autoUpdated="false" digits="6" id="12" name="refreshed_timestamp" nullable="true" remarks="" size="29" type="timestamp"/>
          <primaryKey column="id" sequenceNumberInPK="1"/>
          <index name="vacancy_pkey" unique="true">
             <column ascending="true" name="id"/>

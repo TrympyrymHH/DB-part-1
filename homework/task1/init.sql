@@ -17,8 +17,7 @@ DROP TYPE SPHERE;
 DROP TYPE CV_STATUS;
 DROP TYPE VACANCY_STATUS;
 DROP TYPE RESPONSE_STATUS;
-DROP TYPE RESPONSE_SOURCE;
-DROP TYPE MESSAGE_TYPE;
+DROP TYPE SOURCE;
 
 -- Create
 
@@ -27,9 +26,7 @@ CREATE TYPE SPHERE AS ENUM ('IT', 'Marketing', 'Education', 'Entrepreneurship', 
 CREATE TYPE CV_STATUS AS ENUM ('VISIBLE', 'HIDDEN', 'ARCHIVE', 'DELETED');
 CREATE TYPE VACANCY_STATUS AS ENUM ('OPEN', 'CLOSED', 'ARCHIVE', 'DELETED');
 CREATE TYPE RESPONSE_STATUS AS ENUM ('NEW', 'READ', 'ACCEPTED', 'REJECTED');
-CREATE TYPE RESPONSE_SOURCE AS ENUM ('EMPLOYEE', 'EMPLOYER');
-CREATE TYPE MESSAGE_TYPE AS ENUM ('SEND', 'RECEIVE');
-
+CREATE TYPE SOURCE AS ENUM ('EMPLOYEE', 'EMPLOYER');
 
 CREATE TABLE account(
     id SERIAL PRIMARY KEY,
@@ -51,7 +48,7 @@ CREATE TABLE cv(
     photo_url TEXT,
     salary INTEGER,
     place TEXT,
-    employment_type EMPLOYMENT_TYPE[],
+    employment_types EMPLOYMENT_TYPE[],
     spheres SPHERE[],
     skills TEXT[],
     about_me TEXT,
@@ -114,7 +111,7 @@ CREATE TABLE vacancy(
     salary_min INTEGER,
     salary_max INTEGER,
     place TEXT,
-    employment_type EMPLOYMENT_TYPE[],
+    employment_types EMPLOYMENT_TYPE[],
     spheres SPHERE[],
     skills TEXT[],
     created_timestamp TIMESTAMP NOT NULL,
@@ -126,7 +123,7 @@ CREATE TABLE response(
     cv_id INTEGER REFERENCES cv(id) NOT NULL,
     vacancy_id INTEGER REFERENCES vacancy(id) NOT NULL,
     employer_id INTEGER REFERENCES employer(id),
-    response_source RESPONSE_SOURCE NOT NULL,
+    response_source SOURCE NOT NULL,
     response_status RESPONSE_STATUS NOT NULL,
     created_timestamp TIMESTAMP NOT NULL,
     status_changed_timestamp TIMESTAMP
@@ -135,8 +132,10 @@ CREATE TABLE response(
 CREATE TABLE messages(
     id SERIAL PRIMARY KEY,
     response_id INTEGER REFERENCES response(id),
+    is_new BOOLEAN,
     message_timestamp TIMESTAMP,
-    message_type MESSAGE_TYPE,
+    message_source SOURCE,
     message_text TEXT
 );
 
+CREATE INDEX IX_messages ON messages (response_id, message_timestamp DESC);

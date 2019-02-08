@@ -4,8 +4,8 @@ cv_education
 cv_certificates
 response
 cv
-vacancy
 employer
+vacancy
 employee
-account
 company
+account

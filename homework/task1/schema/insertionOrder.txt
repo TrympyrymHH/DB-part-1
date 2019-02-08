@@ -1,8 +1,8 @@
-company
 account
+company
 employee
-employer
 vacancy
+employer
 cv
 response
 cv_certificates

@@ -48,7 +48,7 @@ INSERT INTO cv
     ,photo_url
     ,salary
     ,place
-    ,employment_type
+    ,employment_types
     ,spheres
     ,skills
     ,about_me
@@ -128,7 +128,7 @@ INSERT INTO vacancy
     ,salary_min
     ,salary_max
     ,place
-    ,employment_type
+    ,employment_types
     ,spheres
     ,skills
     ,created_timestamp
@@ -161,7 +161,7 @@ SELECT
     g.id
     ,g.id
     ,g.id
-    ,(select g.so from unnest(enum_range(NULL::RESPONSE_SOURCE)) as g(so) order by random() limit 1)
+    ,(select g.so from unnest(enum_range(NULL::SOURCE)) as g(so) order by random() limit 1)
     ,(select g.st from unnest(enum_range(NULL::RESPONSE_STATUS)) as g(st) order by random() limit 1)
     ,now()
     ,now()
@@ -171,12 +171,14 @@ FROM generate_series(1,25) as g(id);
 -- generate messages
 INSERT INTO messages
     (response_id
+    ,is_new
     ,message_timestamp
-    ,message_type
+    ,message_source
     ,message_text)
 SELECT
     g.id
+    ,TRUE
     ,now()
-    ,(select g.so from unnest(enum_range(NULL::MESSAGE_TYPE)) as g(so) order by random() limit 1)
+    ,(select g.so from unnest(enum_range(NULL::SOURCE)) as g(so) order by random() limit 1)
     ,'Text message: '||g.id
 FROM generate_series(1,25) as g(id);
