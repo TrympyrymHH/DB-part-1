@@ -1,0 +1,11 @@
+messages
+cv_job
+cv_education
+cv_certificates
+response
+cv
+vacancy
+employer
+employee
+account
+company

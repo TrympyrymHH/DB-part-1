@@ -20,11 +20,13 @@ WHERE account_login = :input_login
 -- Employee can add Job/Certificate/Education to CV
 -- Employee can search Vacancies
 -- Employee can send response to Vacancy with CV
+-- Employee can see responses to his CV and his responses to Vacancies
 
 -- Employer can create Vacancy for Company
 -- Employer can search CVs
 -- Employer can send response to CV with Vacancy (he will be assigned to it)
 -- Employer can see responses to Vacancies and assign himself to it
+-- Employee can see responses to company Vacancies
 
 -- Employee and Employer can chat with each other with Messages on Response
 
