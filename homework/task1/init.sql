@@ -39,7 +39,7 @@ CREATE TABLE account(
 
 CREATE TABLE employee(
     id SERIAL PRIMARY KEY,
-    account_id INTEGER REFERENCES account(id)
+    account_id INTEGER REFERENCES account(id) UNIQUE
 );
 
 CREATE TABLE cv(
@@ -98,6 +98,7 @@ CREATE TABLE company(
 
 CREATE TABLE employer(
     id SERIAL PRIMARY KEY,
+    account_id INTEGER REFERENCES account(id) UNIQUE,
     company_id INTEGER REFERENCES company(id),
     full_name TEXT NOT NULL,
     photo_url TEXT,
@@ -116,7 +117,6 @@ CREATE TABLE vacancy(
     employment_type EMPLOYMENT_TYPE[],
     spheres SPHERE[],
     skills TEXT[],
-    contact_info TEXT,
     created_timestamp TIMESTAMP NOT NULL,
     refreshed_timestamp TIMESTAMP
 );
@@ -139,3 +139,4 @@ CREATE TABLE messages(
     message_type MESSAGE_TYPE,
     message_text TEXT
 );
+

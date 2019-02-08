@@ -1,20 +1,46 @@
 -- Create account
-INSERT INTO accounts
+INSERT INTO account
     (account_login
     ,account_password_hash)
 VALUES
-    :input_login
-    crypt(:input_password, gen_salt('bf', 8));
+    ('admin',
+    crypt('qwerty', gen_salt('bf', 8)));
 -- Login
-SELECT TOP 1 1
+SELECT 1 as IsCorrect
 FROM account
-WHERE account_login = :input_login
-  AND account_password_hash = crypt(:input_password_hash, account_password_hash);
+WHERE account_login = 'admin'
+  AND account_password_hash = crypt('qwerty', account_password_hash)
+LIMIT 1;
 
 -- Register as Employee
+INSERT INTO employee (account_id) VALUES (currval('account_id_seq'));
+
 -- Register as Employer
+INSERT INTO employer 
+    (account_id
+    ,company_id
+    ,full_name
+    ,photo_url
+    ,contact_info)
+VALUES
+    (currval('account_id_seq')
+    ,null
+    ,'FIO'
+    ,null
+    ,null);
+
 -- Create Company
+INSERT INTO company
+    (company_name
+    ,company_description
+    ,company_url)
+VALUES
+    ('Big COMPANY'
+    ,'Super Big Company, You should work there'
+    ,'https://www.google.com');
+
 -- Add Employer to Company
+UPDATE employer set company_id = lastval() where id = currval('employee_id_seq');
 
 -- Employee can create/update CV
 -- Employee can add Job/Certificate/Education to CV
