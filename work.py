@@ -454,6 +454,13 @@ def update_city_table(connection, cursor):
         FROM new_city
         LEFT JOIN city ON (lower(city.name) = lower(new_city.name));
         """
+
+        compare_city_indices_sql_analyze = """
+        explain analyze 
+        SELECT new_city.city_id, city.city_id, new_city.name
+        FROM new_city
+        LEFT JOIN city ON (lower(city.name) = lower(new_city.name));
+        """
         
         insert_new_city_indices_sql = """
         INSERT INTO city (name)
@@ -467,6 +474,12 @@ def update_city_table(connection, cursor):
         update_resume_city_sql = update_table_field_sql('new_resume', 'city_id')
 
         update_experience_city_sql = update_table_field_sql('new_experience', 'city_id')
+
+        cursor.execute(compare_city_indices_sql_analyze)
+        analyze_fetched = cursor.fetchall()
+        print('ANALYZE:')
+        print(analyze_fetched)
+        print('ANALYZE END')
 
         cursor.execute(compare_city_indices_sql)
         old_new_indices = cursor.fetchall()
